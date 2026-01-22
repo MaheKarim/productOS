@@ -215,9 +215,9 @@
 
                     <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System
                     </div>
-                    <a href="#"
-                        class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl hover:bg-slate-800/50 hover:text-white transition-soft">
-                        <i data-lucide="settings" class="mr-3 w-5 h-5 text-slate-500 group-hover:text-indigo-400"></i>
+                    <a href="{{ route('admin.settings.index') }}"
+                        class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.settings.index') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}">
+                        <i data-lucide="settings" class="mr-3 w-5 h-5 {{ request()->routeIs('admin.settings.index') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
                         Settings
                     </a>
                 </nav>
@@ -225,10 +225,15 @@
                 {{-- User Profile Card / Footer --}}
                 <div class="p-4 mt-auto border-t border-slate-800/50">
                     <div class="bg-white/5 rounded-2xl p-4 flex items-center">
-                        <div
-                            class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center mr-3">
-                            <span class="text-indigo-400 font-bold">{{ substr(Auth::user()->name ?? 'A', 0, 1) }}</span>
-                        </div>
+                        @if (Auth::user()->avatar)
+                            <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
+                                class="w-10 h-10 rounded-full object-cover mr-3 border border-indigo-500/30">
+                        @else
+                            <div
+                                class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center mr-3">
+                                <span class="text-indigo-400 font-bold">{{ substr(Auth::user()->name ?? 'A', 0, 1) }}</span>
+                            </div>
+                        @endif
                         <div class="mr-2">
                             <p class="text-xs font-bold text-white truncate w-24">
                                 {{ Auth::user()->name ?? 'Admin User' }}</p>

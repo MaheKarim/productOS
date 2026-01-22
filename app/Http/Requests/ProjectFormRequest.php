@@ -16,6 +16,24 @@ class ProjectFormRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->tags && is_string($this->tags)) {
+            $this->merge([
+                'tags' => array_map('trim', explode(',', $this->tags)),
+            ]);
+        }
+
+        if ($this->related_tools && is_string($this->related_tools)) {
+            $this->merge([
+                'related_tools' => array_map('trim', explode(',', $this->related_tools)),
+            ]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>

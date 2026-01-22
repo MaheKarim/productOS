@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\FooterController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\ToolsController;
 
 // Public Routes
@@ -49,5 +50,10 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     // Footer
     Route::resource('footer', FooterController::class)->names('admin.footer');
     Route::post('footer/{footer}/toggle', [FooterController::class, 'toggle'])->name('admin.footer.toggle');
+
+    // Settings
+    Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings.index');
+    Route::put('/settings/profile', [SettingsController::class, 'updateProfile'])->name('admin.settings.update-profile');
+    Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('admin.settings.update-password');
 });
 

@@ -6,10 +6,10 @@
             </div>
 
             <nav class="hidden md:flex items-center space-x-8">
+                <a href="{{ route('tools') }}"
+                    class="text-slate-700 font-medium hover:text-primary transition-default cursor-pointer {{ request()->routeIs('tools') ? 'text-primary' : '' }}">ProductOS</a>
                 <a href="{{ route('home') }}#portfolio"
                     class="text-slate-700 font-medium hover:text-primary transition-default cursor-pointer">Portfolio</a>
-                <a href="{{ route('tools') }}"
-                    class="text-slate-700 font-medium hover:text-primary transition-default cursor-pointer {{ request()->routeIs('tools') ? 'text-primary' : '' }}">Toolkit</a>
                 <a href="{{ route('home') }}#services"
                     class="text-slate-700 font-medium hover:text-primary transition-default cursor-pointer">Services</a>
                 <a href="{{ route('home') }}#about"
