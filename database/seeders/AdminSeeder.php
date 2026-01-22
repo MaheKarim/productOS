@@ -14,17 +14,17 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         User::updateOrCreate(
-            ['email' => 'admin@portfolio.com'],
+            ['email' => 'admin@productos.bd'],
             [
-                'name' => 'Admin',
-                'email' => 'admin@portfolio.com',
-                'password' => Hash::make('password123'),
+                'name' => 'Admin ProductOS',
+                'email' => 'admin@productos.bd',
+                'password' => Hash::make('productos'),
                 'email_verified_at' => now(),
             ]
         );
 
         $this->command->info('Admin user created successfully!');
-        $this->command->info('Email: admin@portfolio.com');
-        $this->command->info('Password: password123');
+        $this->command->info('Email: admin@productos.bd');
+        $this->command->info('Password: productos');
     }
 }

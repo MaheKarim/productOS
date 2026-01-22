@@ -16,7 +16,7 @@
                 Interactive tools and calculators I use to make data-driven decisions.
                 <span class="text-primary font-medium">Free for you to use.</span>
             </p>
-            <a href="{{ route('tools') }}"
+            <a href="{{ route('tools.index') }}"
                 class="inline-flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors cursor-pointer">
                 View All Tools
                 <i class="fa-solid fa-arrow-right ml-2"></i>
@@ -32,7 +32,7 @@
                     'icon' => 'fa-solid fa-chart-pie',
                     'color' => 'text-blue-500',
                     'bg' => 'bg-blue-50',
-                    'link' => route('tools') . '#cac-calculator',
+                    'link' => route('tools.index') . '#cac-calculator',
                     'badge' => 'Popular',
                 ],
                 [
@@ -42,7 +42,7 @@
                     'icon' => 'fa-solid fa-infinity',
                     'color' => 'text-purple-500',
                     'bg' => 'bg-purple-50',
-                    'link' => route('tools') . '#ltv-calculator',
+                    'link' => route('tools.index') . '#ltv-calculator',
                     'badge' => 'Strategic',
                 ],
                 [
@@ -51,7 +51,7 @@
                     'icon' => 'fa-solid fa-list-check',
                     'color' => 'text-teal-500',
                     'bg' => 'bg-teal-50',
-                    'link' => route('tools') . '#rice-framework',
+                    'link' => route('tools.index') . '#rice-framework',
                     'badge' => 'Essential',
                 ],
             ];

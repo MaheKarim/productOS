@@ -11,10 +11,28 @@ use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\FooterController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\ToolsController;
+use App\Http\Controllers\CaseStudyController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\SearchController;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/tools', [ToolsController::class, 'index'])->name('tools');
+// Tools
+Route::get('/tools', [ToolsController::class, 'index'])->name('tools.index');
+Route::get('/tools/{category}', [ToolsController::class, 'category'])->name('tools.category');
+Route::get('/tools/{category}/{tool}', [ToolsController::class, 'show'])->name('tools.show');
+
+// Portfolio
+Route::get('/portfolio', [CaseStudyController::class, 'index'])->name('portfolio.index');
+Route::get('/portfolio/{slug}', [CaseStudyController::class, 'show'])->name('portfolio.show');
+
+// Pages
+Route::get('/about', [PageController::class, 'about'])->name('about');
+Route::get('/services', [PageController::class, 'services'])->name('services');
+Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+
+// Search
+Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 // Auth Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

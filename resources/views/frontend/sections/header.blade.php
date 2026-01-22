@@ -6,7 +6,7 @@
             </div>
 
             <nav class="hidden md:flex items-center space-x-8">
-                <a href="{{ route('tools') }}"
+                <a href="{{ route('tools.index') }}"
                     class="text-slate-700 font-medium hover:text-primary transition-default cursor-pointer {{ request()->routeIs('tools') ? 'text-primary' : '' }}">ProductOS</a>
                 <a href="{{ route('home') }}#portfolio"
                     class="text-slate-700 font-medium hover:text-primary transition-default cursor-pointer">Portfolio</a>
