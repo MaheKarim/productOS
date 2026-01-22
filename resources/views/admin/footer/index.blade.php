@@ -1,38 +1,37 @@
 @extends('admin.layout')
 
-@section('title', 'Impact Projects')
+@section('title', 'Footer Settings')
 
-@section('page-title', 'Portfolio Projects')
+@section('page-title', 'Footer Management')
 
 @section('content')
     <div class="space-y-6">
         {{-- Header Card --}}
         <div class="flex items-center justify-between">
             <div>
-                <h3 class="text-xl font-bold text-slate-900 tracking-tight">Success Stories</h3>
-                <p class="text-sm text-slate-500">Curate and manage your high-impact case studies and project metrics.</p>
+                <h3 class="text-xl font-bold text-slate-900 tracking-tight">Footer Settings</h3>
+                <p class="text-sm text-slate-500">Manage footer content, links, and social media.</p>
             </div>
-            <a href="{{ route('admin.projects.create') }}"
+            <a href="{{ route('admin.footer.create') }}"
                 class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 transition-soft font-bold text-sm">
                 <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
-                Create New Project
+                Create Footer
             </a>
         </div>
 
         {{-- Table Card --}}
         <div class="bg-white rounded-[2.5rem] shadow-sm border border-slate-200/60 overflow-hidden">
-            @if ($projects->count() > 0)
+            @if ($footers->count() > 0)
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50/50 border-b border-slate-100">
-                                <th
-                                    class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">
-                                    Order</th>
-                                <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Project
+                                <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Order
+                                </th>
+                                <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Footer
                                     Details</th>
-                                <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                                    Category</th>
+                                <th class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Links
+                                </th>
                                 <th
                                     class="px-8 py-5 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">
                                     Status</th>
@@ -42,59 +41,60 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100">
-                            @foreach ($projects as $project)
+                            @foreach ($footers as $footer)
                                 <tr class="hover:bg-slate-50/30 transition-colors group">
-                                    <td class="px-8 py-6 text-center">
+                                    <td class="px-8 py-6">
                                         <span
                                             class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-bold text-xs">
-                                            {{ $project->order }}
+                                            {{ $footer->order }}
                                         </span>
                                     </td>
                                     <td class="px-8 py-6">
                                         <div class="flex items-center space-x-4">
-                                            <div
-                                                class="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
-                                                @if ($project->image)
-                                                    <img src="{{ $project->image_url }}" alt=""
-                                                        class="w-full h-full object-cover">
-                                                @else
-                                                    <div class="w-full h-full flex items-center justify-center">
-                                                        <i data-lucide="image" class="w-5 h-5 text-slate-300"></i>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <div>
+                                            @if ($footer->logo_image)
                                                 <div
-                                                    class="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">
-                                                    {{ $project->title }}</div>
-                                                @if ($project->metric_value)
-                                                    <div
-                                                        class="text-[10px] text-emerald-600 font-bold uppercase tracking-wider mt-0.5">
-                                                        {{ $project->metric_value }} {{ $project->metric_label }}
-                                                    </div>
-                                                @endif
+                                                    class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                                                    <img src="{{ $footer->logo_image_url }}" alt="Logo"
+                                                        class="w-full h-full object-cover">
+                                                </div>
+                                            @else
+                                                <div
+                                                    class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0">
+                                                    <i data-lucide="layout" class="text-indigo-600 text-lg"></i>
+                                                </div>
+                                            @endif
+                                            <div>
+                                                <div class="text-sm font-bold text-slate-900">
+                                                    {{ $footer->logo_text ?: 'No Logo Text' }}</div>
+                                                <div class="text-[10px] text-slate-400 font-medium">
+                                                    {{ $footer->email ?: 'No Email' }}
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-8 py-6">
-                                        <span
-                                            class="px-3 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded-lg uppercase tracking-widest border border-slate-200">
-                                            {{ $project->category ?? 'General' }}
-                                        </span>
+                                    <td class="px-8 py-6 text-sm text-slate-500 leading-relaxed">
+                                        <div class="space-y-1">
+                                            <div class="text-[10px] text-slate-400 font-medium">Column 1:
+                                                {{ count($footer->column1_links ?? []) }} links</div>
+                                            <div class="text-[10px] text-slate-400 font-medium">Column 2:
+                                                {{ count($footer->column2_links ?? []) }} links</div>
+                                            <div class="text-[10px] text-slate-400 font-medium">Column 3:
+                                                {{ count($footer->column3_links ?? []) }} links</div>
+                                        </div>
                                     </td>
                                     <td class="px-8 py-6">
                                         <div class="flex justify-center">
-                                            @if ($project->is_active)
+                                            @if ($footer->is_active)
                                                 <span
                                                     class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-100 uppercase tracking-widest">
                                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-2"></span>
-                                                    Published
+                                                    Active
                                                 </span>
                                             @else
                                                 <span
                                                     class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-slate-50 text-slate-400 border border-slate-100 uppercase tracking-widest">
                                                     <span class="w-1.5 h-1.5 rounded-full bg-slate-300 mr-2"></span>
-                                                    Draft
+                                                    Hidden
                                                 </span>
                                             @endif
                                         </div>
@@ -102,29 +102,29 @@
                                     <td class="px-8 py-6 text-right">
                                         <div
                                             class="flex items-center justify-end space-x-1">
-                                            <form action="{{ route('admin.projects.toggle', $project) }}" method="POST"
+                                            <form action="{{ route('admin.footer.toggle', $footer) }}" method="POST"
                                                 class="inline">
                                                 @csrf
                                                 <button type="submit"
                                                     class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-soft"
-                                                    title="{{ $project->is_active ? 'Unpublish' : 'Publish' }}">
-                                                    <i data-lucide="{{ $project->is_active ? 'archive' : 'send' }}"
+                                                    title="{{ $footer->is_active ? 'Deactivate' : 'Activate' }}">
+                                                    <i data-lucide="{{ $footer->is_active ? 'eye-off' : 'eye' }}"
                                                         class="w-4 h-4"></i>
                                                 </button>
                                             </form>
-                                            <a href="{{ route('admin.projects.edit', $project) }}"
+                                            <a href="{{ route('admin.footer.edit', $footer) }}"
                                                 class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-soft"
                                                 title="Edit Content">
                                                 <i data-lucide="edit-2" class="w-4 h-4"></i>
                                             </a>
-                                            <form action="{{ route('admin.projects.destroy', $project) }}" method="POST"
-                                                onsubmit="return confirm('Permanently remove this case study?');"
+                                            <form action="{{ route('admin.footer.destroy', $footer) }}" method="POST"
+                                                onsubmit="return confirm('Delete this footer configuration?');"
                                                 class="inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
                                                     class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-soft"
-                                                    title="Delete Project">
+                                                    title="Delete Footer">
                                                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                                                 </button>
                                             </form>
@@ -136,15 +136,15 @@
                     </table>
                 </div>
 
-                {{-- Pagination Links --}}
-                @if ($projects->hasPages())
+                {{-- Pagination --}}
+                @if ($footers->hasPages())
                     <div class="px-8 py-5 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
                         <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                            Showing {{ $projects->firstItem() }}-{{ $projects->lastItem() }} of {{ $projects->total() }}
-                            entries
+                            Showing {{ $footers->firstItem() }}-{{ $footers->lastItem() }} of {{ $footers->total() }}
+                            results
                         </div>
                         <div class="pagination-custom">
-                            {{ $projects->links('pagination::tailwind') }}
+                            {{ $footers->links('pagination::tailwind') }}
                         </div>
                     </div>
                 @endif
@@ -152,15 +152,15 @@
                 {{-- Empty State --}}
                 <div class="py-24 text-center">
                     <div class="w-24 h-24 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-8">
-                        <i data-lucide="briefcase" class="w-10 h-10 text-indigo-400"></i>
+                        <i data-lucide="layout" class="w-10 h-10 text-indigo-400"></i>
                     </div>
-                    <h3 class="text-2xl font-black text-slate-900 tracking-tight mb-2">No Projects Logged</h3>
-                    <p class="text-slate-500 max-w-sm mx-auto mb-10 leading-relaxed italic">"It's time to show off your
-                        impact. Add your first success story to build credibility."</p>
-                    <a href="{{ route('admin.projects.create') }}"
+                    <h3 class="text-2xl font-black text-slate-900 tracking-tight mb-2">No Footer Configurations</h3>
+                    <p class="text-slate-500 max-w-sm mx-auto mb-10 leading-relaxed italic">"Create your first footer to
+                        customize the bottom section of your portfolio."</p>
+                    <a href="{{ route('admin.footer.create') }}"
                         class="inline-flex items-center px-8 py-4 bg-indigo-600 text-white rounded-2xl hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 transition-soft font-bold text-sm">
                         <i data-lucide="plus" class="w-5 h-5 mr-3"></i>
-                        Add Project
+                        Get Started Now
                     </a>
                 </div>
             @endif

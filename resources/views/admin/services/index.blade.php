@@ -84,7 +84,7 @@
                                     </td>
                                     <td class="px-8 py-6 text-right">
                                         <div
-                                            class="flex items-center justify-end space-x-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                                            class="flex items-center justify-end space-x-1">
                                             <form action="{{ route('admin.services.toggle', $service) }}" method="POST"
                                                 class="inline">
                                                 @csrf

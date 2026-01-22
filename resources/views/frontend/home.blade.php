@@ -508,52 +508,83 @@
 
 
 
-    <section id="testimonials" class="py-24 px-8 bg-teal-50">
-        <div class="max-w-[1200px] mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-semibold text-teal-900 mb-4">What People Say</h2>
-                <p class="text-lg text-slate-600">Trusted by teams worldwide</p>
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-32 px-8 bg-white relative overflow-hidden">
+        {{-- Decorative text --}}
+        <div
+            class="absolute -top-10 left-1/2 -translate-x-1/2 text-[15rem] font-black text-slate-50 select-none pointer-events-none opacity-50">
+            TRUST</div>
+
+        <div class="max-w-[1200px] mx-auto relative z-10">
+            <div class="text-center mb-24">
+                <span
+                    class="inline-block py-1 px-3 rounded-full bg-indigo-50 text-indigo-600 text-[10px] font-bold mb-4 border border-indigo-100 uppercase tracking-widest">Endorsements</span>
+                <h2 class="text-5xl font-black text-slate-900 mb-6 tracking-tight">The <span
+                        class="text-indigo-600 italic">Human</span> ROI</h2>
+                <p class="text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed italic">"Behind every metric is a human
+                    experience. Here's what it feels like to build together."</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 @foreach ($testimonials as $testimonial)
-                    <div class="bg-white rounded-2xl p-8 shadow-level-1">
-                        <div class="flex items-start space-x-4 mb-6">
-                            @if ($testimonial->avatar_image)
-                                <img src="{{ $testimonial->avatar_image_url }}" alt="{{ $testimonial->name }}"
-                                    class="w-16 h-16 rounded-full object-cover">
-                            @else
-                                <div class="w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center">
-                                    <i class="fa-solid fa-user text-2xl text-primary"></i>
+                    <div
+                        class="group relative bg-white border border-slate-200 rounded-[2.5rem] p-10 hover:shadow-2xl hover:border-indigo-500/20 transition-all duration-500 flex flex-col h-full">
+                        {{-- Quote Icon --}}
+                        <div class="absolute top-8 right-10 text-slate-100 group-hover:text-indigo-50 transition-colors">
+                            <i data-lucide="quote" class="w-12 h-12"></i>
+                        </div>
+
+                        <div class="flex items-center space-x-4 mb-8">
+                            <div class="relative">
+                                @if ($testimonial->avatar_image)
+                                    <img src="{{ $testimonial->avatar_image_url }}" alt="{{ $testimonial->name }}"
+                                        class="w-16 h-16 rounded-2xl object-cover ring-4 ring-slate-50 group-hover:ring-indigo-50 transition-all">
+                                @else
+                                    <div
+                                        class="w-16 h-16 rounded-2xl bg-indigo-50 flex items-center justify-center border border-indigo-100 group-hover:bg-indigo-600 group-hover:border-indigo-600 transition-all">
+                                        <i data-lucide="user"
+                                            class="w-6 h-6 text-indigo-400 group-hover:text-white transition-colors"></i>
+                                    </div>
+                                @endif
+                                <div
+                                    class="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 rounded-lg flex items-center justify-center border-4 border-white">
+                                    <i data-lucide="check" class="w-3 h-3 text-white"></i>
                                 </div>
-                            @endif
+                            </div>
                             <div>
-                                <div class="font-semibold text-teal-900">{{ $testimonial->name }}</div>
-                                @if ($testimonial->designation)
-                                    <div class="text-sm text-slate-600">{{ $testimonial->designation }}</div>
-                                @endif
-                                @if ($testimonial->company)
-                                    <div class="text-sm text-slate-500">{{ $testimonial->company }}</div>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="relative">
-                            <div class="flex mb-4">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    <i
-                                        class="fa-solid fa-star {{ $i <= $testimonial->rating ? 'text-yellow-400' : 'text-gray-300' }}"></i>
-                                @endfor
-                            </div>
-                            <p class="text-slate-600 leading-relaxed">"{{ $testimonial->feedback }}"</p>
-                            @if ($testimonial->project)
-                                <div class="mt-4 pt-4 border-t border-gray-100">
-                                    <a href="#portfolio" class="text-sm text-primary font-medium hover:underline">
-                                        <i class="fa-solid fa-link mr-1"></i>
-                                        Related Project: {{ $testimonial->project->title }}
-                                    </a>
+                                <div class="font-black text-slate-900 text-lg leading-tight">{{ $testimonial->name }}
                                 </div>
-                            @endif
+                                @if ($testimonial->designation || $testimonial->company)
+                                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">
+                                        {{ $testimonial->designation }}
+                                        {{ $testimonial->company ? '@ ' . $testimonial->company : '' }}
+                                    </div>
+                                @endif
+                            </div>
                         </div>
+
+                        <div class="flex mb-6 space-x-1">
+                            @for ($i = 1; $i <= 5; $i++)
+                                <i data-lucide="star"
+                                    class="w-4 h-4 {{ $i <= ($testimonial->rating ?? 5) ? 'fill-amber-400 text-amber-400' : 'text-slate-200' }}"></i>
+                            @endfor
+                        </div>
+
+                        <div class="relative flex-grow">
+                            <p class="text-slate-600 leading-relaxed text-lg italic">
+                                “{{ $testimonial->feedback }}”
+                            </p>
+                        </div>
+
+                        @if ($testimonial->project)
+                            <div class="mt-8 pt-6 border-t border-slate-100 group">
+                                <a href="#portfolio"
+                                    class="inline-flex items-center text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-indigo-600 transition-colors">
+                                    <i data-lucide="link" class="w-3 h-3 mr-2"></i>
+                                    Context: {{ $testimonial->project->title }}
+                                </a>
+                            </div>
+                        @endif
                     </div>
                 @endforeach
             </div>

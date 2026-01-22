@@ -94,6 +94,10 @@
         .transition-soft {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        .gradient-primary {
+            background: linear-gradient(135deg, #4F46E5 0%, #2563EB 100%);
+        }
     </style>
 </head>
 

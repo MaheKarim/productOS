@@ -89,7 +89,7 @@
 
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Button URL</label>
-                            <input type="url" name="cta_primary_url"
+                            <input type="text" name="cta_primary_url"
                                 value="{{ old('cta_primary_url', $hero->cta_primary_url) }}"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                                 placeholder="https://example.com/case-studies">
@@ -109,7 +109,7 @@
 
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-2">Button URL</label>
-                            <input type="url" name="cta_secondary_url"
+                            <input type="text" name="cta_secondary_url"
                                 value="{{ old('cta_secondary_url', $hero->cta_secondary_url) }}"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                                 placeholder="https://example.com/tools">
