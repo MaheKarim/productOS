@@ -1,0 +1,1469 @@
+<!DOCTYPE html><html lang="en"><head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0D9488',
+                        accent: '#2DD4BF',
+                        teal: {
+                            50: '#F0FDFA',
+                            600: '#0D9488',
+                            400: '#2DD4BF',
+                            900: '#134E4A'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <script>window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        * { scroll-behavior: smooth; }
+        .gradient-primary { background: linear-gradient(135deg, #0D9488 0%, #2DD4BF 100%); }
+        .shadow-level-1 { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); }
+        .shadow-level-2 { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        .shadow-level-3 { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .transition-default { transition: all 150ms ease-out; }
+        .transition-medium { transition: all 300ms ease-out; }
+        .transition-slow { transition: all 500ms ease-out; }
+        .hover-lift:hover { transform: translateY(-4px); }
+    </style>
+</head>
+<body class="font-sans bg-white text-slate-700">
+
+<header id="header" class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-level-1">
+    <div class="max-w-[1200px] mx-auto px-8">
+        <div class="flex items-center justify-between h-20">
+            <div class="flex items-center">
+                <a href="#" class="text-2xl font-bold text-teal-900">productOS</a>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#portfolio" class="text-slate-700 font-medium hover:text-primary transition-default">Portfolio</a>
+                <a href="#toolkit" class="text-slate-700 font-medium hover:text-primary transition-default">Toolkit</a>
+                <a href="#services" class="text-slate-700 font-medium hover:text-primary transition-default">Services</a>
+                <a href="#resources" class="text-slate-700 font-medium hover:text-primary transition-default">Resources</a>
+                <a href="#about" class="text-slate-700 font-medium hover:text-primary transition-default">About</a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <button class="hidden md:flex items-center space-x-2 px-4 py-2 text-sm text-slate-600 hover:text-primary transition-default">
+                    <i class="fa-solid fa-search"></i>
+                    <span>Search</span>
+                    <kbd class="px-2 py-1 text-xs bg-gray-100 rounded">⌘K</kbd>
+                </button>
+                <a href="#contact" class="gradient-primary text-white font-semibold px-6 py-3 rounded-lg hover:shadow-level-2 transition-medium">Let's Talk</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section id="hero" class="relative bg-gradient-to-br from-teal-50 to-white pt-24 pb-32 px-8">
+    <div class="max-w-[1200px] mx-auto">
+        <div class="grid grid-cols-12 gap-12 items-center">
+            <div class="col-span-7">
+                <div class="inline-block px-4 py-2 bg-white rounded-full shadow-level-1 mb-8">
+                    <span class="text-sm font-semibold text-primary">Product Manager + Growth Strategist</span>
+                </div>
+                <h1 class="text-6xl font-bold text-teal-900 leading-tight mb-6">
+                    I build growth strategies—<br>and the tools to<br><span class="text-primary">measure them</span>
+                </h1>
+                <p class="text-xl text-slate-600 mb-12 leading-relaxed">
+                    Strategy + Data + Execution<br>
+                    <span class="text-base">Helping B2B SaaS and consumer products make decisions backed by metrics, not assumptions.</span>
+                </p>
+                <div class="flex items-center space-x-4">
+                    <a href="#case-studies" class="gradient-primary text-white font-semibold px-8 py-4 rounded-lg hover:shadow-level-2 transition-medium">
+                        View Case Studies
+                    </a>
+                    <a href="#toolkit" class="bg-white text-primary font-semibold px-8 py-4 rounded-lg border-2 border-primary hover:bg-teal-50 transition-medium">
+                        Try Tools
+                    </a>
+                </div>
+                <div class="flex items-center space-x-8 mt-16">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                            <i class="fa-solid fa-users text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-teal-900">2.4M+</div>
+                            <div class="text-sm text-slate-600">Users Impacted</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center">
+                            <i class="fa-solid fa-chart-line text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-teal-900">127%</div>
+                            <div class="text-sm text-slate-600">Avg Growth Rate</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center">
+                            <i class="fa-solid fa-rocket text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-bold text-teal-900">23</div>
+                            <div class="text-sm text-slate-600">Products Shipped</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-5">
+                <div class="relative">
+                    <div class="absolute -top-8 -right-8 w-64 h-64 bg-accent rounded-full opacity-20 blur-3xl"></div>
+                    <div class="absolute -bottom-8 -left-8 w-48 h-48 bg-primary rounded-full opacity-20 blur-3xl"></div>
+                    <div class="relative">
+                        <div class="overflow-hidden rounded-2xl shadow-level-3 h-[500px]">
+                            <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Professional product manager portrait">
+                        </div>
+                        <div class="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-level-2 p-4 flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center">
+                                <i class="fa-solid fa-trophy text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-600">Top 1% PM</div>
+                                <div class="text-sm font-bold text-teal-900">8 Years Experience</div>
+                            </div>
+                        </div>
+                        <div class="absolute -top-6 -right-6 bg-white rounded-xl shadow-level-2 p-4 flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
+                                <i class="fa-solid fa-star text-white"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs text-slate-600">Success Rate</div>
+                                <div class="text-sm font-bold text-teal-900">94% Projects</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <section id="case-studies" class="py-24 px-8 bg-white">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-semibold text-teal-900 mb-4">Featured Impact</h2>
+                <p class="text-lg text-slate-600">Real products. Real metrics. Real growth.</p>
+            </div>
+            
+            <div class="grid grid-cols-12 gap-8 mb-8">
+                <div class="col-span-8">
+                    <div class="bg-gradient-to-br from-teal-900 to-primary rounded-2xl p-12 h-full shadow-level-2 hover-lift transition-medium cursor-pointer">
+                        <div class="flex items-center space-x-3 mb-6">
+                            <span class="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-semibold text-white">B2B SaaS</span>
+                            <span class="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-semibold text-white">Growth</span>
+                        </div>
+                        <div class="mb-8">
+                            <div class="text-6xl font-bold text-white mb-2">+89%</div>
+                            <div class="text-xl text-teal-100">Trial-to-Paid Conversion</div>
+                        </div>
+                        <h3 class="text-3xl font-semibold text-white mb-4">
+                            Redesigning the Onboarding Flow for a B2B Analytics Platform
+                        </h3>
+                        <p class="text-teal-100 mb-8 leading-relaxed">
+                            Reduced time-to-value from 14 days to 3 days through strategic product changes and a metrics-driven experimentation framework.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fa-solid fa-clock text-teal-200"></i>
+                                    <span class="text-sm text-teal-100">6 months</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <i class="fa-solid fa-users text-teal-200"></i>
+                                    <span class="text-sm text-teal-100">47K users</span>
+                                </div>
+                            </div>
+                            <a href="#" class="flex items-center space-x-2 text-white font-semibold hover:text-teal-100 transition-default">
+                                <span>Read Case Study</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </div>
+                        <div class="mt-8 pt-8 border-t border-white/20">
+                            <div class="text-sm text-teal-100 mb-3">Tools used in this project:</div>
+                            <div class="flex flex-wrap gap-2">
+                                <a href="#tool-activation" class="px-3 py-2 bg-white/10 backdrop-blur-sm rounded-lg text-sm text-white hover:bg-white/20 transition-default">
+                                    <i class="fa-solid fa-calculator mr-2"></i>Activation Rate Calculator
+                                </a>
+                                <a href="#tool-cohort" class="px-3 py-2 bg-white/10 backdrop-blur-sm rounded-lg text-sm text-white hover:bg-white/20 transition-default">
+                                    <i class="fa-solid fa-chart-line mr-2"></i>Cohort Analyzer
+                                </a>
+                                <a href="#tool-experiment" class="px-3 py-2 bg-white/10 backdrop-blur-sm rounded-lg text-sm text-white hover:bg-white/20 transition-default">
+                                    <i class="fa-solid fa-flask mr-2"></i>A/B Test Calculator
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-span-4 space-y-8">
+                    <div class="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-level-1 hover-lift transition-medium cursor-pointer">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <span class="px-3 py-1 bg-teal-50 rounded-full text-xs font-semibold text-primary">Consumer App</span>
+                        </div>
+                        <div class="mb-6">
+                            <div class="text-4xl font-bold text-primary mb-1">+156%</div>
+                            <div class="text-sm text-slate-600">DAU Growth</div>
+                        </div>
+                        <h3 class="text-xl font-semibold text-teal-900 mb-3">
+                            Launching a Viral Referral Program
+                        </h3>
+                        <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                            Built a K-factor optimization model that increased organic user acquisition by 3.2x.
+                        </p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-slate-500">8 months • 340K users</span>
+                            <i class="fa-solid fa-arrow-right text-primary"></i>
+                        </div>
+                        <div class="mt-6 pt-6 border-t border-gray-100">
+                            <a href="#tool-viral" class="text-xs text-primary font-medium hover:underline">
+                                <i class="fa-solid fa-link mr-1"></i>Viral Coefficient Calculator
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-level-1 hover-lift transition-medium cursor-pointer">
+                        <div class="flex items-center space-x-2 mb-4">
+                            <span class="px-3 py-1 bg-teal-50 rounded-full text-xs font-semibold text-primary">Fintech</span>
+                        </div>
+                        <div class="mb-6">
+                            <div class="text-4xl font-bold text-primary mb-1">+42%</div>
+                            <div class="text-sm text-slate-600">Revenue Growth</div>
+                        </div>
+                        <h3 class="text-xl font-semibold text-teal-900 mb-3">
+                            Pricing Model Optimization
+                        </h3>
+                        <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                            Redesigned pricing tiers using Van Westendorp analysis and willingness-to-pay data.
+                        </p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-slate-500">4 months • 89K users</span>
+                            <i class="fa-solid fa-arrow-right text-primary"></i>
+                        </div>
+                        <div class="mt-6 pt-6 border-t border-gray-100">
+                            <a href="#tool-pricing" class="text-xs text-primary font-medium hover:underline">
+                                <i class="fa-solid fa-link mr-1"></i>Pricing Sensitivity Tool
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#portfolio" class="inline-flex items-center space-x-2 text-primary font-semibold hover:text-teal-900 transition-default">
+                    <span>View All Case Studies</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="toolkit" class="py-24 px-8 bg-teal-50">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-semibold text-teal-900 mb-4">Popular PM Tools</h2>
+                <p class="text-lg text-slate-600">Free calculators and frameworks I use in every project</p>
+            </div>
+            
+            <div class="grid grid-cols-4 gap-8">
+                <div id="tool-activation" class="bg-white rounded-2xl p-8 shadow-level-1 hover-lift transition-medium cursor-pointer">
+                    <div class="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-chart-line text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-900 mb-3">Activation Rate Calculator</h3>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        Calculate user activation metrics and identify drop-off points in your onboarding funnel.
+                    </p>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-semibold text-primary">MOST POPULAR</span>
+                        <span class="text-xs text-slate-500">3.2K uses</span>
+                    </div>
+                    <a href="#" class="flex items-center justify-center w-full py-3 gradient-primary text-white font-semibold rounded-lg hover:shadow-level-2 transition-medium">
+                        Calculate Now
+                    </a>
+                    <div class="mt-6 pt-6 border-t border-gray-100">
+                        <div class="text-xs text-slate-500 mb-2">Used in:</div>
+                        <a href="#" class="text-xs text-primary hover:underline">B2B Analytics Platform Case Study</a>
+                    </div>
+                </div>
+                
+                <div id="tool-cohort" class="bg-white rounded-2xl p-8 shadow-level-1 hover-lift transition-medium cursor-pointer">
+                    <div class="w-16 h-16 rounded-2xl bg-accent flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-table text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-900 mb-3">Cohort Analysis Tool</h3>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        Analyze retention patterns across user cohorts to identify engagement trends.
+                    </p>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-semibold text-slate-400">RETENTION</span>
+                        <span class="text-xs text-slate-500">2.8K uses</span>
+                    </div>
+                    <a href="#" class="flex items-center justify-center w-full py-3 bg-white border-2 border-primary text-primary font-semibold rounded-lg hover:bg-teal-50 transition-medium">
+                        Try Tool
+                    </a>
+                    <div class="mt-6 pt-6 border-t border-gray-100">
+                        <div class="text-xs text-slate-500 mb-2">Used in:</div>
+                        <a href="#" class="text-xs text-primary hover:underline">Subscription App Retention Study</a>
+                    </div>
+                </div>
+                
+                <div id="tool-experiment" class="bg-white rounded-2xl p-8 shadow-level-1 hover-lift transition-medium cursor-pointer">
+                    <div class="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-flask text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-900 mb-3">A/B Test Calculator</h3>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        Determine statistical significance and required sample sizes for your experiments.
+                    </p>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-semibold text-slate-400">EXPERIMENTATION</span>
+                        <span class="text-xs text-slate-500">4.1K uses</span>
+                    </div>
+                    <a href="#" class="flex items-center justify-center w-full py-3 gradient-primary text-white font-semibold rounded-lg hover:shadow-level-2 transition-medium">
+                        Calculate Now
+                    </a>
+                    <div class="mt-6 pt-6 border-t border-gray-100">
+                        <div class="text-xs text-slate-500 mb-2">Used in:</div>
+                        <a href="#" class="text-xs text-primary hover:underline">Onboarding Flow Redesign</a>
+                    </div>
+                </div>
+                
+                <div id="tool-viral" class="bg-white rounded-2xl p-8 shadow-level-1 hover-lift transition-medium cursor-pointer">
+                    <div class="w-16 h-16 rounded-2xl bg-accent flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-share-nodes text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-900 mb-3">Viral Coefficient Tool</h3>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        Calculate K-factor and predict viral growth potential for referral programs.
+                    </p>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-semibold text-slate-400">GROWTH</span>
+                        <span class="text-xs text-slate-500">1.9K uses</span>
+                    </div>
+                    <a href="#" class="flex items-center justify-center w-full py-3 bg-white border-2 border-primary text-primary font-semibold rounded-lg hover:bg-teal-50 transition-medium">
+                        Try Tool
+                    </a>
+                    <div class="mt-6 pt-6 border-t border-gray-100">
+                        <div class="text-xs text-slate-500 mb-2">Used in:</div>
+                        <a href="#" class="text-xs text-primary hover:underline">Viral Referral Program Launch</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-4 gap-8 mt-8">
+                <div id="tool-pricing" class="bg-white rounded-2xl p-8 shadow-level-1 hover-lift transition-medium cursor-pointer">
+                    <div class="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-dollar-sign text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-900 mb-3">Pricing Sensitivity</h3>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        Van Westendorp analysis to find optimal price points for your product.
+                    </p>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-semibold text-slate-400">MONETIZATION</span>
+                        <span class="text-xs text-slate-500">1.5K uses</span>
+                    </div>
+                    <a href="#" class="flex items-center justify-center w-full py-3 gradient-primary text-white font-semibold rounded-lg hover:shadow-level-2 transition-medium">
+                        Calculate Now
+                    </a>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 shadow-level-1 hover-lift transition-medium cursor-pointer">
+                    <div class="w-16 h-16 rounded-2xl bg-accent flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-bullseye text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-900 mb-3">North Star Metric</h3>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        Framework to identify and validate your product's North Star Metric.
+                    </p>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-semibold text-slate-400">STRATEGY</span>
+                        <span class="text-xs text-slate-500">2.3K uses</span>
+                    </div>
+                    <a href="#" class="flex items-center justify-center w-full py-3 bg-white border-2 border-primary text-primary font-semibold rounded-lg hover:bg-teal-50 transition-medium">
+                        Try Tool
+                    </a>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 shadow-level-1 hover-lift transition-medium cursor-pointer">
+                    <div class="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-funnel text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-900 mb-3">Funnel Drop-off</h3>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        Identify where users drop off and calculate potential impact of improvements.
+                    </p>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-semibold text-slate-400">CONVERSION</span>
+                        <span class="text-xs text-slate-500">3.7K uses</span>
+                    </div>
+                    <a href="#" class="flex items-center justify-center w-full py-3 gradient-primary text-white font-semibold rounded-lg hover:shadow-level-2 transition-medium">
+                        Calculate Now
+                    </a>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 shadow-level-1 hover-lift transition-medium cursor-pointer">
+                    <div class="w-16 h-16 rounded-2xl bg-accent flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-money-bill-trend-up text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-teal-900 mb-3">LTV:CAC Ratio</h3>
+                    <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                        Calculate customer lifetime value to acquisition cost ratio for unit economics.
+                    </p>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-xs font-semibold text-slate-400">ECONOMICS</span>
+                        <span class="text-xs text-slate-500">2.1K uses</span>
+                    </div>
+                    <a href="#" class="flex items-center justify-center w-full py-3 bg-white border-2 border-primary text-primary font-semibold rounded-lg hover:bg-teal-50 transition-medium">
+                        Try Tool
+                    </a>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#all-tools" class="inline-flex items-center space-x-2 text-primary font-semibold hover:text-teal-900 transition-default">
+                    <span>Browse All 24 Tools</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="py-24 px-8 bg-white">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-semibold text-teal-900 mb-4">How I Can Help</h2>
+                <p class="text-lg text-slate-600">Outcome-driven services for product teams and founders</p>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-8">
+                <div class="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-level-1 hover:border-primary hover:shadow-level-2 transition-medium">
+                    <div class="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-lightbulb text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-teal-900 mb-4">Product Strategy &amp; Discovery</h3>
+                    <div class="mb-6">
+                        <div class="text-sm font-semibold text-slate-600 mb-2">Problem it solves:</div>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            You're building features without clear strategic direction or validation that they'll move the needle.
+                        </p>
+                    </div>
+                    <div class="mb-6">
+                        <div class="text-sm font-semibold text-slate-600 mb-2">Tangible outcome:</div>
+                        <p class="text-sm text-teal-900 font-medium leading-relaxed">
+                            A validated product roadmap with prioritized initiatives tied to measurable business outcomes.
+                        </p>
+                    </div>
+                    <div class="mb-6 p-4 bg-teal-50 rounded-lg">
+                        <div class="text-xs font-semibold text-slate-600 mb-2">What you get:</div>
+                        <ul class="text-sm text-slate-600 space-y-1">
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check text-primary mt-1 mr-2"></i>
+                                <span>Opportunity sizing &amp; market analysis</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check text-primary mt-1 mr-2"></i>
+                                <span>User research &amp; problem validation</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check text-primary mt-1 mr-2"></i>
+                                <span>North Star Metric definition</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check text-primary mt-1 mr-2"></i>
+                                <span>3-6 month roadmap with success metrics</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="#contact" class="flex items-center justify-center w-full py-3 gradient-primary text-white font-semibold rounded-lg hover:shadow-level-2 transition-medium">
+                        See Related Work
+                    </a>
+                </div>
+                
+                <div class="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-level-1 hover:border-primary hover:shadow-level-2 transition-medium">
+                    <div class="w-16 h-16 rounded-2xl bg-accent flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-chart-line text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-teal-900 mb-4">Growth &amp; Experimentation</h3>
+                    <div class="mb-6">
+                        <div class="text-sm font-semibold text-slate-600 mb-2">Problem it solves:</div>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Growth has plateaued and you're running out of ideas on what to test next.
+                        </p>
+                    </div>
+                    <div class="mb-6">
+                        <div class="text-sm font-semibold text-slate-600 mb-2">Tangible outcome:</div>
+                        <p class="text-sm text-teal-900 font-medium leading-relaxed">
+                            A systematic experimentation program that delivers 15-30% improvement in key metrics within 3 months.
+                        </p>
+                    </div>
+                    <div class="mb-6 p-4 bg-teal-50 rounded-lg">
+                        <div class="text-xs font-semibold text-slate-600 mb-2">What you get:</div>
+                        <ul class="text-sm text-slate-600 space-y-1">
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check text-primary mt-1 mr-2"></i>
+                                <span>Growth model &amp; lever identification</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check text-primary mt-1 mr-2"></i>
+                                <span>Experiment backlog (20+ ideas)</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check text-primary mt-1 mr-2"></i>
+                                <span>A/B testing framework &amp; tooling</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check text-primary mt-1 mr-2"></i>
+                                <span>Weekly experiment reviews</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="#contact" class="flex items-center justify-center w-full py-3 bg-white border-2 border-primary text-primary font-semibold rounded-lg hover:bg-teal-50 transition-medium">
+                        See Related Work
+                    </a>
+                </div>
+                
+                <div class="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-level-1 hover:border-primary hover:shadow-level-2 transition-medium">
+                    <div class="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-chart-pie text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-teal-900 mb-4">Metrics &amp; Analytics</h3>
+                    <div class="mb-6">
+                        <div class="text-sm font-semibold text-slate-600 mb-2">Problem it solves:</div>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            You have data but don't know which metrics matter or how to use them for decisions.
+                        </p>
+                    </div>
+                    <div class="mb-6">
+                        <div class="text-sm font-semibold text-slate-600 mb-2">Tangible outcome:</div>
+                        <p class="text-sm text-teal-900 font-medium leading-relaxed">
+                            A complete metrics framework with dashboards that enable data-driven decision making across the org.
+                        </p>
+                    </div>
+                    <div class="mb-6 p-4 bg-teal-50 rounded-lg">
+                        <div class="text-xs font-semibold text-slate-600 mb-2">What you get:</div>
+                        <ul class="text-sm text-slate-600 space-y-1">
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check text-primary mt-1 mr-2"></i>
+                                <span>Metrics hierarchy &amp; definitions</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check text-primary mt-1 mr-2"></i>
+                                <span>Event tracking implementation</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check text-primary mt-1 mr-2"></i>
+                                <span>Custom dashboards &amp; reports</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check text-primary mt-1 mr-2"></i>
+                                <span>Team training on data interpretation</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="#contact" class="flex items-center justify-center w-full py-3 gradient-primary text-white font-semibold rounded-lg hover:shadow-level-2 transition-medium">
+                        See Related Work
+                    </a>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-8 mt-8">
+                <div class="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-level-1 hover:border-primary hover:shadow-level-2 transition-medium">
+                    <div class="w-16 h-16 rounded-2xl bg-accent flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-brain text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-teal-900 mb-4">AI-Enabled Product Design</h3>
+                    <div class="mb-6">
+                        <div class="text-sm font-semibold text-slate-600 mb-2">Problem it solves:</div>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            You want to integrate AI/ML into your product but don't know where to start or how to validate use cases.
+                        </p>
+                    </div>
+                    <div class="mb-6">
+                        <div class="text-sm font-semibold text-slate-600 mb-2">Tangible outcome:</div>
+                        <p class="text-sm text-teal-900 font-medium leading-relaxed">
+                            Validated AI features with clear success metrics and implementation roadmap.
+                        </p>
+                    </div>
+                    <a href="#contact" class="inline-flex items-center space-x-2 text-primary font-semibold hover:text-teal-900 transition-default">
+                        <span>See Related Work</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-level-1 hover:border-primary hover:shadow-level-2 transition-medium">
+                    <div class="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-user-graduate text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-teal-900 mb-4">PM Coaching &amp; Advisory</h3>
+                    <div class="mb-6">
+                        <div class="text-sm font-semibold text-slate-600 mb-2">Problem it solves:</div>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Your PM team needs guidance on best practices, frameworks, and how to level up their strategic thinking.
+                        </p>
+                    </div>
+                    <div class="mb-6">
+                        <div class="text-sm font-semibold text-slate-600 mb-2">Tangible outcome:</div>
+                        <p class="text-sm text-teal-900 font-medium leading-relaxed">
+                            A more strategic, data-driven PM team that ships better products faster.
+                        </p>
+                    </div>
+                    <a href="#contact" class="inline-flex items-center space-x-2 text-primary font-semibold hover:text-teal-900 transition-default">
+                        <span>See Related Work</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="methodology" class="py-24 px-8 bg-teal-50">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-semibold text-teal-900 mb-4">The Methodology</h2>
+                <p class="text-lg text-slate-600">A systematic approach to product growth</p>
+            </div>
+            
+            <div class="grid grid-cols-4 gap-8">
+                <div class="relative">
+                    <div class="bg-white rounded-2xl p-8 shadow-level-1">
+                        <div class="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-white font-bold text-xl mb-6">1</div>
+                        <h3 class="text-xl font-semibold text-teal-900 mb-3">Strategy</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                            Define clear objectives, identify key metrics, and understand the opportunity space through user research and market analysis.
+                        </p>
+                        <div class="space-y-2">
+                            <div class="flex items-center space-x-2 text-sm text-slate-600">
+                                <i class="fa-solid fa-check text-primary"></i>
+                                <span>Opportunity sizing</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-sm text-slate-600">
+                                <i class="fa-solid fa-check text-primary"></i>
+                                <span>User research</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-sm text-slate-600">
+                                <i class="fa-solid fa-check text-primary"></i>
+                                <span>Goal setting</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute top-1/2 -right-4 transform -translate-y-1/2 hidden xl:block">
+                        <i class="fa-solid fa-arrow-right text-primary text-2xl"></i>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="bg-white rounded-2xl p-8 shadow-level-1">
+                        <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-white font-bold text-xl mb-6">2</div>
+                        <h3 class="text-xl font-semibold text-teal-900 mb-3">Metrics</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                            Establish measurement frameworks, implement tracking, and create dashboards that surface actionable insights.
+                        </p>
+                        <div class="space-y-2">
+                            <div class="flex items-center space-x-2 text-sm text-slate-600">
+                                <i class="fa-solid fa-check text-primary"></i>
+                                <span>Metric definition</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-sm text-slate-600">
+                                <i class="fa-solid fa-check text-primary"></i>
+                                <span>Event tracking</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-sm text-slate-600">
+                                <i class="fa-solid fa-check text-primary"></i>
+                                <span>Dashboard setup</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute top-1/2 -right-4 transform -translate-y-1/2 hidden xl:block">
+                        <i class="fa-solid fa-arrow-right text-primary text-2xl"></i>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="bg-white rounded-2xl p-8 shadow-level-1">
+                        <div class="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-white font-bold text-xl mb-6">3</div>
+                        <h3 class="text-xl font-semibold text-teal-900 mb-3">Experiments</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                            Design and run systematic experiments to validate hypotheses and optimize key conversion points.
+                        </p>
+                        <div class="space-y-2">
+                            <div class="flex items-center space-x-2 text-sm text-slate-600">
+                                <i class="fa-solid fa-check text-primary"></i>
+                                <span>Hypothesis generation</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-sm text-slate-600">
+                                <i class="fa-solid fa-check text-primary"></i>
+                                <span>A/B testing</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-sm text-slate-600">
+                                <i class="fa-solid fa-check text-primary"></i>
+                                <span>Analysis &amp; iteration</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute top-1/2 -right-4 transform -translate-y-1/2 hidden xl:block">
+                        <i class="fa-solid fa-arrow-right text-primary text-2xl"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 shadow-level-1">
+                    <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center text-white font-bold text-xl mb-6">4</div>
+                    <h3 class="text-xl font-semibold text-teal-900 mb-3">Growth</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                        Scale winning experiments, build sustainable growth loops, and continuously optimize the product experience.
+                    </p>
+                    <div class="space-y-2">
+                        <div class="flex items-center space-x-2 text-sm text-slate-600">
+                            <i class="fa-solid fa-check text-primary"></i>
+                            <span>Scaling winners</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600">
+                            <i class="fa-solid fa-check text-primary"></i>
+                            <span>Growth loops</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-slate-600">
+                            <i class="fa-solid fa-check text-primary"></i>
+                            <span>Continuous optimization</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-16 bg-white rounded-2xl p-12 shadow-level-2">
+                <div class="grid grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-semibold text-teal-900 mb-4">Data-Driven, Always</h3>
+                        <p class="text-slate-600 leading-relaxed mb-6">
+                            Every decision is backed by data. Every hypothesis is tested. Every outcome is measured. This isn't just a philosophy—it's embedded in every tool, framework, and case study on this site.
+                        </p>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-chart-bar text-primary"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-teal-900 mb-1">Quantitative + Qualitative</div>
+                                    <div class="text-sm text-slate-600">Combine user behavior data with research insights</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-flask text-primary"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-teal-900 mb-1">Test Everything</div>
+                                    <div class="text-sm text-slate-600">Validate assumptions before building features</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-rotate text-primary"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-teal-900 mb-1">Iterate Rapidly</div>
+                                    <div class="text-sm text-slate-600">Ship small, learn fast, compound improvements</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-teal-50 rounded-xl p-8">
+                        <div class="text-sm font-semibold text-slate-600 mb-4">Typical Project Timeline</div>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium text-teal-900">Discovery &amp; Strategy</span>
+                                    <span class="text-xs text-slate-600">2-3 weeks</span>
+                                </div>
+                                <div class="w-full bg-white rounded-full h-2">
+                                    <div class="gradient-primary h-2 rounded-full" style="width: 25%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium text-teal-900">Metrics Setup</span>
+                                    <span class="text-xs text-slate-600">1-2 weeks</span>
+                                </div>
+                                <div class="w-full bg-white rounded-full h-2">
+                                    <div class="bg-accent h-2 rounded-full" style="width: 15%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium text-teal-900">Experimentation</span>
+                                    <span class="text-xs text-slate-600">8-12 weeks</span>
+                                </div>
+                                <div class="w-full bg-white rounded-full h-2">
+                                    <div class="gradient-primary h-2 rounded-full" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="py-24 px-8 bg-white">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-semibold text-teal-900 mb-4">Specialized Experience</h2>
+                <p class="text-lg text-slate-600">Deep domain expertise across multiple industries</p>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-8 mb-16">
+                <div class="bg-gradient-to-br from-teal-900 to-primary rounded-2xl p-8 text-white">
+                    <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-building text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">B2B SaaS</h3>
+                    <p class="text-teal-100 leading-relaxed mb-4">
+                        Built growth engines for enterprise software companies, focusing on PLG motions, trial optimization, and expansion revenue.
+                    </p>
+                    <div class="pt-4 border-t border-white/20">
+                        <div class="text-sm text-teal-100">Notable impact:</div>
+                        <div class="text-xl font-bold">+89% trial conversion</div>
+                    </div>
+                </div>
+                
+                <div class="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-level-1">
+                    <div class="w-16 h-16 rounded-2xl bg-teal-50 flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-mobile-screen text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-teal-900 mb-3">Consumer Apps</h3>
+                    <p class="text-slate-600 leading-relaxed mb-4">
+                        Scaled mobile apps to millions of users through viral mechanics, retention optimization, and monetization strategies.
+                    </p>
+                    <div class="pt-4 border-t border-gray-100">
+                        <div class="text-sm text-slate-600">Notable impact:</div>
+                        <div class="text-xl font-bold text-primary">+156% DAU growth</div>
+                    </div>
+                </div>
+                
+                <div class="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-level-1">
+                    <div class="w-16 h-16 rounded-2xl bg-teal-50 flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-coins text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-teal-900 mb-3">Fintech</h3>
+                    <p class="text-slate-600 leading-relaxed mb-4">
+                        Launched financial products with focus on trust, compliance, and unit economics while maintaining rapid growth.
+                    </p>
+                    <div class="pt-4 border-t border-gray-100">
+                        <div class="text-sm text-slate-600">Notable impact:</div>
+                        <div class="text-xl font-bold text-primary">+42% revenue growth</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-8">
+                <div class="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-level-1">
+                    <div class="w-16 h-16 rounded-2xl bg-teal-50 flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-heart-pulse text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-teal-900 mb-3">Healthtech</h3>
+                    <p class="text-slate-600 leading-relaxed mb-4">
+                        Designed patient-centric digital health experiences balancing regulatory requirements with user engagement.
+                    </p>
+                    <div class="pt-4 border-t border-gray-100">
+                        <div class="text-sm text-slate-600">Notable impact:</div>
+                        <div class="text-xl font-bold text-primary">73% patient adherence</div>
+                    </div>
+                </div>
+                
+                <div class="bg-white border-2 border-gray-100 rounded-2xl p-8 shadow-level-1">
+                    <div class="w-16 h-16 rounded-2xl bg-teal-50 flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-brain text-primary text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-teal-900 mb-3">AI-Powered Products</h3>
+                    <p class="text-slate-600 leading-relaxed mb-4">
+                        Integrated ML/AI capabilities into products, from recommendation engines to generative AI features.
+                    </p>
+                    <div class="pt-4 border-t border-gray-100">
+                        <div class="text-sm text-slate-600">Notable impact:</div>
+                        <div class="text-xl font-bold text-primary">2.3x engagement lift</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="proof-metrics" class="py-24 px-8 bg-teal-900">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-semibold text-white mb-4">Impact by the Numbers</h2>
+                <p class="text-lg text-teal-100">Measurable outcomes across 23 products</p>
+            </div>
+            
+            <div class="grid grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-white mb-2">2.4M+</div>
+                    <div class="text-teal-100">Users Impacted</div>
+                    <div class="mt-4 text-sm text-teal-200">Across B2B and consumer products</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-white mb-2">127%</div>
+                    <div class="text-teal-100">Avg Growth Rate</div>
+                    <div class="mt-4 text-sm text-teal-200">In key metrics (activation, retention, revenue)</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-white mb-2">23</div>
+                    <div class="text-teal-100">Products Shipped</div>
+                    <div class="mt-4 text-sm text-teal-200">From 0-to-1 launches to scale optimizations</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-white mb-2">340+</div>
+                    <div class="text-teal-100">Experiments Run</div>
+                    <div class="mt-4 text-sm text-teal-200">Systematic testing across funnels</div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-8 mt-16">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+                    <div class="text-3xl font-bold text-white mb-2">+89%</div>
+                    <div class="text-teal-100 mb-4">Trial Conversion</div>
+                    <div class="text-sm text-teal-200">B2B Analytics Platform</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+                    <div class="text-3xl font-bold text-white mb-2">+156%</div>
+                    <div class="text-teal-100 mb-4">DAU Growth</div>
+                    <div class="text-sm text-teal-200">Consumer Social App</div>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+                    <div class="text-3xl font-bold text-white mb-2">+42%</div>
+                    <div class="text-teal-100 mb-4">Revenue Growth</div>
+                    <div class="text-sm text-teal-200">Fintech Product</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="resources" class="py-24 px-8 bg-white">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-semibold text-teal-900 mb-4">Product Teardowns &amp; Resources</h2>
+                <p class="text-lg text-slate-600">Deep dives into product strategy and execution</p>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-8">
+                <div class="bg-white border-2 border-gray-100 rounded-2xl overflow-hidden shadow-level-1 hover:shadow-level-2 transition-medium cursor-pointer">
+                    <div class="h-48 bg-gradient-to-br from-teal-900 to-primary"></div>
+                    <div class="p-6">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <span class="px-3 py-1 bg-teal-50 rounded-full text-xs font-semibold text-primary">Teardown</span>
+                            <span class="text-xs text-slate-500">12 min read</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-teal-900 mb-3">
+                            How Notion's Onboarding Drives 40%+ Activation
+                        </h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                            A detailed breakdown of Notion's activation funnel, highlighting what works, what fails, and what I'd test in 30 days.
+                        </p>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center space-x-2 text-sm">
+                                <i class="fa-solid fa-check text-green-600"></i>
+                                <span class="text-slate-600">Progressive onboarding reduces overwhelm</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-sm">
+                                <i class="fa-solid fa-xmark text-red-600"></i>
+                                <span class="text-slate-600">Too many template options create choice paralysis</span>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-gray-100">
+                            <div class="text-xs text-slate-600 mb-2">Hypothesis:</div>
+                            <div class="text-sm font-medium text-teal-900">+18% activation by simplifying template selection</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white border-2 border-gray-100 rounded-2xl overflow-hidden shadow-level-1 hover:shadow-level-2 transition-medium cursor-pointer">
+                    <div class="h-48 bg-gradient-to-br from-primary to-accent"></div>
+                    <div class="p-6">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <span class="px-3 py-1 bg-teal-50 rounded-full text-xs font-semibold text-primary">Teardown</span>
+                            <span class="text-xs text-slate-500">15 min read</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-teal-900 mb-3">
+                            Duolingo's Retention Playbook: Gamification Done Right
+                        </h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                            Why Duolingo has 68% D30 retention while competitors struggle to hit 20%. A masterclass in habit formation.
+                        </p>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center space-x-2 text-sm">
+                                <i class="fa-solid fa-check text-green-600"></i>
+                                <span class="text-slate-600">Streak mechanics create daily habits</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-sm">
+                                <i class="fa-solid fa-check text-green-600"></i>
+                                <span class="text-slate-600">Push notifications perfectly timed</span>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-gray-100">
+                            <div class="text-xs text-slate-600 mb-2">Hypothesis:</div>
+                            <div class="text-sm font-medium text-teal-900">Social features could add +12% to retention</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white border-2 border-gray-100 rounded-2xl overflow-hidden shadow-level-1 hover:shadow-level-2 transition-medium cursor-pointer">
+                    <div class="h-48 bg-gradient-to-br from-accent to-primary"></div>
+                    <div class="p-6">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <span class="px-3 py-1 bg-teal-50 rounded-full text-xs font-semibold text-primary">Framework</span>
+                            <span class="text-xs text-slate-500">8 min read</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-teal-900 mb-3">
+                            The Product Metrics Hierarchy Every PM Should Know
+                        </h3>
+                        <p class="text-sm text-slate-600 leading-relaxed mb-4">
+                            A practical framework for organizing your metrics from North Star down to micro-conversions.
+                        </p>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center space-x-2 text-sm text-slate-600">
+                                <i class="fa-solid fa-layer-group text-primary"></i>
+                                <span>4-tier metric structure</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-sm text-slate-600">
+                                <i class="fa-solid fa-download text-primary"></i>
+                                <span>Free template included</span>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-gray-100">
+                            <a href="#" class="text-sm font-semibold text-primary hover:underline">Download Framework →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="#all-resources" class="inline-flex items-center space-x-2 text-primary font-semibold hover:text-teal-900 transition-default">
+                    <span>View All Teardowns &amp; Articles</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="professional-experience" class="py-24 px-8 bg-teal-50">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-semibold text-teal-900 mb-4">Professional Experience</h2>
+                <p class="text-lg text-slate-600">Impact-driven product leadership</p>
+            </div>
+            
+            <div class="space-y-8">
+                <div class="bg-white rounded-2xl p-8 shadow-level-1">
+                    <div class="flex items-start justify-between mb-6">
+                        <div>
+                            <h3 class="text-2xl font-semibold text-teal-900 mb-2">Senior Product Manager</h3>
+                            <div class="text-lg text-slate-600 mb-1">TechCorp (B2B SaaS)</div>
+                            <div class="text-sm text-slate-500">2021 - Present</div>
+                        </div>
+                        <div class="px-4 py-2 bg-teal-50 rounded-lg">
+                            <div class="text-xs text-slate-600">Team Size</div>
+                            <div class="text-lg font-bold text-primary">12 people</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-6 mb-6">
+                        <div class="p-4 bg-teal-50 rounded-lg">
+                            <div class="text-3xl font-bold text-primary mb-1">+89%</div>
+                            <div class="text-sm text-slate-600">Trial-to-paid conversion</div>
+                        </div>
+                        <div class="p-4 bg-teal-50 rounded-lg">
+                            <div class="text-3xl font-bold text-primary mb-1">$4.2M</div>
+                            <div class="text-sm text-slate-600">ARR added in 12 months</div>
+                        </div>
+                        <div class="p-4 bg-teal-50 rounded-lg">
+                            <div class="text-3xl font-bold text-primary mb-1">47K</div>
+                            <div class="text-sm text-slate-600">Active users reached</div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-start space-x-3">
+                            <i class="fa-solid fa-circle-check text-primary mt-1"></i>
+                            <div class="text-slate-600">Led complete redesign of onboarding flow, reducing time-to-value from 14 days to 3 days</div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <i class="fa-solid fa-circle-check text-primary mt-1"></i>
+                            <div class="text-slate-600">Implemented product-led growth motion that generated 40% of new revenue</div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <i class="fa-solid fa-circle-check text-primary mt-1"></i>
+                            <div class="text-slate-600">Built experimentation culture: 120+ tests run, 23% win rate, compounded to 67% improvement</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 shadow-level-1">
+                    <div class="flex items-start justify-between mb-6">
+                        <div>
+                            <h3 class="text-2xl font-semibold text-teal-900 mb-2">Product Manager</h3>
+                            <div class="text-lg text-slate-600 mb-1">GrowthCo (Consumer App)</div>
+                            <div class="text-sm text-slate-500">2019 - 2021</div>
+                        </div>
+                        <div class="px-4 py-2 bg-teal-50 rounded-lg">
+                            <div class="text-xs text-slate-600">Team Size</div>
+                            <div class="text-lg font-bold text-primary">8 people</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-6 mb-6">
+                        <div class="p-4 bg-teal-50 rounded-lg">
+                            <div class="text-3xl font-bold text-primary mb-1">+156%</div>
+                            <div class="text-sm text-slate-600">DAU growth</div>
+                        </div>
+                        <div class="p-4 bg-teal-50 rounded-lg">
+                            <div class="text-3xl font-bold text-primary mb-1">340K</div>
+                            <div class="text-sm text-slate-600">Users acquired organically</div>
+                        </div>
+                        <div class="p-4 bg-teal-50 rounded-lg">
+                            <div class="text-3xl font-bold text-primary mb-1">3.2x</div>
+                            <div class="text-sm text-slate-600">Viral coefficient (K-factor)</div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-start space-x-3">
+                            <i class="fa-solid fa-circle-check text-primary mt-1"></i>
+                            <div class="text-slate-600">Launched viral referral program that drove 67% of new user acquisition</div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <i class="fa-solid fa-circle-check text-primary mt-1"></i>
+                            <div class="text-slate-600">Improved D30 retention from 42% to 68% through engagement loop optimization</div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <i class="fa-solid fa-circle-check text-primary mt-1"></i>
+                            <div class="text-slate-600">Built analytics infrastructure from scratch: event tracking, dashboards, experimentation platform</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 shadow-level-1">
+                    <div class="flex items-start justify-between mb-6">
+                        <div>
+                            <h3 class="text-2xl font-semibold text-teal-900 mb-2">Associate Product Manager</h3>
+                            <div class="text-lg text-slate-600 mb-1">FinanceApp (Fintech)</div>
+                            <div class="text-sm text-slate-500">2017 - 2019</div>
+                        </div>
+                        <div class="px-4 py-2 bg-teal-50 rounded-lg">
+                            <div class="text-xs text-slate-600">Team Size</div>
+                            <div class="text-lg font-bold text-primary">5 people</div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-6 mb-6">
+                        <div class="p-4 bg-teal-50 rounded-lg">
+                            <div class="text-3xl font-bold text-primary mb-1">+42%</div>
+                            <div class="text-sm text-slate-600">Revenue growth</div>
+                        </div>
+                        <div class="p-4 bg-teal-50 rounded-lg">
+                            <div class="text-3xl font-bold text-primary mb-1">$247</div>
+                            <div class="text-sm text-slate-600">ARPU increase</div>
+                        </div>
+                        <div class="p-4 bg-teal-50 rounded-lg">
+                            <div class="text-3xl font-bold text-primary mb-1">89K</div>
+                            <div class="text-sm text-slate-600">Paying users</div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-start space-x-3">
+                            <i class="fa-solid fa-circle-check text-primary mt-1"></i>
+                            <div class="text-slate-600">Redesigned pricing model using Van Westendorp analysis, increasing conversion by 28%</div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <i class="fa-solid fa-circle-check text-primary mt-1"></i>
+                            <div class="text-slate-600">Launched premium tier that captured 15% of user base at 3.2x higher ARPU</div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <i class="fa-solid fa-circle-check text-primary mt-1"></i>
+                            <div class="text-slate-600">Owned checkout optimization: reduced drop-off by 34% through friction analysis</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-24 px-8 bg-white">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="grid grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl font-semibold text-teal-900 mb-6">About Me</h2>
+                    <div class="space-y-6 text-slate-600 leading-relaxed">
+                        <p>
+                            I'm a product manager who believes that great products are built on great metrics. For the past 8 years, I've helped B2B and consumer companies turn data into growth.
+                        </p>
+                        <p>
+                            My approach is simple: understand the problem deeply, measure what matters, test systematically, and scale what works. I've done this across 23 products, from 0-to-1 launches to scaling products to millions of users.
+                        </p>
+                        <p>
+                            What sets me apart is the combination of strategic thinking and hands-on execution. I don't just recommend what to build—I roll up my sleeves and build it with the team, whether that's defining metrics, designing experiments, or optimizing conversion funnels.
+                        </p>
+                        <p>
+                            Outside of product work, I build tools and frameworks that help other PMs make better decisions. You'll find many of them on this site, free to use.
+                        </p>
+                    </div>
+                    
+                    <div class="mt-12">
+                        <h3 class="text-xl font-semibold text-teal-900 mb-4">My Product Philosophy</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-1 text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-teal-900 mb-1">Data over opinions</div>
+                                    <div class="text-sm text-slate-600">Every decision backed by evidence, every hypothesis tested</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-accent flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-2 text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-teal-900 mb-1">Outcomes over outputs</div>
+                                    <div class="text-sm text-slate-600">Shipping features means nothing if they don't move metrics</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-3 text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-teal-900 mb-1">Speed over perfection</div>
+                                    <div class="text-sm text-slate-600">Ship fast, learn faster, iterate constantly</div>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-accent flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-4 text-white text-sm"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-teal-900 mb-1">Users over stakeholders</div>
+                                    <div class="text-sm text-slate-600">Build what users need, not what executives think they need</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="bg-teal-50 rounded-2xl p-12">
+                        <div class="mb-8">
+                            <div class="w-32 h-32 rounded-2xl gradient-primary mx-auto mb-6 flex items-center justify-center">
+                                <i class="fa-solid fa-user text-white text-5xl"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-xl font-semibold text-teal-900 mb-4">How I Work</h3>
+                                <div class="space-y-3 text-sm text-slate-600">
+                                    <div class="flex items-start space-x-2">
+                                        <i class="fa-solid fa-check text-primary mt-1"></i>
+                                        <span>Embedded in your team, not external consultant</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <i class="fa-solid fa-check text-primary mt-1"></i>
+                                        <span>Hands-on execution, not just strategy decks</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <i class="fa-solid fa-check text-primary mt-1"></i>
+                                        <span>Weekly progress reviews with clear metrics</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <i class="fa-solid fa-check text-primary mt-1"></i>
+                                        <span>Knowledge transfer: leave your team stronger</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="pt-6 border-t border-teal-200">
+                                <h3 class="text-xl font-semibold text-teal-900 mb-4">Core Values</h3>
+                                <div class="space-y-2">
+                                    <div class="px-4 py-2 bg-white rounded-lg text-sm font-medium text-teal-900">
+                                        Intellectual honesty
+                                    </div>
+                                    <div class="px-4 py-2 bg-white rounded-lg text-sm font-medium text-teal-900">
+                                        Bias toward action
+                                    </div>
+                                    <div class="px-4 py-2 bg-white rounded-lg text-sm font-medium text-teal-900">
+                                        Continuous learning
+                                    </div>
+                                    <div class="px-4 py-2 bg-white rounded-lg text-sm font-medium text-teal-900">
+                                        User empathy
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 px-8 bg-gradient-to-br from-teal-900 to-primary">
+        <div class="max-w-[1200px] mx-auto text-center">
+            <h2 class="text-5xl font-bold text-white mb-6">Let's build something measurable</h2>
+            <p class="text-xl text-teal-100 mb-12 max-w-2xl mx-auto">
+                Whether you need strategic guidance, hands-on execution, or just want to talk product—I'm here to help.
+            </p>
+            
+            <div class="grid grid-cols-3 gap-8 max-w-4xl mx-auto mb-16">
+                <a href="mailto:pm@example.com" class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/20 transition-medium">
+                    <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-envelope text-white text-2xl"></i>
+                    </div>
+                    <div class="text-white font-semibold mb-2">Email</div>
+                    <div class="text-teal-100 text-sm">pm@example.com</div>
+                </a>
+                
+                <a href="https://linkedin.com" class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/20 transition-medium">
+                    <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-brands fa-linkedin text-white text-2xl"></i>
+                    </div>
+                    <div class="text-white font-semibold mb-2">LinkedIn</div>
+                    <div class="text-teal-100 text-sm">Connect with me</div>
+                </a>
+                
+                <a href="#" class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/20 transition-medium">
+                    <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-calendar text-white text-2xl"></i>
+                    </div>
+                    <div class="text-white font-semibold mb-2">Schedule</div>
+                    <div class="text-teal-100 text-sm">Book a call</div>
+                </a>
+            </div>
+            
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-12 max-w-3xl mx-auto">
+                <h3 class="text-2xl font-semibold text-white mb-6">Quick Contact</h3>
+                <form class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" placeholder="Your Name" class="w-full px-4 py-3 rounded-lg bg-white/20 backdrop-blur-sm text-white placeholder-teal-200 border border-white/20 focus:border-white/40 focus:outline-none transition-default">
+                        <input type="email" placeholder="Your Email" class="w-full px-4 py-3 rounded-lg bg-white/20 backdrop-blur-sm text-white placeholder-teal-200 border border-white/20 focus:border-white/40 focus:outline-none transition-default">
+                    </div>
+                    <textarea rows="4" placeholder="Tell me about your project or question" class="w-full px-4 py-3 rounded-lg bg-white/20 backdrop-blur-sm text-white placeholder-teal-200 border border-white/20 focus:border-white/40 focus:outline-none transition-default resize-none"></textarea>
+                    <button type="submit" class="w-full py-4 bg-white text-primary font-semibold rounded-lg hover:bg-teal-50 transition-medium">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer id="footer" class="bg-teal-900 text-white py-16 px-8">
+    <div class="max-w-[1200px] mx-auto">
+        <div class="grid grid-cols-4 gap-12 mb-12">
+            <div>
+                <div class="text-2xl font-bold mb-4">productOS</div>
+                <p class="text-teal-200 text-sm leading-relaxed">
+                    Building growth strategies and the tools to measure them.
+                </p>
+            </div>
+            
+            <div>
+                <h4 class="font-semibold mb-4">Case Studies</h4>
+                <ul class="space-y-2 text-sm text-teal-200">
+                    <li><a href="#" class="hover:text-white transition-default">B2B SaaS Onboarding</a></li>
+                    <li><a href="#" class="hover:text-white transition-default">Viral Referral Program</a></li>
+                    <li><a href="#" class="hover:text-white transition-default">Pricing Optimization</a></li>
+                    <li><a href="#" class="hover:text-white transition-default">View All Projects</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="font-semibold mb-4">Tools</h4>
+                <ul class="space-y-2 text-sm text-teal-200">
+                    <li><a href="#" class="hover:text-white transition-default">Activation Calculator</a></li>
+                    <li><a href="#" class="hover:text-white transition-default">Cohort Analyzer</a></li>
+                    <li><a href="#" class="hover:text-white transition-default">A/B Test Calculator</a></li>
+                    <li><a href="#" class="hover:text-white transition-default">Browse All Tools</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="font-semibold mb-4">Connect</h4>
+                <ul class="space-y-2 text-sm text-teal-200">
+                    <li><a href="#" class="hover:text-white transition-default">LinkedIn</a></li>
+                    <li><a href="#" class="hover:text-white transition-default">Twitter</a></li>
+                    <li><a href="#" class="hover:text-white transition-default">Email</a></li>
+                    <li><a href="#" class="hover:text-white transition-default">Schedule a Call</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="pt-8 border-t border-white/20 flex items-center justify-between text-sm text-teal-200">
+            <div>© 2024 PM+ Portfolio. All rights reserved.</div>
+            <div class="flex items-center space-x-6">
+                <a href="#" class="hover:text-white transition-default">Privacy</a>
+                <a href="#" class="hover:text-white transition-default">Terms</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Command + K Search Modal
+    document.addEventListener('keydown', function(e) {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+            e.preventDefault();
+            alert('Search functionality would open here');
+        }
+    });
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Scroll reveal animation
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    document.querySelectorAll('section > div > div').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 500ms ease-out, transform 500ms ease-out';
+        observer.observe(el);
+    });
+</script>
+
+
+</body></html>
