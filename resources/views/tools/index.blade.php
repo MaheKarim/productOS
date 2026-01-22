@@ -1,12 +1,14 @@
 <x-layout.app>
-    <x-slot:title>PM Toolkit - ProductOS</x-slot:title>
+    <x-slot:title>ProductOS</x-slot:title>
 
     <!-- Hero Section -->
     <section class="pt-24 pb-16 bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 relative overflow-hidden">
         <!-- Background Pattern -->
-        <div
-            class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%232563EB\" fill-opacity=\"0.03\"%3E%3Cpath d=\"M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50">
-        </div>
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60"
+            xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%232563EB"
+            fill-opacity="0.03"%3E%3Cpath
+            d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"
+            /%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -53,7 +55,7 @@
                     <div class="relative max-w-md">
                         <input type="text" placeholder="Search tools (CAC, RICE, A/B Test...)"
                             class="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 bg-white shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-slate-900 placeholder:text-slate-400"
-                            @keydown.enter="window.location.href = '/search?q=' + $el.value">
+                            onkeydown="if(event.key === 'Enter') window.location.href = '/search?q=' + this.value">
                         <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -65,7 +67,8 @@
 
                 <!-- Right: Interactive Demo Card -->
                 <div class="hidden lg:block">
-                    <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 relative">
+                    <div x-data="{ spend: 50000, customers: 125 }"
+                        class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 relative">
                         <div
                             class="absolute -top-4 -right-4 bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
                             Most Popular
@@ -88,28 +91,30 @@
 
                         <div class="space-y-4 mb-6">
                             <div>
-                                <label class="text-sm font-medium text-slate-600 mb-1 block">Marketing Spend</label>
-                                <div class="flex items-center gap-2 bg-slate-50 rounded-lg p-3 border border-slate-100">
-                                    <span class="text-slate-400">$</span>
-                                    <span class="text-xl font-bold text-slate-900">50,000</span>
-                                </div>
+                                <label class="text-sm font-medium text-slate-600 mb-1 block">Marketing Spend ($)</label>
+                                <input type="number" x-model.number="spend"
+                                    class="w-full bg-slate-50 rounded-lg p-3 border border-slate-100 text-xl font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
                             </div>
                             <div>
                                 <label class="text-sm font-medium text-slate-600 mb-1 block">New Customers</label>
-                                <div class="flex items-center gap-2 bg-slate-50 rounded-lg p-3 border border-slate-100">
-                                    <span class="text-xl font-bold text-slate-900">125</span>
-                                </div>
+                                <input type="number" x-model.number="customers"
+                                    class="w-full bg-slate-50 rounded-lg p-3 border border-slate-100 text-xl font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
                             </div>
                         </div>
 
                         <div class="bg-blue-600 rounded-xl p-4 text-center">
                             <div class="text-sm text-blue-100 mb-1">Your CAC</div>
-                            <div class="text-3xl font-bold text-white">$400</div>
+                            <div class="text-3xl font-bold text-white">$<span
+                                    x-text="customers > 0 ? (spend / customers).toFixed(0) : '0'"></span></div>
                         </div>
 
                         <a href="{{ route('tools.show', ['category' => 'saas-metrics', 'tool' => 'cac']) }}"
-                            class="mt-6 block w-full py-3 bg-slate-900 text-white text-center font-bold rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
-                            Try Calculator →
+                            class="mt-6 flex items-center justify-center gap-2 w-full py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-200 transition-all transform hover:-translate-y-1 active:scale-95 cursor-pointer">
+                            Try Full Framework
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
                         </a>
                     </div>
                 </div>
