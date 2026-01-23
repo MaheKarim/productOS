@@ -22,7 +22,20 @@ class ToolsController extends Controller
             $query->where('is_active', true);
         })->get();
 
-        return view('tools.index', compact('categories'));
+        // Prepare tools data for Alpine.js search
+        $allToolsJson = $categories->flatMap(function ($c) {
+            return $c->tools->map(function ($t) use ($c) {
+                return [
+                    'name' => $t->name,
+                    'slug' => $t->slug,
+                    'category' => $c->name,
+                    'categorySlug' => $c->slug,
+                    'description' => $t->description,
+                ];
+            });
+        })->values();
+
+        return view('tools.index', compact('categories', 'allToolsJson'));
     }
 
     public function category($category)
