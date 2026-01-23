@@ -288,6 +288,8 @@
             </div>
         </div>
     </section>
+
+    @include('frontend.sections.skills')
     @include('frontend.sections.toolkit')
 
     <!-- Services Section -->
@@ -591,42 +593,97 @@
         </div>
     </section>
 
+    @include('frontend.sections.stats-dashboard')
+    @include('frontend.sections.trust')
 
-    <!-- Contact Section (Static) -->
-    <section id="contact" class="py-24 px-8 bg-gradient-to-br from-teal-900 to-primary">
-        <div class="max-w-[1200px] mx-auto text-center">
-            <h2 class="text-5xl font-bold text-white mb-6">Let's build something measurable</h2>
-            <p class="text-xl text-teal-100 mb-12 max-w-2xl mx-auto">
-                Whether you need strategic guidance, hands-on execution, or just want to talk product—I'm here to help.
+    <!-- Contact Section (Upgraded with Dual CTA) -->
+    <section id="contact" class="py-24 relative overflow-hidden">
+        <!-- Gradient Background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900"></div>
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute top-0 right-0 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Let's Build Something <span
+                    class="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Measurable</span></h2>
+            <p class="text-xl text-blue-100/80 mb-12 max-w-2xl mx-auto">
+                Whether you need strategic guidance, hands-on product execution, or want to explore my free tools—I'm here
+                to help.
             </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-16">
+            <!-- Dual CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
                 <a href="mailto:pm@example.com"
-                    class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/20 transition-medium">
-                    <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4">
-                        <i class="fa-solid fa-envelope text-white text-2xl"></i>
+                    class="px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all hover:shadow-lg hover:shadow-blue-500/25 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                        </path>
+                    </svg>
+                    Let's Talk Product
+                </a>
+                <a href="{{ route('tools.index') }}"
+                    class="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold rounded-xl hover:bg-white/20 transition-all flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                    Use Free PM Tools
+                </a>
+            </div>
+
+            <!-- Contact Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <a href="mailto:pm@example.com"
+                    class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all border border-white/10 group">
+                    <div
+                        class="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                            </path>
+                        </svg>
                     </div>
-                    <div class="text-white font-semibold mb-2">Email</div>
-                    <div class="text-teal-100 text-sm">pm@example.com</div>
+                    <div class="text-white font-bold mb-1">Email</div>
+                    <div class="text-blue-200/60 text-sm">pm@example.com</div>
                 </a>
 
-                <a href="https://linkedin.com"
-                    class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/20 transition-medium">
-                    <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4">
-                        <i class="fa-brands fa-linkedin text-white text-2xl"></i>
+                <a href="https://linkedin.com" target="_blank"
+                    class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all border border-white/10 group">
+                    <div
+                        class="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
                     </div>
-                    <div class="text-white font-semibold mb-2">LinkedIn</div>
-                    <div class="text-teal-100 text-sm">Connect with me</div>
+                    <div class="text-white font-bold mb-1">LinkedIn</div>
+                    <div class="text-blue-200/60 text-sm">Connect with me</div>
                 </a>
 
                 <a href="#"
-                    class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/20 transition-medium">
-                    <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4">
-                        <i class="fa-solid fa-calendar text-white text-2xl"></i>
+                    class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all border border-white/10 group">
+                    <div
+                        class="w-14 h-14 rounded-xl bg-white/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                            </path>
+                        </svg>
                     </div>
-                    <div class="text-white font-semibold mb-2">Schedule</div>
-                    <div class="text-teal-100 text-sm">Book a call</div>
+                    <div class="text-white font-bold mb-1">Schedule</div>
+                    <div class="text-blue-200/60 text-sm">Book a call</div>
                 </a>
             </div>
+
+            <!-- Social Proof -->
+            <div class="mt-12 pt-8 border-t border-white/10">
+                <p class="text-blue-200/60 text-sm">Join <span class="text-white font-bold">5,000+</span> product managers
+                    using these free tools</p>
+            </div>
+        </div>
     </section>
 @endsection

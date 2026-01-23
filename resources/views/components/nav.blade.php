@@ -4,7 +4,7 @@
         <div class="flex justify-between h-16">
             <div class="flex items-center">
                 <a href="{{ route('home') }}" class="text-xl font-bold text-slate-900 tracking-tight">
-                    product<span class="text-blue-600">OS</span>
+                    Product<span class="text-blue-600">OS</span>
                 </a>
             </div>
 
@@ -18,7 +18,7 @@
                 <a href="{{ route('about') }}"
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('about') ? 'text-blue-600' : '' }}">About</a>
                 <a href="{{ route('tools.index') }}"
-                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('tools.*') ? 'text-blue-600 font-bold' : '' }}">Toolkit</a>
+                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('tools.*') ? 'text-blue-600 font-bold' : '' }}">Tools</a>
 
                 <a href="{{ route('contact') }}"
                     class="ml-4 px-5 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-lg hover:bg-blue-700 transition-all shadow-md hover:shadow-lg cursor-pointer">
