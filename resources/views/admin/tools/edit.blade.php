@@ -181,79 +181,110 @@ Write detailed content about the tool here using Markdown...
                     </div>
                 </div>
             </div>
-            <div>
-                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <i data-lucide="help-circle" class="w-5 h-5 text-indigo-600"></i>
-                    Frequently Asked Questions
-                </h3>
-                <p class="text-sm text-slate-500 mt-1">Add FAQ items that appear on the tool's page</p>
-            </div>
-            <button type="button" @click="addFaq()"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white font-bold text-sm rounded-xl hover:bg-indigo-700 transition-colors cursor-pointer">
-                <i data-lucide="plus" class="w-4 h-4"></i>
-                Add FAQ
-            </button>
-    </div>
-    <div class="p-6 space-y-4">
-        <template x-for="(faq, index) in faqs" :key="index">
-            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-4">
-                <div class="flex items-start justify-between gap-4">
-                    <div class="flex-1 space-y-4">
-                        <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Question</label>
-                            <input type="text" :name="`faqs[${index}][question]`" x-model="faq.question"
-                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900"
-                                placeholder="e.g., How often should I calculate this?">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Answer</label>
-                            <textarea :name="`faqs[${index}][answer]`" x-model="faq.answer" rows="3"
-                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900"
-                                placeholder="Provide a detailed answer..."></textarea>
-                        </div>
+
+            <!-- FAQs Card -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="px-6 py-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i data-lucide="help-circle" class="w-5 h-5 text-indigo-600"></i>
+                            Frequently Asked Questions
+                        </h3>
+                        <p class="text-sm text-slate-500 mt-1">Add helpful Q&A pairs for this tool.</p>
                     </div>
-                    <button type="button" @click="removeFaq(index)"
-                        class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer mt-6">
-                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    <button type="button" @click="addFaq()"
+                        class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white font-bold text-sm rounded-xl hover:bg-indigo-700 transition-colors cursor-pointer shadow-indigo-500/20 shadow-lg">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Add Question
+                    </button>
+                </div>
+
+                <div class="p-6">
+                    <!-- Empty State -->
+                    <div x-show="faqs.length === 0"
+                        class="text-center py-12 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
+                        <div
+                            class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-slate-100">
+                            <i data-lucide="message-circle-question" class="w-8 h-8 text-slate-300"></i>
+                        </div>
+                        <h4 class="text-slate-900 font-bold mb-1">No FAQs Added</h4>
+                        <p class="text-slate-500 text-sm mb-4">Start by adding common questions users might have.</p>
+                        <button type="button" @click="addFaq()"
+                            class="text-indigo-600 font-bold text-sm hover:text-indigo-700 cursor-pointer inline-flex items-center gap-1">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            Add First FAQ
+                        </button>
+                    </div>
+
+                    <!-- FAQ List -->
+                    <div class="space-y-4" x-show="faqs.length > 0">
+                        <template x-for="(faq, index) in faqs" :key="index">
+                            <div
+                                class="group bg-white rounded-xl border border-slate-200 hover:border-indigo-200 hover:shadow-md transition-all duration-200 relative overflow-hidden">
+                                <!-- Drag Handle / Index -->
+                                <div
+                                    class="absolute left-0 top-0 bottom-0 w-1 bg-slate-200 group-hover:bg-indigo-500 transition-colors">
+                                </div>
+
+                                <div class="p-5 pl-7">
+                                    <div class="flex items-start justify-between gap-6">
+                                        <div class="flex-1 space-y-4">
+                                            <div class="grid grid-cols-1 gap-4">
+                                                <div>
+                                                    <label
+                                                        class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Question</label>
+                                                    <input type="text" :name="`faqs[${index}][question]`"
+                                                        x-model="faq.question"
+                                                        class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900 font-medium placeholder:text-slate-300 placeholder:font-normal"
+                                                        placeholder="e.g. How is this calculated?">
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Answer</label>
+                                                    <textarea :name="`faqs[${index}][answer]`" x-model="faq.answer" rows="2"
+                                                        class="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-600 text-sm leading-relaxed placeholder:text-slate-300"
+                                                        placeholder="Provide a clear, concise answer..."></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Actions -->
+                                        <div class="flex flex-col gap-2 pt-6">
+                                            <button type="button" @click="removeFaq(index)"
+                                                class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                                                title="Remove FAQ">
+                                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-between pt-6 border-t border-slate-200">
+                <a href="{{ route('admin.tools.index') }}"
+                    class="px-6 py-3 text-slate-600 font-medium hover:text-slate-900 transition-colors">
+                    Cancel
+                </a>
+                <div class="flex items-center gap-3">
+                    <a href="{{ route('tools.show', ['category' => $tool->category->slug, 'tool' => $tool->slug]) }}"
+                        target="_blank"
+                        class="inline-flex items-center gap-2 px-5 py-3 border border-slate-200 text-slate-700 font-bold text-sm rounded-xl hover:bg-slate-50 transition-colors">
+                        <i data-lucide="external-link" class="w-4 h-4"></i>
+                        Preview
+                    </a>
+                    <button type="submit"
+                        class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-bold text-sm rounded-xl hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/25 cursor-pointer">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        Save Changes
                     </button>
                 </div>
             </div>
-        </template>
-
-        <div x-show="faqs.length === 0" class="text-center py-8">
-            <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <i data-lucide="help-circle" class="w-6 h-6 text-slate-400"></i>
-            </div>
-            <p class="text-slate-500 text-sm">No FAQs added yet</p>
-            <button type="button" @click="addFaq()"
-                class="mt-3 text-indigo-600 font-medium text-sm hover:text-indigo-700 cursor-pointer">
-                + Add your first FAQ
-            </button>
-        </div>
-    </div>
-    </div>
-
-    <!-- Actions -->
-    <div class="flex items-center justify-between">
-        <a href="{{ route('admin.tools.index') }}"
-            class="px-6 py-3 text-slate-600 font-medium hover:text-slate-900 transition-colors">
-            Cancel
-        </a>
-        <div class="flex items-center gap-3">
-            <a href="{{ route('tools.show', ['category' => $tool->category->slug, 'tool' => $tool->slug]) }}"
-                target="_blank"
-                class="inline-flex items-center gap-2 px-5 py-3 border border-slate-200 text-slate-700 font-bold text-sm rounded-xl hover:bg-slate-50 transition-colors">
-                <i data-lucide="external-link" class="w-4 h-4"></i>
-                Preview
-            </a>
-            <button type="submit"
-                class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-bold text-sm rounded-xl hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/25 cursor-pointer">
-                <i data-lucide="save" class="w-4 h-4"></i>
-                Save Changes
-            </button>
-        </div>
-    </div>
-    </form>
+        </form>
     </div>
 
     @push('scripts')
@@ -270,6 +301,7 @@ Write detailed content about the tool here using Markdown...
                     },
                     removeFaq(index) {
                         this.faqs.splice(index, 1);
+                        this.$nextTick(() => lucide.createIcons());
                     }
                 }
             }
