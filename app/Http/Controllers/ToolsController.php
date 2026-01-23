@@ -51,11 +51,37 @@ class ToolsController extends Controller
     {
         $category = \App\Models\ToolCategory::where('slug', $category)->with([
             'tools' => function ($query) {
-                $query->where('is_active', true);
+                $query->where('is_active', true)->orderBy('name');
             }
         ])->firstOrFail();
 
-        return view('tools.category', compact('category'));
+        // Get all categories for cross-category recommendations
+        $allCategories = \App\Models\ToolCategory::with([
+            'tools' => function ($query) {
+                $query->where('is_active', true)->take(3);
+            }
+        ])->where('id', '!=', $category->id)->get();
+
+        // Get suggested tools from other categories (3-5 tools)
+        $suggestedTools = \App\Models\Tool::where('category_id', '!=', $category->id)
+            ->where('is_active', true)
+            ->inRandomOrder()
+            ->take(5)
+            ->with('category')
+            ->get();
+
+        // Prepare tools data for Alpine.js search
+        $toolsJson = $category->tools->map(function ($t) use ($category) {
+            return [
+                'name' => $t->name,
+                'slug' => $t->slug,
+                'description' => $t->description,
+                'difficulty' => $t->difficulty,
+                'time_estimate' => $t->time_estimate,
+            ];
+        });
+
+        return view('tools.category', compact('category', 'allCategories', 'suggestedTools', 'toolsJson'));
     }
 
     public function show($category, $tool)
