@@ -130,93 +130,96 @@
                     </section>
 
                     <!-- Decision Guidance -->
-                    <section
-                        class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-3xl shadow-xl p-8 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500 blur-[120px] opacity-20"></div>
-                        <h2 class="text-2xl font-bold mb-8 flex items-center gap-3 relative z-10">
-                            <span
-                                class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
-                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                                </svg>
-                            </span>
-                            Decision Guidance
-                        </h2>
+                    @if ($tool->slug !== 'tam-sam-som')
+                        <section
+                            class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-3xl shadow-xl p-8 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500 blur-[120px] opacity-20"></div>
+                            <h2 class="text-2xl font-bold mb-8 flex items-center gap-3 relative z-10">
+                                <span
+                                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </span>
+                                Decision Guidance
+                            </h2>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-                            <div>
-                                <h3 class="font-bold text-lg mb-4 text-slate-200">What to do next?</h3>
-                                <ul class="space-y-4 text-slate-400 text-sm">
-                                    <li class="flex gap-3">
-                                        <svg class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        <span>If result is healthy, scale the channel immediately.</span>
-                                    </li>
-                                    <li class="flex gap-3">
-                                        <svg class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
-                                            </path>
-                                        </svg>
-                                        <span>If borderline, optimize conversion rates before spending more.</span>
-                                    </li>
-                                    <li class="flex gap-3">
-                                        <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
-                                            </path>
-                                        </svg>
-                                        <span>If poor, pause spending and analyze customer acquisition funnel.</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-lg mb-4 text-slate-200">Industry Benchmarks</h3>
-                                <div class="space-y-4">
-                                    <div>
-                                        <div class="flex justify-between text-sm mb-1">
-                                            <span class="text-slate-400">B2B SaaS</span>
-                                            <span class="font-mono text-white">$250 - $1,500</span>
-                                        </div>
-                                        <div class="w-full bg-slate-700 rounded-full h-2">
-                                            <div
-                                                class="bg-gradient-to-r from-emerald-400 to-blue-500 w-2/3 h-2 rounded-full">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                                <div>
+                                    <h3 class="font-bold text-lg mb-4 text-slate-200">What to do next?</h3>
+                                    <ul class="space-y-4 text-slate-400 text-sm">
+                                        <li class="flex gap-3">
+                                            <svg class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            <span>If result is healthy, scale the channel immediately.</span>
+                                        </li>
+                                        <li class="flex gap-3">
+                                            <svg class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                                </path>
+                                            </svg>
+                                            <span>If borderline, optimize conversion rates before spending more.</span>
+                                        </li>
+                                        <li class="flex gap-3">
+                                            <svg class="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none"
+                                                stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                </path>
+                                            </svg>
+                                            <span>If poor, pause spending and analyze customer acquisition
+                                                funnel.</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-lg mb-4 text-slate-200">Industry Benchmarks</h3>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <div class="flex justify-between text-sm mb-1">
+                                                <span class="text-slate-400">B2B SaaS</span>
+                                                <span class="font-mono text-white">$250 - $1,500</span>
+                                            </div>
+                                            <div class="w-full bg-slate-700 rounded-full h-2">
+                                                <div
+                                                    class="bg-gradient-to-r from-emerald-400 to-blue-500 w-2/3 h-2 rounded-full">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-between text-sm mb-1">
-                                            <span class="text-slate-400">B2C App</span>
-                                            <span class="font-mono text-white">$5 - $50</span>
-                                        </div>
-                                        <div class="w-full bg-slate-700 rounded-full h-2">
-                                            <div
-                                                class="bg-gradient-to-r from-emerald-400 to-blue-500 w-1/3 h-2 rounded-full">
+                                        <div>
+                                            <div class="flex justify-between text-sm mb-1">
+                                                <span class="text-slate-400">B2C App</span>
+                                                <span class="font-mono text-white">$5 - $50</span>
+                                            </div>
+                                            <div class="w-full bg-slate-700 rounded-full h-2">
+                                                <div
+                                                    class="bg-gradient-to-r from-emerald-400 to-blue-500 w-1/3 h-2 rounded-full">
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-between text-sm mb-1">
-                                            <span class="text-slate-400">E-commerce</span>
-                                            <span class="font-mono text-white">$10 - $100</span>
-                                        </div>
-                                        <div class="w-full bg-slate-700 rounded-full h-2">
-                                            <div
-                                                class="bg-gradient-to-r from-emerald-400 to-blue-500 w-1/2 h-2 rounded-full">
+                                        <div>
+                                            <div class="flex justify-between text-sm mb-1">
+                                                <span class="text-slate-400">E-commerce</span>
+                                                <span class="font-mono text-white">$10 - $100</span>
+                                            </div>
+                                            <div class="w-full bg-slate-700 rounded-full h-2">
+                                                <div
+                                                    class="bg-gradient-to-r from-emerald-400 to-blue-500 w-1/2 h-2 rounded-full">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
+                        </section>
+                    @endif
 
                     <!-- Context / Guide Content -->
                     @if ($tool->content)
