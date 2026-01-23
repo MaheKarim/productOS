@@ -18,12 +18,16 @@ class Tool extends Model
         'time_estimate',
         'calculator_config',
         'content',
+        'faqs',
         'is_active',
+        'sort_order',
     ];
 
     protected $casts = [
         'calculator_config' => 'array',
+        'faqs' => 'array',
         'is_active' => 'boolean',
+        'sort_order' => 'integer',
     ];
 
     public function category()

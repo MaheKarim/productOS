@@ -146,6 +146,17 @@
                     <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Content
                         Management</div>
 
+                    {{-- Tools Management --}}
+                    <a href="{{ route('admin.tools.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.tools.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="tools">
+                        <i data-lucide="calculator"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.tools.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        Tools
+                        <span
+                            class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-indigo-500/20 text-indigo-400 font-bold">{{ \App\Models\Tool::count() }}</span>
+                    </a>
+
                     {{-- Collapsible CMS Group --}}
                     <div class="cms-settings-group">
                         <button onclick="toggleCmsSettings()"
@@ -217,7 +228,8 @@
                     </div>
                     <a href="{{ route('admin.settings.index') }}"
                         class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.settings.index') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}">
-                        <i data-lucide="settings" class="mr-3 w-5 h-5 {{ request()->routeIs('admin.settings.index') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        <i data-lucide="settings"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.settings.index') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
                         Settings
                     </a>
                 </nav>
@@ -231,7 +243,8 @@
                         @else
                             <div
                                 class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center mr-3">
-                                <span class="text-indigo-400 font-bold">{{ substr(Auth::user()->name ?? 'A', 0, 1) }}</span>
+                                <span
+                                    class="text-indigo-400 font-bold">{{ substr(Auth::user()->name ?? 'A', 0, 1) }}</span>
                             </div>
                         @endif
                         <div class="mr-2">

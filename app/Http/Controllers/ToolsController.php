@@ -35,7 +35,16 @@ class ToolsController extends Controller
             });
         })->values();
 
-        return view('tools.index', compact('categories', 'allToolsJson'));
+        // Prepare categories data for Alpine.js
+        $categoriesJson = $categories->map(function ($c) {
+            return [
+                'name' => $c->name,
+                'slug' => $c->slug,
+                'tools_count' => $c->tools->count(),
+            ];
+        });
+
+        return view('tools.index', compact('categories', 'allToolsJson', 'categoriesJson'));
     }
 
     public function category($category)

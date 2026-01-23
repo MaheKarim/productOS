@@ -73,5 +73,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings.index');
     Route::put('/settings/profile', [SettingsController::class, 'updateProfile'])->name('admin.settings.update-profile');
     Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('admin.settings.update-password');
+
+    // Tools Management
+    Route::resource('tools', \App\Http\Controllers\Admin\ToolsController::class)->names('admin.tools');
+    Route::post('tools/{tool}/toggle', [\App\Http\Controllers\Admin\ToolsController::class, 'toggleStatus'])->name('admin.tools.toggle');
 });
 
