@@ -19,6 +19,8 @@
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('about') ? 'text-blue-600' : '' }}">About</a>
                 <a href="{{ route('tools.index') }}"
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('tools.*') ? 'text-blue-600 font-bold' : '' }}">Tools</a>
+                <a href="{{ route('directory.index') }}"
+                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('directory.*') ? 'text-blue-600 font-bold' : '' }}">Directory</a>
 
                 <a href="{{ route('contact') }}"
                     class="ml-4 px-5 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-lg hover:bg-blue-700 transition-all shadow-md hover:shadow-lg cursor-pointer">
@@ -62,6 +64,8 @@
                 class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">About</a>
             <a href="{{ route('tools.index') }}"
                 class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">Toolkit</a>
+            <a href="{{ route('directory.index') }}"
+                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">Directory</a>
             <a href="{{ route('contact') }}"
                 class="block px-4 py-3 text-base font-bold text-blue-600 hover:bg-blue-50 rounded-lg cursor-pointer">Book
                 a Call</a>

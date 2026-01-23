@@ -157,7 +157,41 @@
                         <span
                             class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-indigo-500/20 text-indigo-400 font-bold">{{ \App\Models\Tool::count() }}</span>
                     </a>
+                    {{-- Directory Management --}}
+                    <div class="cms-settings-group mb-2">
+                        <button onclick="toggleDirectoryMenu()"
+                            class="w-full group flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl hover:bg-slate-800/50 hover:text-white transition-soft {{ request()->routeIs('admin.directory.*') ? 'bg-slate-800/50 text-white' : '' }}">
+                            <div class="flex items-center">
+                                <i data-lucide="folder-open"
+                                    class="mr-3 w-5 h-5 {{ request()->routeIs('admin.directory.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                                Directory
+                            </div>
+                            <i data-lucide="chevron-down" id="directory-chevron"
+                                class="w-4 h-4 transition-transform duration-300"></i>
+                        </button>
 
+                        <div id="directory-menu"
+                            class="hidden mt-1 px-6 space-y-1 overflow-hidden transition-all duration-300">
+                            <a href="{{ route('admin.directory.dashboard') }}"
+                                class="menu-item group flex items-center px-4 py-2.5 text-xs font-medium rounded-lg transition-soft {{ request()->routeIs('admin.directory.dashboard') ? 'text-white bg-white/5' : 'text-slate-500 hover:text-white' }}"
+                                data-menu-name="directory-dashboard">
+                                <i data-lucide="layout-grid" class="mr-3 w-4 h-4"></i>
+                                Dashboard
+                            </a>
+                            <a href="{{ route('admin.directory.index') }}"
+                                class="menu-item group flex items-center px-4 py-2.5 text-xs font-medium rounded-lg transition-soft {{ request()->routeIs('admin.directory.index') || request()->routeIs('admin.directory.create') || request()->routeIs('admin.directory.edit') ? 'text-white bg-white/5' : 'text-slate-500 hover:text-white' }}"
+                                data-menu-name="directory-items">
+                                <i data-lucide="list" class="mr-3 w-4 h-4"></i>
+                                All Items
+                            </a>
+                            <a href="{{ route('admin.directory.categories.index') }}"
+                                class="menu-item group flex items-center px-4 py-2.5 text-xs font-medium rounded-lg transition-soft {{ request()->routeIs('admin.directory.categories.*') ? 'text-white bg-white/5' : 'text-slate-500 hover:text-white' }}"
+                                data-menu-name="directory-categories">
+                                <i data-lucide="tags" class="mr-3 w-4 h-4"></i>
+                                Categories
+                            </a>
+                        </div>
+                    </div>
                     {{-- Collapsible CMS Group --}}
                     <div class="cms-settings-group">
                         <button onclick="toggleCmsSettings()"
@@ -406,9 +440,31 @@
             }
         }
 
+        // Toggle Directory menu
+        function toggleDirectoryMenu() {
+            const menu = document.getElementById('directory-menu');
+            const chevron = document.getElementById('directory-chevron');
+
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                setTimeout(() => {
+                    menu.style.maxHeight = '500px';
+                }, 10);
+                chevron.classList.add('rotate-180');
+            } else {
+                menu.style.maxHeight = '0px';
+                setTimeout(() => {
+                    menu.classList.add('hidden');
+                }, 300);
+                chevron.classList.remove('rotate-180');
+            }
+        }
+
         // Keep CMS Settings open if on any CMS route
         document.addEventListener('DOMContentLoaded', function() {
             const path = window.location.pathname;
+
+            // CMS Auto-Open
             const isCms = ['/admin/hero', '/admin/about', '/admin/services', '/admin/projects',
                     '/admin/testimonials', '/admin/footer'
                 ]
@@ -420,6 +476,15 @@
                 menu.classList.remove('hidden');
                 menu.style.maxHeight = '500px';
                 chevron.classList.add('rotate-180');
+            }
+
+            // Directory Auto-Open
+            if (path.startsWith('/admin/directory')) {
+                const dirMenu = document.getElementById('directory-menu');
+                const dirChevron = document.getElementById('directory-chevron');
+                dirMenu.classList.remove('hidden');
+                dirMenu.style.maxHeight = '500px';
+                dirChevron.classList.add('rotate-180');
             }
         });
     </script>

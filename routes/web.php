@@ -14,6 +14,9 @@ use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\CaseStudyController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\DirectoryController;
+use App\Http\Controllers\Admin\DirectoryController as AdminDirectoryController;
+use App\Http\Controllers\Admin\DirectoryCategoryController;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -29,7 +32,22 @@ Route::get('/portfolio/{slug}', [CaseStudyController::class, 'show'])->name('por
 // Pages
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/services', [PageController::class, 'services'])->name('services');
+Route::get('/services', [PageController::class, 'services'])->name('services');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
+
+// Directory (Public)
+Route::prefix('directory')->name('directory.')->group(function () {
+    Route::get('/', [DirectoryController::class, 'index'])->name('index');
+    Route::get('/search', [DirectoryController::class, 'search'])->name('search');
+    Route::post('/track-click/{uuid}', [DirectoryController::class, 'trackClick'])->name('track-click');
+
+    // Category Pages
+    Route::get('/tools', [DirectoryController::class, 'tools'])->name('tools');
+    Route::get('/learning', [DirectoryController::class, 'learning'])->name('learning');
+    Route::get('/companies', [DirectoryController::class, 'companies'])->name('companies');
+    Route::get('/communities', [DirectoryController::class, 'communities'])->name('communities');
+    Route::get('/templates', [DirectoryController::class, 'templates'])->name('templates');
+});
 
 // Search
 Route::get('/search', [SearchController::class, 'search'])->name('search');
@@ -77,5 +95,23 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     // Tools Management
     Route::resource('tools', \App\Http\Controllers\Admin\ToolsController::class)->names('admin.tools');
     Route::post('tools/{tool}/toggle', [\App\Http\Controllers\Admin\ToolsController::class, 'toggleStatus'])->name('admin.tools.toggle');
+
+    // Directory Management
+    Route::prefix('directory')->name('admin.directory.')->group(function () {
+        Route::get('/dashboard', [AdminDirectoryController::class, 'dashboard'])->name('dashboard');
+        Route::get('/analytics', [AdminDirectoryController::class, 'analytics'])->name('analytics');
+        Route::get('/export', [AdminDirectoryController::class, 'export'])->name('export');
+
+        // Toggles
+        Route::patch('/{id}/toggle-active', [AdminDirectoryController::class, 'toggleActive'])->name('toggle-active');
+        Route::patch('/{id}/toggle-featured', [AdminDirectoryController::class, 'toggleFeatured'])->name('toggle-featured');
+        Route::patch('/{id}/verify', [AdminDirectoryController::class, 'verify'])->name('verify');
+        Route::post('/bulk-action', [AdminDirectoryController::class, 'bulkAction'])->name('bulk-action');
+
+        // Categories
+        Route::resource('categories', DirectoryCategoryController::class);
+    });
+    // Main Directory Resource
+    Route::resource('directory', AdminDirectoryController::class)->names('admin.directory');
 });
 
