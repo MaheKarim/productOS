@@ -3,225 +3,375 @@
 @section('title', 'Directory - ProductOS')
 
 @section('content')
-    <div class="relative min-h-[500px] flex items-center justify-center pt-32 pb-20 overflow-hidden bg-slate-900">
-        {{-- Animated Gradient Background --}}
-        <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-900 to-blue-900/40"></div>
-        <div
-            class="absolute w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[120px] -top-[200px] left-1/2 -translate-x-1/2">
+    <div class="relative min-h-screen bg-[#030712] text-white selection:bg-indigo-500/30 overflow-hidden">
+        {{-- Futuristic Background Mesh --}}
+        <div class="absolute inset-0 z-0">
+            <div
+                class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-900/20 rounded-full blur-[120px] animate-pulse-slow">
+            </div>
+            <div
+                class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-900/20 rounded-full blur-[120px] animate-pulse-slow delay-1000">
+            </div>
+            <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.05)_0%,transparent_70%)]">
+            </div>
+            {{-- Grid Pattern Overlay --}}
+            <div
+                class="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]">
+            </div>
         </div>
 
-        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
-            <span
-                class="inline-block py-1 px-3 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-bold uppercase tracking-widest mb-6">
-                Everything You Need
-            </span>
-            <h1 class="text-4xl md:text-6xl font-black text-white mb-8 tracking-tight leading-tight">
-                The Ultimate Resource Hub for <br />
-                <span class="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Product
-                    Managers</span>
-            </h1>
-            <p class="text-lg text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-                Curated tools, courses, jobs, communities, and templates. Built for the Bangladesh PM ecosystem.
-            </p>
+        {{-- Hero & Search --}}
+        <div class="relative z-10 pt-40 pb-20 px-6">
+            <div class="max-w-5xl mx-auto text-center mb-16">
+                <div
+                    class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-8 animate-fade-in">
+                    <span class="relative flex h-2 w-2">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                    </span>
+                    <span>Direct Access to Innovation</span>
+                </div>
 
-            {{-- Global Search Bar --}}
-            <div class="relative max-w-2xl mx-auto mb-12" x-data="{
-                query: '',
-                results: [],
-                showResults: false,
-                loading: false,
-                async search() {
-                    if (this.query.length < 2) {
-                        this.results = [];
-                        this.showResults = false;
-                        return;
-                    }
-                    this.loading = true;
-                    const response = await fetch(`/directory/search?q=${this.query}`);
-                    this.results = await response.json();
-                    this.loading = false;
-                    this.showResults = true;
-                },
-                trackClick(ItemUuid) {
-                    fetch(`/directory/track-click/${ItemUuid}`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                <h1
+                    class="text-5xl md:text-8xl font-black text-white mb-8 tracking-tighter leading-none animate-fade-in-up">
+                    The PM <br />
+                    <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-blue-400 to-cyan-400">Knowledge
+                        Graph.</span>
+                </h1>
+
+                <p
+                    class="text-xl text-slate-400 mb-12 max-w-2xl mx-auto leading-relaxed font-light animate-fade-in-up delay-100">
+                    A multi-dimensional repository of tools, workflows, and insights curated for the next generation of
+                    product leaders.
+                </p>
+
+                {{-- Floating Search Bar with Neon Glow --}}
+                <div class="relative max-w-3xl mx-auto group animate-fade-in-up delay-200" x-data="{
+                    query: '',
+                    results: [],
+                    showResults: false,
+                    loading: false,
+                    async search() {
+                        if (this.query.length < 2) {
+                            this.results = [];
+                            this.showResults = false;
+                            return;
                         }
-                    });
-                }
-            }" @click.away="showResults = false">
-                <div class="relative">
-                    <input type="text" x-model="query" @input.debounce.300ms="search()"
-                        placeholder="Search tools, courses, jobs..."
-                        class="w-full bg-slate-800/80 backdrop-blur-md border border-slate-700 text-white placeholder-slate-500 rounded-2xl py-4 pl-12 pr-4 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-2xl transition-all">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <div x-show="loading" class="absolute right-4 top-1/2 -translate-y-1/2 text-blue-500">
-                        <i class="fa-solid fa-circle-notch fa-spin"></i>
-                    </div>
-                </div>
+                        this.loading = true;
+                        const response = await fetch(`/directory/search?q=${this.query}`);
+                        this.results = await response.json();
+                        this.loading = false;
+                        this.showResults = true;
+                    },
+                    trackClick(ItemUuid) {
+                        fetch(`/directory/track-click/${ItemUuid}`, {
+                            method: 'POST',
+                            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+                        });
+                    }
+                }"
+                    @click.away="showResults = false">
 
-                {{-- Live Search Results --}}
-                <div x-show="showResults && results.length > 0" x-transition
-                    class="absolute w-full mt-4 bg-slate-900/90 backdrop-blur-xl border border-slate-700 rounded-2xl shadow-2xl overflow-hidden z-50 text-left">
-                    <ul class="max-h-[400px] overflow-y-auto divide-y divide-slate-800">
-                        <template x-for="item in results" :key="item.uuid">
-                            <li>
-                                <a :href="item.website_url || '#'" target="_blank" @click="trackClick(item.uuid)"
-                                    class="block p-4 hover:bg-slate-800 transition-colors group">
-                                    <div class="flex items-center space-x-4">
-                                        <div
-                                            class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 border border-slate-700">
-                                            <template x-if="item.logo_path">
-                                                <img :src="'/storage/' + item.logo_path"
-                                                    class="w-full h-full object-cover rounded-lg">
-                                            </template>
-                                            <template x-if="!item.logo_path">
-                                                <span class="text-xs text-slate-500"
-                                                    x-text="item.type.charAt(0).toUpperCase()"></span>
-                                            </template>
-                                        </div>
-                                        <div>
-                                            <div class="flex items-center space-x-2">
-                                                <span
-                                                    class="font-bold text-white group-hover:text-blue-400 transition-colors"
-                                                    x-text="item.name"></span>
-                                                <span
-                                                    class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400 capitalize"
-                                                    x-text="item.type"></span>
-                                            </div>
-                                            <p class="text-xs text-slate-500 mt-0.5 truncate max-w-[300px]"
-                                                x-text="item.tagline"></p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                        </template>
-                    </ul>
-                    <div class="p-3 bg-slate-950/50 text-center text-xs text-slate-500 border-t border-slate-800">
-                        Press Enter to see all results
-                    </div>
-                </div>
-                <div x-show="showResults && results.length === 0 && !loading" x-cloak
-                    class="absolute w-full mt-4 bg-slate-900 border border-slate-700 rounded-xl p-4 text-slate-400 text-sm">
-                    No results found.
-                </div>
-            </div>
-
-            <div class="flex flex-wrap items-center justify-center gap-6 text-sm text-slate-500 font-medium">
-                <span><i class="fa-solid fa-check text-blue-500 mr-2"></i> 500+ Curated Tools</span>
-                <span><i class="fa-solid fa-check text-blue-500 mr-2"></i> Free Templates</span>
-                <span><i class="fa-solid fa-check text-blue-500 mr-2"></i> Local Jobs</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="max-w-[1400px] mx-auto px-6 py-20">
-        {{-- Categories Grid --}}
-        <h2 class="text-2xl font-bold text-slate-900 mb-10 border-l-4 border-blue-600 pl-4">Browse by Category</h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-24">
-            @foreach ($categories as $category)
-                @php
-                    // Map types to routes
-                    $route = route('directory.' . $category->type); // Assumes route names match type
-                @endphp
-                <a href="{{ $route }}"
-                    class="group relative overflow-hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    {{-- Neon Border Effect --}}
                     <div
-                        class="absolute inset-0 bg-gradient-to-br from-white to-slate-50 opacity-0 group-hover:opacity-100 transition-opacity">
+                        class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-[2rem] blur opacity-25 group-focus-within:opacity-50 transition duration-500">
                     </div>
-                    <div class="relative z-10">
-                        <div
-                            class="w-12 h-12 rounded-xl {{ $category->color_class }} bg-opacity-10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform text-2xl {{ str_replace('bg-', 'text-', $category->color_class) }}">
-                            <i class="{{ $category->icon }}"></i>
-                        </div>
-                        <h3 class="font-bold text-slate-900 text-lg mb-2">{{ $category->name }}</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed mb-4 min-h-[40px]">{{ $category->description }}</p>
-                        <div class="flex items-center justify-between">
-                            <span
-                                class="text-xs font-semibold text-slate-400 bg-slate-50 px-2 py-1 rounded">{{ $category->item_count }}
-                                items</span>
-                            <span
-                                class="text-sm font-bold {{ str_replace('bg-', 'text-', $category->color_class) }} group-hover:translate-x-1 transition-transform">Explore
-                                <i class="fa-solid fa-arrow-right ml-1 text-xs"></i></span>
-                        </div>
-                    </div>
-                </a>
-            @endforeach
-        </div>
 
-        {{-- Featured Section --}}
-        @if ($featuredItems->isNotEmpty())
-            <div class="mb-24">
-                <div class="flex items-center justify-between mb-10">
-                    <h2 class="text-2xl font-bold text-slate-900 border-l-4 border-amber-400 pl-4">Featured This Week</h2>
+                    <div class="relative">
+                        <input type="text" x-model="query" @input.debounce.300ms="search()"
+                            placeholder="Initialize query for tools, courses, jobs..."
+                            class="w-full bg-[#0F172A]/80 backdrop-blur-2xl border border-white/10 text-white placeholder-slate-500 rounded-[1.8rem] py-5 pl-14 pr-6 text-xl focus:outline-none focus:ring-0 shadow-2xl transition-all">
+                        <i
+                            class="fa-solid fa-magnifying-glass absolute left-6 top-1/2 -translate-y-1/2 text-indigo-400 text-lg group-focus-within:scale-110 transition-transform"></i>
+                        <div x-show="loading" class="absolute right-6 top-1/2 -translate-y-1/2 text-cyan-400">
+                            <i class="fa-solid fa-circle-notch fa-spin"></i>
+                        </div>
+                    </div>
+
+                    {{-- Search Results Glass Card --}}
+                    <div x-show="showResults && results.length > 0" x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 translate-y-4"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        class="absolute w-full mt-6 bg-[#0F172A]/90 backdrop-blur-3xl border border-white/10 rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] overflow-hidden z-50 text-left">
+                        <ul class="max-h-[440px] overflow-y-auto divide-y divide-white/5 scrollbar-thin">
+                            <template x-for="item in results" :key="item.uuid">
+                                <li>
+                                    <a :href="item.website_url || '#'" target="_blank" @click="trackClick(item.uuid)"
+                                        class="block p-5 hover:bg-white/5 transition-all group/item">
+                                        <div class="flex items-center space-x-5">
+                                            <div
+                                                class="w-12 h-12 rounded-2xl bg-slate-800/80 p-0.5 border border-white/10 shadow-inner">
+                                                <template x-if="item.logo_path">
+                                                    <img :src="'/storage/' + item.logo_path"
+                                                        class="w-full h-full object-cover rounded-[0.9rem]">
+                                                </template>
+                                                <template x-if="!item.logo_path">
+                                                    <div
+                                                        class="w-full h-full flex items-center justify-center bg-indigo-500/10 rounded-[0.9rem]">
+                                                        <span class="text-xs font-bold text-indigo-400"
+                                                            x-text="item.type.charAt(0).toUpperCase()"></span>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                            <div class="flex-1">
+                                                <div class="flex items-center justify-between">
+                                                    <span
+                                                        class="text-lg font-bold text-white group-hover/item:text-indigo-400 transition-colors"
+                                                        x-text="item.name"></span>
+                                                    <span
+                                                        class="text-[9px] px-2 py-0.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 uppercase font-black"
+                                                        x-text="item.type"></span>
+                                                </div>
+                                                <p class="text-sm text-slate-500 group-hover/item:text-slate-400 transition-colors mt-0.5 line-clamp-1"
+                                                    x-text="item.tagline"></p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Categories Section --}}
+            <div class="max-w-[1400px] mx-auto pt-20">
+                <div class="flex items-end justify-between mb-12">
+                    <div>
+                        <h2 class="text-xs font-black text-indigo-400 uppercase tracking-[0.3em] mb-3">System Mapping</h2>
+                        <h3 class="text-3xl md:text-4xl font-black text-white tracking-tight">Browse Sub-Systems</h3>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    @foreach ($featuredItems as $item)
-                        <div
-                            class="bg-white rounded-2xl border border-slate-200 p-6 hover:shadow-lg transition-all group h-full flex flex-col">
-                            <div class="flex items-start justify-between mb-6">
-                                @if ($item->logo_path)
-                                    <img src="{{ Storage::url($item->logo_path) }}"
-                                        class="w-14 h-14 rounded-xl object-cover border border-slate-100 shadow-sm">
-                                @else
-                                    <div
-                                        class="w-14 h-14 rounded-xl bg-slate-50 flex items-center justify-center border border-slate-100 shadow-sm">
-                                        <i class="fa-solid fa-layer-group text-slate-300 text-xl"></i>
-                                    </div>
-                                @endif
-                                <div class="flex space-x-2">
-                                    @if ($item->is_featured)
-                                        <span
-                                            class="px-2 py-1 bg-amber-50 text-amber-600 text-[10px] font-bold uppercase rounded leading-none border border-amber-100">Featured</span>
-                                    @endif
-                                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">
+                    @foreach ($categories as $category)
+                        @php $route = route('directory.' . $category->type); @endphp
+                        <a href="{{ $route }}"
+                            class="group relative bg-[#1E293B]/30 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 hover:bg-white/[0.07] hover:border-white/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+                            {{-- Ambient Glow --}}
+                            <div
+                                class="absolute -bottom-20 -right-20 w-40 h-40 {{ $category->color_class }} opacity-[0.05] group-hover:opacity-20 blur-3xl transition-opacity duration-500">
                             </div>
 
-                            <div class="mb-4 flex-grow">
+                            <div class="relative z-10 flex flex-col h-full">
                                 <div
-                                    class="text-[10px] items-center text-blue-600 font-bold uppercase tracking-wider mb-2 flex space-x-2">
-                                    <span>{{ $item->type }}</span>
-                                    <span class="bg-slate-200 rounded-full w-1 h-1"></span>
-                                    <span>{{ $item->category }}</span>
+                                    class="w-14 h-14 rounded-2xl {{ $category->color_class }} bg-opacity-10 border border-white/5 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:shadow-[0_0_30px_-5px_rgba(0,0,0,0.5)] transition-all duration-500 text-3xl {{ str_replace('bg-', 'text-', $category->color_class) }}">
+                                    <i class="{{ $category->icon }}"></i>
                                 </div>
-                                <h3 class="text-lg font-bold text-slate-900 leading-tight mb-2">{{ $item->name }}</h3>
-                                <p class="text-sm text-slate-500 line-clamp-2">{{ $item->tagline }}</p>
-                            </div>
 
-                            <a href="{{ $item->website_url ?? '#' }}" target="_blank"
-                                class="w-full block text-center py-2.5 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-blue-600 transition-colors mt-auto">
-                                Visit Website
-                            </a>
-                        </div>
+                                <h3
+                                    class="text-xl font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-slate-400 transition-all">
+                                    {{ $category->name }}</h3>
+                                <p class="text-slate-500 text-sm font-medium leading-relaxed mb-8 flex-grow line-clamp-2">
+                                    {{ $category->description }}</p>
+
+                                <div class="flex items-center justify-between mt-auto">
+                                    <span
+                                        class="text-[10px] font-black uppercase tracking-widest text-slate-500">{{ $category->item_count }}
+                                        Units</span>
+                                    <div
+                                        class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white/30 group-hover:bg-white text-slate-400 group-hover:text-black transition-all">
+                                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
                     @endforeach
                 </div>
             </div>
-        @endif
 
-        {{-- CTA Section --}}
-        <div
-            class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] p-12 text-center text-white relative overflow-hidden">
-            <div
-                class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2">
-            </div>
-            <div
-                class="absolute bottom-0 left-0 w-64 h-64 bg-cyan-400/20 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2">
-            </div>
+            {{-- Featured Section --}}
+            @if ($featuredItems->isNotEmpty())
+                <div class="max-w-[1400px] mx-auto pt-32 pb-20">
+                    <div class="flex items-end justify-between mb-12">
+                        <div>
+                            <h2 class="text-xs font-black text-amber-400 uppercase tracking-[0.3em] mb-3">High Priority</h2>
+                            <h3 class="text-3xl md:text-4xl font-black text-white tracking-tight">Verified Entities</h3>
+                        </div>
+                    </div>
 
-            <div class="relative z-10 max-w-2xl mx-auto">
-                <h2 class="text-3xl font-bold mb-6">Have a resource to share?</h2>
-                <p class="text-blue-100 text-lg mb-8">
-                    Help us grow the largest repository of Product Management resources in Bangladesh. Submit your tool,
-                    job, or community.
-                </p>
-                <a href="mailto:mahe@productOS.bd"
-                    class="inline-flex items-center px-8 py-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition shadow-xl hover:shadow-2xl hover:-translate-y-1">
-                    <i class="fa-solid fa-paper-plane mr-2"></i> Submit Resource
-                </a>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        @foreach ($featuredItems as $item)
+                            <div
+                                class="group relative bg-[#0F172A]/40 backdrop-blur-2xl border border-white/10 p-8 rounded-[2.5rem] flex flex-col hover:bg-white/[0.05] transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/5">
+                                <div class="flex justify-between items-start mb-8">
+                                    <div
+                                        class="w-16 h-16 rounded-[1.2rem] bg-slate-800/80 p-0.5 border border-white/10 shadow-2xl">
+                                        @if ($item->logo_path)
+                                            <img src="{{ Storage::url($item->logo_path) }}"
+                                                class="w-full h-full object-cover rounded-[1.1rem]">
+                                        @else
+                                            <div
+                                                class="w-full h-full flex items-center justify-center bg-indigo-500/10 rounded-[1.1rem]">
+                                                <i class="fa-solid fa-cube text-indigo-400/50 text-2xl"></i>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div
+                                        class="px-2 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[9px] font-black uppercase tracking-widest rounded-lg">
+                                        Featured</div>
+                                </div>
+
+                                <div class="flex-grow">
+                                    <div
+                                        class="flex items-center space-x-2 text-[9px] font-black uppercase tracking-[0.2em] text-indigo-400 mb-3">
+                                        <span>{{ $item->type }}</span>
+                                        <span class="w-1 h-1 rounded-full bg-slate-700"></span>
+                                        <span class="text-slate-500">{{ $item->category }}</span>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-3 tracking-tight">{{ $item->name }}</h3>
+                                    <p
+                                        class="text-slate-500 text-sm font-medium leading-relaxed mb-8 line-clamp-2 group-hover:text-slate-400 transition-colors">
+                                        {{ $item->tagline }}</p>
+                                </div>
+
+                                <a href="{{ $item->website_url ?? '#' }}" target="_blank"
+                                    class="relative overflow-hidden w-full py-4 rounded-2xl bg-white text-slate-900 text-sm font-black uppercase tracking-[0.2em] group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300 text-center">
+                                    <span class="relative z-10">Access Interface</span>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            {{-- CTA Section --}}
+            <div class="max-w-[1400px] mx-auto pb-40">
+                <div
+                    class="relative bg-gradient-to-br from-indigo-600 to-blue-700 rounded-[3rem] p-16 md:p-24 overflow-hidden group shadow-[0_0_80px_-20px_rgba(79,70,229,0.3)]">
+                    {{-- Animated Volumetric Lighting --}}
+                    <div
+                        class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.15)_0%,transparent_50%)]">
+                    </div>
+                    <div
+                        class="absolute -bottom-1/2 -left-1/4 w-[80%] h-[80%] bg-cyan-400/20 rounded-full blur-[120px] animate-pulse-slow">
+                    </div>
+
+                    <div class="relative z-10 max-w-3xl">
+                        <h2 class="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter leading-tight">Augment
+                            the Hub.</h2>
+                        <p class="text-indigo-100/80 text-xl font-light leading-relaxed mb-12 max-w-2xl">
+                            The repository is decentralized by nature. Contribute your specialized tools or intelligence to
+                            the ecosystem.
+                        </p>
+                        <a href="mailto:mahe@productOS.bd"
+                            class="inline-flex items-center px-10 py-5 bg-white text-indigo-600 font-black uppercase tracking-[0.2em] rounded-[1.5rem] hover:bg-slate-50 transition-all duration-300 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.3)] hover:-translate-y-1 hover:shadow-white/10 group">
+                            <i class="fa-solid fa-terminal mr-3 group-hover:animate-pulse"></i> Submit Intelligence
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <style>
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-slow {
+
+            0%,
+            100% {
+                opacity: 0.1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.3;
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .animate-pulse-slow {
+            animation: pulse-slow 8s ease-in-out infinite;
+        }
+
+        .animate-fade-in {
+            animation: fade-in 1.5s ease-out forwards;
+        }
+
+        .delay-100 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Nav Override */
+        nav {
+            background: rgba(3, 7, 18, 0.7) !important;
+            border-color: rgba(255, 255, 255, 0.05) !important;
+            backdrop-blur: 20px !important;
+        }
+
+        nav a.text-slate-600 {
+            color: #94a3b8 !important;
+        }
+
+        nav a.text-slate-600:hover,
+        nav a.text-blue-600 {
+            color: white !important;
+        }
+
+        nav .text-slate-900 {
+            color: white !important;
+        }
+
+        /* Icon Gradients */
+        .fa-solid,
+        .fa-brands,
+        .fa-regular {
+            background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 50%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+    </style>
+@endpush

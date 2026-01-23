@@ -1,99 +1,90 @@
-<div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 sticky top-24">
-    <div class="flex items-center justify-between mb-6">
-        <h3 class="font-bold text-slate-900 text-lg">Filters</h3>
+<div class="space-y-12">
+    {{-- Sector Selection --}}
+    <div class="sector-matrix">
+        <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-6 flex items-center">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-3"></span> Sector Mapping
+        </h4>
+        <div class="flex flex-wrap gap-2">
+            @foreach ($categories as $cat)
+                <button wire:click="$set('filters.category', '{{ $cat->slug }}')"
+                    class="relative px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 {{ ($filters['category'] ?? '') == $cat->slug ? 'bg-indigo-600 text-white shadow-[0_0_20px_rgba(79,70,229,0.4)] border-indigo-500' : 'bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10' }}">
+                    {{ $cat->name }}
+                    @if (($filters['category'] ?? '') == $cat->slug)
+                        <span class="absolute -top-1 -right-1 flex h-2 w-2">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-400"></span>
+                        </span>
+                    @endif
+                </button>
+            @endforeach
+            <button wire:click="$set('filters.category', '')"
+                class="px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 {{ ($filters['category'] ?? '') == '' ? 'bg-slate-700 text-white shadow-xl' : 'bg-white/5 border border-white/10 text-slate-400 hover:bg-white/10' }}">
+                All Nodes
+            </button>
+        </div>
     </div>
 
-    <div class="space-y-8">
-        {{-- Category Filter --}}
+    {{-- Parameters Matrix --}}
+    @if (in_array($type, ['tools', 'learning']))
         <div>
-            <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wide mb-3">Categories</h4>
-            <div class="space-y-2">
-                @foreach ($categories as $cat)
-                    <label class="flex items-center space-x-3 cursor-pointer group">
-                        <input type="radio" wire:model.live="filters.category" value="{{ $cat->slug }}"
-                            class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500">
-                        <span
-                            class="text-slate-600 group-hover:text-blue-600 transition-colors text-sm">{{ $cat->name }}</span>
-                    </label>
+            <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-6 flex items-center">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-500 mr-3"></span> Fiscal Logic
+            </h4>
+            <div class="grid grid-cols-2 gap-3">
+                @foreach (['all' => 'Deep Scan', 'free' => 'Open Source', 'freemium' => 'Hybrid', 'paid' => 'Premium'] as $value => $label)
+                    <button wire:click="$set('filters.pricing', '{{ $value }}')"
+                        class="px-3 py-3 rounded-2xl text-[9px] font-bold uppercase tracking-wider transition-all {{ ($filters['pricing'] ?? 'all') == $value ? 'bg-cyan-500/20 border border-cyan-500/40 text-cyan-400' : 'bg-white/[0.03] border border-white/5 text-slate-500 hover:border-white/10 hover:text-white' }}">
+                        {{ $label }}
+                    </button>
                 @endforeach
-                <label class="flex items-center space-x-3 cursor-pointer group">
-                    <input type="radio" wire:model.live="filters.category" value=""
-                        class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500">
-                    <span class="text-slate-600 group-hover:text-blue-600 transition-colors text-sm italic">All
-                        Categories</span>
-                </label>
             </div>
         </div>
+    @endif
 
-        {{-- Pricing Filter (Tools/Learning) --}}
-        @if (in_array($type, ['tools', 'learning']))
-            <div>
-                <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wide mb-3">Pricing</h4>
-                <div class="space-y-2">
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="radio" wire:model.live="filters.pricing" value="all"
-                            class="w-4 h-4 text-blue-600 focus:ring-blue-500">
-                        <span class="text-slate-600 text-sm">Any Price</span>
-                    </label>
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="radio" wire:model.live="filters.pricing" value="free"
-                            class="w-4 h-4 text-blue-600 focus:ring-blue-500">
-                        <span class="text-slate-600 text-sm">Free</span>
-                    </label>
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="radio" wire:model.live="filters.pricing" value="freemium"
-                            class="w-4 h-4 text-blue-600 focus:ring-blue-500">
-                        <span class="text-slate-600 text-sm">Freemium</span>
-                    </label>
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="radio" wire:model.live="filters.pricing" value="paid"
-                            class="w-4 h-4 text-blue-600 focus:ring-blue-500">
-                        <span class="text-slate-600 text-sm">Paid</span>
-                    </label>
+    {{-- Difficulty Matrix --}}
+    @if ($type === 'learning')
+        <div>
+            <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-6 flex items-center">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-3"></span> Level Logic
+            </h4>
+            <div class="space-y-2">
+                @foreach (['all' => 'Universal', 'beginner' => 'Foundation', 'intermediate' => 'Standard', 'advanced' => 'Enterprise'] as $value => $label)
+                    <button wire:click="$set('filters.difficulty', '{{ $value }}')"
+                        class="w-full text-left px-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.15em] transition-all {{ ($filters['difficulty'] ?? 'all') == $value ? 'bg-blue-600 text-white shadow-lg' : 'bg-white/[0.03] border border-white/5 text-slate-500 hover:bg-white/5' }}">
+                        {{ $label }}
+                    </button>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
+    {{-- Recruitment Matrix --}}
+    @if ($type === 'companies')
+        <div class="pt-6 border-t border-white/5">
+            <button wire:click="$toggle('filters.hiring')"
+                class="group w-full flex items-center justify-between px-6 py-5 rounded-[1.8rem] transition-all {{ $filters['hiring'] ?? false ? 'bg-green-500 shadow-[0_0_30px_rgba(34,197,94,0.3)]' : 'bg-white/[0.03] border border-white/10' }}">
+                <div class="flex items-center">
+                    <div
+                        class="w-8 h-8 rounded-full {{ $filters['hiring'] ?? false ? 'bg-white/20' : 'bg-green-500/20' }} flex items-center justify-center mr-4">
+                        <i
+                            class="fa-solid fa-briefcase text-xs {{ $filters['hiring'] ?? false ? 'text-white' : 'text-green-500' }}"></i>
+                    </div>
+                    <div>
+                        <div
+                            class="text-[10px] font-black uppercase tracking-widest {{ $filters['hiring'] ?? false ? 'text-white' : 'text-slate-200' }}">
+                            Hiring Mode</div>
+                        <div
+                            class="text-[8px] font-bold uppercase tracking-widest {{ $filters['hiring'] ?? false ? 'text-green-100' : 'text-slate-500' }}">
+                            Active Intelligence</div>
+                    </div>
                 </div>
-            </div>
-        @endif
-
-        {{-- Difficulty (Learning) --}}
-        @if ($type === 'learning')
-            <div>
-                <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wide mb-3">Level</h4>
-                <div class="space-y-2">
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="radio" wire:model.live="filters.difficulty" value="all"
-                            class="w-4 h-4 text-blue-600 focus:ring-blue-500">
-                        <span class="text-slate-600 text-sm">Any Level</span>
-                    </label>
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="radio" wire:model.live="filters.difficulty" value="beginner"
-                            class="w-4 h-4 text-blue-600 focus:ring-blue-500">
-                        <span class="text-slate-600 text-sm">Beginner</span>
-                    </label>
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="radio" wire:model.live="filters.difficulty" value="intermediate"
-                            class="w-4 h-4 text-blue-600 focus:ring-blue-500">
-                        <span class="text-slate-600 text-sm">Intermediate</span>
-                    </label>
-                    <label class="flex items-center space-x-3 cursor-pointer">
-                        <input type="radio" wire:model.live="filters.difficulty" value="advanced"
-                            class="w-4 h-4 text-blue-600 focus:ring-blue-500">
-                        <span class="text-slate-600 text-sm">Advanced</span>
-                    </label>
+                <div class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center">
+                    <div
+                        class="w-2 h-2 rounded-full {{ $filters['hiring'] ?? false ? 'bg-white animate-pulse' : 'bg-slate-700' }}">
+                    </div>
                 </div>
-            </div>
-        @endif
-
-        {{-- Hiring (Companies) --}}
-        @if ($type === 'companies')
-            <div>
-                <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wide mb-3">Jobs</h4>
-                <label class="flex items-center space-x-3 cursor-pointer">
-                    <input type="checkbox" wire:model.live="filters.hiring"
-                        class="w-4 h-4 text-green-600 rounded focus:ring-green-500">
-                    <span class="text-slate-700 font-medium text-sm">Hiring Now</span>
-                </label>
-            </div>
-        @endif
-
-    </div>
+            </button>
+        </div>
+    @endif
 </div>
