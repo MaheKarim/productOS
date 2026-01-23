@@ -21,7 +21,12 @@ class TamSamSomSeeder extends Seeder
             'content' => $this->getMarkdownContent(),
             'faqs' => $this->getFaqs(),
             'time_estimate' => '15 mins',
-            'difficulty' => 'Advanced'
+            'difficulty' => 'Advanced',
+            'problem_solved' => 'Founders often overestimate market size. This tool forces a bottom-up validation of your true revenue potential.',
+            'when_to_use' => 'Use during early idea validation, when preparing a pitch deck for investors, or when entering a new market segment.',
+            'when_not_to_use' => 'Do not use for mature products with stable revenue history where historical data is a better predictor of growth.',
+            'data_required' => 'Total number of potential customers, Average Annual Revenue per customer (ARPU), and realistic conversion rates.',
+            'outcome' => 'A defensible "Serviceable Obtainable Market" (SOM) value that you can confidently present to investors.'
         ]);
 
         $this->command->info('TAM/SAM/SOM content updated successfully.');

@@ -289,38 +289,91 @@
                 <!-- Sidebar -->
                 <div class="lg:col-span-4 space-y-8">
 
-                    <!-- CTA Card -->
-                    <div
-                        class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-8 rounded-3xl relative overflow-hidden shadow-2xl shadow-blue-500/25 sticky top-24">
-                        <div
-                            class="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20">
-                        </div>
-                        <div class="relative z-10">
-                            <div class="text-xs font-bold uppercase tracking-wider text-blue-200 mb-4">See it in action
-                            </div>
-                            <h3 class="text-2xl font-bold mb-4">
-                                How we used {{ $tool->name }} to grow by
-                                {{ $relatedCaseStudy->headline_metric ?? '300%' }}
+                    <!-- Dynamic Guidance Card -->
+                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="p-6 bg-slate-50 border-b border-slate-200">
+                            <h3 class="font-bold text-lg text-slate-900 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Tool Guide
                             </h3>
-                            @if ($relatedCaseStudy)
-                                <a href="{{ route('portfolio.show', $relatedCaseStudy->slug) }}"
-                                    class="inline-flex items-center justify-center gap-2 w-full bg-white text-blue-600 font-bold py-4 rounded-2xl hover:bg-blue-50 transition-colors shadow-lg cursor-pointer">
-                                    Read Case Study
+                        </div>
+                        <div class="divide-y divide-slate-100">
+                            <!-- Problem Solved -->
+                            <div class="p-6">
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">What Problem
+                                    This Solves</h4>
+                                <p class="text-slate-700 text-sm leading-relaxed">
+                                    {{ $tool->problem_solved ?? 'Helps quantify important metrics for data-driven decision making and strategy validation.' }}
+                                </p>
+                            </div>
+
+                            <!-- When to Use -->
+                            <div class="p-6 bg-blue-50/30">
+                                <h4
+                                    class="text-xs font-bold uppercase tracking-wider text-blue-500 mb-2 flex items-center gap-1.5">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                </a>
-                            @else
-                                <a href="{{ route('contact') }}"
-                                    class="inline-flex items-center justify-center gap-2 w-full bg-white text-blue-600 font-bold py-4 rounded-2xl hover:bg-blue-50 transition-colors shadow-lg cursor-pointer">
-                                    Book Advisory
+                                    When to Use
+                                </h4>
+                                <p class="text-slate-700 text-sm leading-relaxed">
+                                    {{ $tool->when_to_use ?? 'Use when you need to validate assumptions with concrete data points.' }}
+                                </p>
+                            </div>
+
+                            <!-- When NOT to Use -->
+                            <div class="p-6">
+                                <h4
+                                    class="text-xs font-bold uppercase tracking-wider text-amber-500 mb-2 flex items-center gap-1.5">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                        </path>
                                     </svg>
-                                </a>
-                            @endif
+                                    When NOT to Use
+                                </h4>
+                                <p class="text-slate-700 text-sm leading-relaxed">
+                                    {{ $tool->when_not_to_use ?? 'Avoid using if you lack sufficient data or are in a pure exploration phase.' }}
+                                </p>
+                            </div>
+
+                            <!-- Data Required -->
+                            <div class="p-6 bg-slate-50/50">
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Data You'll
+                                    Need</h4>
+                                <div class="flex items-start gap-3">
+                                    <svg class="w-5 h-5 text-slate-400 mt-0.5 flex-shrink-0" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                        </path>
+                                    </svg>
+                                    <p class="text-slate-700 text-sm leading-relaxed">
+                                        {{ $tool->data_required ?? 'Basic metric inputs related to the tool\'s formula.' }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Outcome -->
+                            <div class="p-6 bg-emerald-50/30">
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-2">What
+                                    You'll Get</h4>
+                                <div class="flex items-start gap-3">
+                                    <svg class="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                    <p class="text-slate-900 font-medium text-sm leading-relaxed">
+                                        {{ $tool->outcome ?? 'Actionable insights to drive your strategy forward.' }}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

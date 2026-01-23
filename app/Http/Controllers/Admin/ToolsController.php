@@ -83,6 +83,11 @@ class ToolsController extends Controller
             'faqs.*.question' => 'required_with:faqs|string',
             'faqs.*.answer' => 'required_with:faqs|string',
             'is_active' => 'boolean',
+            'problem_solved' => 'nullable|string',
+            'when_to_use' => 'nullable|string',
+            'when_not_to_use' => 'nullable|string',
+            'data_required' => 'nullable|string',
+            'outcome' => 'nullable|string',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);

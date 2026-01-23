@@ -124,82 +124,136 @@ Write detailed content about the tool here using Markdown...
                 </div>
             </div>
 
-            <!-- FAQs Card -->
+            <!-- Guidence Metadata Card -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-premium overflow-hidden">
-                <div class="px-6 py-5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-                    <div>
-                        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                            <i data-lucide="help-circle" class="w-5 h-5 text-indigo-600"></i>
-                            Frequently Asked Questions
-                        </h3>
-                        <p class="text-sm text-slate-500 mt-1">Add FAQ items that appear on the tool's page</p>
-                    </div>
-                    <button type="button" @click="addFaq()"
-                        class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white font-bold text-sm rounded-xl hover:bg-indigo-700 transition-colors cursor-pointer">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                        Add FAQ
-                    </button>
+                <div class="px-6 py-5 border-b border-slate-200 bg-slate-50">
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i data-lucide="compass" class="w-5 h-5 text-indigo-600"></i>
+                        Guidance Metadata
+                    </h3>
+                    <p class="text-sm text-slate-500 mt-1">Structured data for the tool sidebar.</p>
                 </div>
-                <div class="p-6 space-y-4">
-                    <template x-for="(faq, index) in faqs" :key="index">
-                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-4">
-                            <div class="flex items-start justify-between gap-4">
-                                <div class="flex-1 space-y-4">
-                                    <div>
-                                        <label class="block text-sm font-bold text-slate-700 mb-2">Question</label>
-                                        <input type="text" :name="`faqs[${index}][question]`" x-model="faq.question"
-                                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900"
-                                            placeholder="e.g., How often should I calculate this?">
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-bold text-slate-700 mb-2">Answer</label>
-                                        <textarea :name="`faqs[${index}][answer]`" x-model="faq.answer" rows="3"
-                                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900"
-                                            placeholder="Provide a detailed answer..."></textarea>
-                                    </div>
-                                </div>
-                                <button type="button" @click="removeFaq(index)"
-                                    class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer mt-6">
-                                    <i data-lucide="trash-2" class="w-5 h-5"></i>
-                                </button>
-                            </div>
+                <div class="p-6 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Problem Solved -->
+                        <div class="md:col-span-2">
+                            <label for="problem_solved" class="block text-sm font-bold text-slate-700 mb-2">What Problem
+                                This Solves</label>
+                            <textarea id="problem_solved" name="problem_solved" rows="2"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900 placeholder:text-slate-400"
+                                placeholder="e.g., Helps quantify market opportunity size for investors.">{{ old('problem_solved', $tool->problem_solved) }}</textarea>
                         </div>
-                    </template>
 
-                    <div x-show="faqs.length === 0" class="text-center py-8">
-                        <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                            <i data-lucide="help-circle" class="w-6 h-6 text-slate-400"></i>
+                        <!-- When to Use -->
+                        <div>
+                            <label for="when_to_use" class="block text-sm font-bold text-slate-700 mb-2">When to Use</label>
+                            <textarea id="when_to_use" name="when_to_use" rows="3"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900 placeholder:text-slate-400"
+                                placeholder="e.g., Early stage idea validation... ">{{ old('when_to_use', $tool->when_to_use) }}</textarea>
                         </div>
-                        <p class="text-slate-500 text-sm">No FAQs added yet</p>
-                        <button type="button" @click="addFaq()"
-                            class="mt-3 text-indigo-600 font-medium text-sm hover:text-indigo-700 cursor-pointer">
-                            + Add your first FAQ
-                        </button>
+
+                        <!-- When NOT to Use -->
+                        <div>
+                            <label for="when_not_to_use" class="block text-sm font-bold text-slate-700 mb-2">When NOT to
+                                Use</label>
+                            <textarea id="when_not_to_use" name="when_not_to_use" rows="3"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900 placeholder:text-slate-400"
+                                placeholder="e.g., If you have zero data...">{{ old('when_not_to_use', $tool->when_not_to_use) }}</textarea>
+                        </div>
+
+                        <!-- Data Required -->
+                        <div>
+                            <label for="data_required" class="block text-sm font-bold text-slate-700 mb-2">Data You'll
+                                Need</label>
+                            <textarea id="data_required" name="data_required" rows="3"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900 placeholder:text-slate-400"
+                                placeholder="e.g., Total potential customers...">{{ old('data_required', $tool->data_required) }}</textarea>
+                        </div>
+
+                        <!-- Outcome -->
+                        <div>
+                            <label for="outcome" class="block text-sm font-bold text-slate-700 mb-2">What You'll
+                                Get</label>
+                            <textarea id="outcome" name="outcome" rows="3"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900 placeholder:text-slate-400"
+                                placeholder="e.g., A clear dollar value for TAM...">{{ old('outcome', $tool->outcome) }}</textarea>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Actions -->
-            <div class="flex items-center justify-between">
-                <a href="{{ route('admin.tools.index') }}"
-                    class="px-6 py-3 text-slate-600 font-medium hover:text-slate-900 transition-colors">
-                    Cancel
-                </a>
-                <div class="flex items-center gap-3">
-                    <a href="{{ route('tools.show', ['category' => $tool->category->slug, 'tool' => $tool->slug]) }}"
-                        target="_blank"
-                        class="inline-flex items-center gap-2 px-5 py-3 border border-slate-200 text-slate-700 font-bold text-sm rounded-xl hover:bg-slate-50 transition-colors">
-                        <i data-lucide="external-link" class="w-4 h-4"></i>
-                        Preview
-                    </a>
-                    <button type="submit"
-                        class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-bold text-sm rounded-xl hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/25 cursor-pointer">
-                        <i data-lucide="save" class="w-4 h-4"></i>
-                        Save Changes
+            <div>
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i data-lucide="help-circle" class="w-5 h-5 text-indigo-600"></i>
+                    Frequently Asked Questions
+                </h3>
+                <p class="text-sm text-slate-500 mt-1">Add FAQ items that appear on the tool's page</p>
+            </div>
+            <button type="button" @click="addFaq()"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white font-bold text-sm rounded-xl hover:bg-indigo-700 transition-colors cursor-pointer">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                Add FAQ
+            </button>
+    </div>
+    <div class="p-6 space-y-4">
+        <template x-for="(faq, index) in faqs" :key="index">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-4">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="flex-1 space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Question</label>
+                            <input type="text" :name="`faqs[${index}][question]`" x-model="faq.question"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900"
+                                placeholder="e.g., How often should I calculate this?">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Answer</label>
+                            <textarea :name="`faqs[${index}][answer]`" x-model="faq.answer" rows="3"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900"
+                                placeholder="Provide a detailed answer..."></textarea>
+                        </div>
+                    </div>
+                    <button type="button" @click="removeFaq(index)"
+                        class="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer mt-6">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
-        </form>
+        </template>
+
+        <div x-show="faqs.length === 0" class="text-center py-8">
+            <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="help-circle" class="w-6 h-6 text-slate-400"></i>
+            </div>
+            <p class="text-slate-500 text-sm">No FAQs added yet</p>
+            <button type="button" @click="addFaq()"
+                class="mt-3 text-indigo-600 font-medium text-sm hover:text-indigo-700 cursor-pointer">
+                + Add your first FAQ
+            </button>
+        </div>
+    </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center justify-between">
+        <a href="{{ route('admin.tools.index') }}"
+            class="px-6 py-3 text-slate-600 font-medium hover:text-slate-900 transition-colors">
+            Cancel
+        </a>
+        <div class="flex items-center gap-3">
+            <a href="{{ route('tools.show', ['category' => $tool->category->slug, 'tool' => $tool->slug]) }}"
+                target="_blank"
+                class="inline-flex items-center gap-2 px-5 py-3 border border-slate-200 text-slate-700 font-bold text-sm rounded-xl hover:bg-slate-50 transition-colors">
+                <i data-lucide="external-link" class="w-4 h-4"></i>
+                Preview
+            </a>
+            <button type="submit"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white font-bold text-sm rounded-xl hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-500/25 cursor-pointer">
+                <i data-lucide="save" class="w-4 h-4"></i>
+                Save Changes
+            </button>
+        </div>
+    </div>
+    </form>
     </div>
 
     @push('scripts')

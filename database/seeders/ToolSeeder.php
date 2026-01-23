@@ -68,6 +68,11 @@ class ToolSeeder extends Seeder
                     'is_active' => true,
                     'calculator_config' => [],
                     'content' => "## Context & Usage\n\nThis tool helps you calculate **{$toolName}** to make data-driven decisions.\n\n### When to use\nUse this when you need to validate assumptions about...",
+                    'problem_solved' => 'Helps quantify important metrics for decision making.',
+                    'when_to_use' => 'When you need data-backed validation.',
+                    'when_not_to_use' => 'When you have no initial data.',
+                    'data_required' => 'Basic input metrics.',
+                    'outcome' => 'Clear actionable insights.',
                 ]);
             }
         }

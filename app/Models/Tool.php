@@ -21,6 +21,11 @@ class Tool extends Model
         'faqs',
         'is_active',
         'sort_order',
+        'problem_solved',
+        'when_to_use',
+        'when_not_to_use',
+        'data_required',
+        'outcome',
     ];
 
     protected $casts = [
