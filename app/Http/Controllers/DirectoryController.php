@@ -15,7 +15,14 @@ class DirectoryController extends Controller
     {
         $categories = DirectoryCategory::where('is_active', true)
             ->orderBy('display_order')
-            ->get();
+            ->get()
+            ->map(function ($category) {
+                // Dynamically calculate item count based on type
+                $category->item_count = DirectoryItem::where('is_active', true)
+                    ->where('type', $category->type)
+                    ->count();
+                return $category;
+            });
 
         $featuredItems = DirectoryItem::where('is_active', true)
             ->where('is_featured', true)

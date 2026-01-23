@@ -217,7 +217,7 @@
                     Help us grow the largest repository of Product Management resources in Bangladesh. Submit your tool,
                     job, or community.
                 </p>
-                <a href="mailto:submit@productOS.bd"
+                <a href="mailto:mahe@productOS.bd"
                     class="inline-flex items-center px-8 py-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition shadow-xl hover:shadow-2xl hover:-translate-y-1">
                     <i class="fa-solid fa-paper-plane mr-2"></i> Submit Resource
                 </a>
