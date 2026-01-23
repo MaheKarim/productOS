@@ -26,6 +26,7 @@
     </div>
 
     <!-- Header/Nav -->
+    <x-announcement-bar />
     <x-nav />
 
     <!-- Main Content -->

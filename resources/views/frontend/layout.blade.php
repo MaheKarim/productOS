@@ -167,6 +167,7 @@
 </head>
 
 <body class="font-sans bg-white text-slate-700">
+    <x-announcement-bar />
     <x-nav />
 
     <main>
