@@ -172,12 +172,6 @@
 
                         <div id="directory-menu"
                             class="hidden mt-1 px-6 space-y-1 overflow-hidden transition-all duration-300">
-                            <a href="{{ route('admin.directory.dashboard') }}"
-                                class="menu-item group flex items-center px-4 py-2.5 text-xs font-medium rounded-lg transition-soft {{ request()->routeIs('admin.directory.dashboard') ? 'text-white bg-white/5' : 'text-slate-500 hover:text-white' }}"
-                                data-menu-name="directory-dashboard">
-                                <i data-lucide="layout-grid" class="mr-3 w-4 h-4"></i>
-                                Dashboard
-                            </a>
                             <a href="{{ route('admin.directory.index') }}"
                                 class="menu-item group flex items-center px-4 py-2.5 text-xs font-medium rounded-lg transition-soft {{ request()->routeIs('admin.directory.index') || request()->routeIs('admin.directory.create') || request()->routeIs('admin.directory.edit') ? 'text-white bg-white/5' : 'text-slate-500 hover:text-white' }}"
                                 data-menu-name="directory-items">
@@ -197,7 +191,7 @@
                         <button onclick="toggleCmsSettings()"
                             class="w-full group flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl hover:bg-slate-800/50 hover:text-white transition-soft">
                             <div class="flex items-center">
-                                <i data-lucide="edit-3"
+                                <i data-lucide="layout-template"
                                     class="mr-3 w-5 h-5 text-slate-500 group-hover:text-indigo-400"></i>
                                 CMS Settings
                             </div>

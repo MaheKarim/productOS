@@ -58,10 +58,12 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Admin Routes (Protected by auth middleware)
+use App\Http\Controllers\Admin\DashboardController;
+
+// ...
+
 Route::middleware(['auth'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
     // Hero
     Route::resource('hero', HeroController::class)->names('admin.hero');

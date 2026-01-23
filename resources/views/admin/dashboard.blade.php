@@ -8,48 +8,54 @@
     {{-- Top Stats Grid --}}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         @php
-            $stats = [
-                [
-                    'label' => 'Hero Sections',
-                    'count' => App\Models\HeroSection::count(),
-                    'icon' => 'monitor',
-                    'color' => 'indigo',
-                    'route' => 'admin.hero.index',
-                ],
-                [
-                    'label' => 'About Blocks',
-                    'count' => App\Models\AboutSection::count(),
-                    'icon' => 'info',
-                    'color' => 'blue',
-                    'route' => 'admin.about.index',
-                ],
+            $displayStats = [
                 [
                     'label' => 'Total Services',
-                    'count' => App\Models\Service::count(),
+                    'count' => $stats['services'],
                     'icon' => 'zap',
                     'color' => 'amber',
                     'route' => 'admin.services.index',
                 ],
                 [
-                    'label' => 'Impact Projects',
-                    'count' => App\Models\Project::count(),
-                    'icon' => 'briefcase',
-                    'color' => 'emerald',
-                    'route' => 'admin.projects.index',
+                    'label' => 'Directory Items',
+                    'count' => $stats['directory_items'],
+                    'icon' => 'folder-open',
+                    'color' => 'blue',
+                    'route' => 'admin.directory.index',
+                ],
+                [
+                    'label' => 'Pending Reviews',
+                    'count' => $stats['directory_pending'],
+                    'icon' => 'clock',
+                    'color' => 'orange', // Orange was not in map, using amber or adding to config? Tailwind supports orange.
+                    // Let's stick to safe colors defined in layout or common
+        'bg_class' => 'bg-orange-500/10',
+        'text_class' => 'text-orange-600',
+        'route' => 'admin.directory.index',
+    ],
+    [
+        'label' => 'Directory Clicks',
+        'count' => $stats['directory_clicks'],
+        'icon' => 'mouse-pointer', // lucide name
+        'color' => 'emerald',
+        'route' => 'admin.directory.analytics',
                 ],
             ];
         @endphp
 
-        @foreach ($stats as $stat)
+        @foreach ($displayStats as $stat)
             <div
                 class="group bg-white rounded-[2rem] p-8 border border-slate-200/60 shadow-glass transition-soft hover:-translate-y-1 hover:shadow-premium relative overflow-hidden">
+                {{-- Decorative Blob --}}
                 <div
-                    class="absolute top-0 right-0 w-24 h-24 bg-{{ $stat['color'] }}-500/5 rounded-bl-full translate-x-4 -translate-y-4 transition-soft group-hover:scale-110">
+                    class="absolute top-0 right-0 w-24 h-24 {{ isset($stat['color']) ? 'bg-' . $stat['color'] . '-500/5' : 'bg-slate-100' }} rounded-bl-full translate-x-4 -translate-y-4 transition-soft group-hover:scale-110">
                 </div>
 
                 <div class="flex items-center justify-between mb-6">
-                    <div class="w-12 h-12 rounded-2xl bg-{{ $stat['color'] }}-500/10 flex items-center justify-center">
-                        <i data-lucide="{{ $stat['icon'] }}" class="text-{{ $stat['color'] }}-600 w-6 h-6"></i>
+                    <div
+                        class="w-12 h-12 rounded-2xl {{ isset($stat['color']) ? 'bg-' . $stat['color'] . '-500/10' : 'bg-slate-100' }} flex items-center justify-center">
+                        <i data-lucide="{{ $stat['icon'] }}"
+                            class="{{ isset($stat['color']) ? 'text-' . $stat['color'] . '-600' : 'text-slate-500' }} w-6 h-6"></i>
                     </div>
                     <a href="{{ route($stat['route']) }}"
                         class="p-2 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded-lg transition-colors">
@@ -70,6 +76,41 @@
         {{-- Secondary Metrics --}}
         <div class="lg:col-span-2 space-y-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {{-- Featured Directory Items --}}
+                <div
+                    class="bg-white rounded-[2rem] p-8 border border-slate-200/60 shadow-sm flex items-center justify-between group hover:border-indigo-200 transition-soft">
+                    <div class="flex items-center space-x-6">
+                        <div
+                            class="w-16 h-16 rounded-full bg-amber-50 flex items-center justify-center group-hover:bg-amber-100 transition-colors">
+                            <i data-lucide="star" class="text-amber-500 w-8 h-8"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Featured Items</h4>
+                            <p class="text-3xl font-black text-slate-900 tracking-tight">{{ $stats['directory_featured'] }}
+                            </p>
+                        </div>
+                    </div>
+                    <a href="{{ route('admin.directory.index', ['featured' => 1]) }}"
+                        class="text-indigo-600 font-bold text-sm hover:underline">View</a>
+                </div>
+
+                {{-- Impact Projects --}}
+                <div
+                    class="bg-white rounded-[2rem] p-8 border border-slate-200/60 shadow-sm flex items-center justify-between group hover:border-indigo-200 transition-soft">
+                    <div class="flex items-center space-x-6">
+                        <div
+                            class="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
+                            <i data-lucide="briefcase" class="text-emerald-600 w-8 h-8"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Projects</h4>
+                            <p class="text-3xl font-black text-slate-900 tracking-tight">{{ $stats['projects'] }}</p>
+                        </div>
+                    </div>
+                    <a href="{{ route('admin.projects.index') }}"
+                        class="text-indigo-600 font-bold text-sm hover:underline">Manage</a>
+                </div>
+
                 {{-- Testimonials --}}
                 <div
                     class="bg-white rounded-[2rem] p-8 border border-slate-200/60 shadow-sm flex items-center justify-between group hover:border-indigo-200 transition-soft">
@@ -80,8 +121,7 @@
                         </div>
                         <div>
                             <h4 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Testimonials</h4>
-                            <p class="text-3xl font-black text-slate-900 tracking-tight">
-                                {{ App\Models\Testimonial::count() }}</p>
+                            <p class="text-3xl font-black text-slate-900 tracking-tight">{{ $stats['testimonials'] }}</p>
                         </div>
                     </div>
                     <a href="{{ route('admin.testimonials.index') }}"
@@ -98,8 +138,7 @@
                         </div>
                         <div>
                             <h4 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Configurations</h4>
-                            <p class="text-3xl font-black text-slate-900 tracking-tight">
-                                {{ App\Models\FooterSettings::count() }}</p>
+                            <p class="text-3xl font-black text-slate-900 tracking-tight">{{ $stats['footer'] }}</p>
                         </div>
                     </div>
                     <a href="{{ route('admin.footer.index') }}"

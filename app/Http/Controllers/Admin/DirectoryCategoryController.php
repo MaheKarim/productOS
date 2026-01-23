@@ -41,7 +41,7 @@ class DirectoryCategoryController extends Controller
 
     public function edit(DirectoryCategory $category)
     {
-        return view('admin.directory.categories.edit', compact('category'));
+        return view('admin.directory.categories.create', compact('category'));
     }
 
     public function update(Request $request, DirectoryCategory $category)

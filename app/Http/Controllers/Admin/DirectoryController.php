@@ -101,7 +101,7 @@ class DirectoryController extends Controller
     {
         $item = DirectoryItem::findOrFail($id);
         $categories = DirectoryCategory::where('is_active', true)->orderBy('type')->orderBy('name')->get();
-        return view('admin.directory.edit', compact('item', 'categories'));
+        return view('admin.directory.create', compact('item', 'categories'));
     }
 
     public function update(Request $request, $id)

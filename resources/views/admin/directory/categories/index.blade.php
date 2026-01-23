@@ -45,7 +45,15 @@
                                         class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition">
                                         <i class="fa-solid fa-pen"></i>
                                     </a>
-                                    {{-- Delete --}}
+                                    <form action="{{ route('admin.directory.categories.destroy', $category->id) }}"
+                                        method="POST" class="inline-block" onsubmit="return confirm('Are you sure?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
