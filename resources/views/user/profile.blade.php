@@ -53,8 +53,8 @@
                                 <label for="email" class="block text-sm font-semibold text-slate-700 mb-2">Email
                                     Address</label>
                                 <input type="email" name="email" id="email"
-                                    value="{{ old('email', Auth::user()->email) }}" required
-                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-slate-50 focus:bg-white text-slate-900">
+                                    value="{{ old('email', Auth::user()->email) }}" required readonly
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-100 text-slate-500 cursor-not-allowed focus:ring-0 focus:border-slate-200 transition-all">
                                 @error('email')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CareerCompassController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\HeroController;
@@ -23,10 +24,11 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Career Compass Tool (before generic tools routes)
 Route::prefix('tools/career-compass')->name('career-compass.')->group(function () {
-    Route::get('/', [\App\Http\Controllers\CareerCompassController::class, 'index'])->name('index');
-    Route::get('/assess', [\App\Http\Controllers\CareerCompassController::class, 'assess'])->name('assess');
-    Route::get('/results/{id?}', [\App\Http\Controllers\CareerCompassController::class, 'results'])->name('results');
-    Route::get('/history', [\App\Http\Controllers\CareerCompassController::class, 'history'])
+    Route::get('/', [CareerCompassController::class, 'index'])->name('index');
+    Route::get('/assess', [CareerCompassController::class, 'assess'])->name('assess');
+    Route::get('/results/{id?}', [CareerCompassController::class, 'results'])->name('results');
+    Route::get('/download-pdf', [CareerCompassController::class, 'downloadPdf'])->name('pdf'); // Added PDF download route
+    Route::get('/history', [CareerCompassController::class, 'history'])
         ->middleware('auth')->name('history');
 });
 

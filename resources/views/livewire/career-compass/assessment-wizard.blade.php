@@ -79,7 +79,7 @@
                                 </div>
                             </div>
 
-                            <button wire:click="startAssessment"
+                            <button wire:click="nextStep"
                                 class="px-8 py-4 bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-bold text-lg rounded-xl hover:from-indigo-600 hover:to-violet-700 transition-all shadow-lg shadow-indigo-500/30 cursor-pointer inline-flex items-center gap-3">
                                 <span>Start Assessment</span>
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

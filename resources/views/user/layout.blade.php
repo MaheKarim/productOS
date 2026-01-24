@@ -32,6 +32,7 @@
             font-family: 'DM Sans', sans-serif;
         }
     </style>
+    @stack('head')
 </head>
 
 <body class="bg-slate-50 text-slate-900 h-full flex overflow-hidden">
@@ -55,17 +56,9 @@
             <a href="{{ route('dashboard') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('dashboard') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">
                 <i
-                    class="fa-solid fa-grid-2 text-lg {{ request()->routeIs('dashboard') ? 'text-blue-600' : 'text-slate-400' }}"></i>
+                    class="fa-solid fa-border-all text-lg {{ request()->routeIs('dashboard') ? 'text-blue-600' : 'text-slate-400' }}"></i>
                 Dashboard
             </a>
-
-            class="fa-regular fa-user text-lg {{ request()->routeIs('profile.*') ? 'text-blue-600' : 'text-slate-400' }}"></i>
-            My Profile
-            </a>
-
-            <div class="px-4 mt-6 mb-2">
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Tools</p>
-            </div>
 
             <a href="{{ route('career-compass.history') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('career-compass.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">
@@ -73,6 +66,17 @@
                     class="fa-solid fa-compass text-lg {{ request()->routeIs('career-compass.*') ? 'text-blue-600' : 'text-slate-400' }}"></i>
                 Career Compass
             </a>
+
+            <a href="{{ route('profile.edit') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('profile.*') ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">
+                <i
+                    class="fa-regular fa-user text-lg {{ request()->routeIs('profile.*') ? 'text-blue-600' : 'text-slate-400' }}"></i>
+                My Profile
+            </a>
+
+            <div class="px-4 mt-6 mb-2">
+                <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Coming Soon</p>
+            </div>
 
             {{-- Placeholder Links for Future Features --}}
             <a href="#"
