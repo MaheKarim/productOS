@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d2318687f5e5a160e385a1bde65edfa",
+    "content-hash": "11dbc4defcb9cf250892ef571910ab04",
     "packages": [
         {
             "name": "brick/math",
@@ -507,6 +507,55 @@
                 }
             ],
             "time": "2025-03-06T22:45:56+00:00"
+        },
+        {
+            "name": "fgribreau/mailchecker",
+            "version": "v6.0.19",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FGRibreau/mailchecker.git",
+                "reference": "4f033b81911ffd28fb28bddde3885577ecea4663"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FGRibreau/mailchecker/zipball/4f033b81911ffd28fb28bddde3885577ecea4663",
+                "reference": "4f033b81911ffd28fb28bddde3885577ecea4663",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^12"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Fgribreau\\": "platform/php"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Temporary (disposable/throwaway) email detection library. Covers 1987 fake email providers.",
+            "keywords": [
+                "detection",
+                "disposable",
+                "email",
+                "fake"
+            ],
+            "support": {
+                "issues": "https://github.com/FGRibreau/mailchecker/issues",
+                "source": "https://github.com/FGRibreau/mailchecker/tree/v6.0.19"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/fgribreau",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-10-19T12:12:29+00:00"
         },
         {
             "name": "fruitcake/php-cors",
