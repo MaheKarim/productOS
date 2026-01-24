@@ -1,113 +1,378 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Portfolio CMS</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#0D9488',
-                        accent: '#2DD4BF',
-                        teal: {
-                            50: '#F0FDFA',
-                            600: '#0D9488',
-                            400: '#2DD4BF',
-                            900: '#134E4A'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
-</head>
-
-<body class="min-h-screen bg-gradient-to-br from-teal-900 to-primary flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
-        <!-- Logo -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-white mb-2">Portfolio CMS</h1>
-            <p class="text-teal-200">Admin Panel Login</p>
+<x-layout.app>
+    <div class="min-h-screen relative overflow-hidden pt-32 pb-20 px-4">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div
+                class="absolute -top-40 -left-40 w-[600px] h-[600px] bg-gradient-to-br from-violet-500/20 to-purple-600/15 rounded-full blur-[120px] animate-pulse">
+            </div>
+            <div class="absolute -bottom-40 -right-40 w-[600px] h-[600px] bg-gradient-to-tl from-blue-500/20 to-indigo-600/10 rounded-full blur-[120px] animate-pulse"
+                style="animation-delay: 1s;"></div>
+            <div
+                class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-r from-cyan-400/10 via-blue-500/10 to-violet-500/10 rounded-full blur-[100px]">
+            </div>
         </div>
 
-        <!-- Login Card -->
-        <div class="bg-white rounded-2xl shadow-xl p-8">
-            <h2 class="text-2xl font-semibold text-teal-900 mb-6">Welcome back</h2>
+        <!-- Floating Particles -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 left-[10%] w-2 h-2 bg-violet-500/50 rounded-full animate-bounce"
+                style="animation-duration: 2s;"></div>
+            <div class="absolute top-40 right-[15%] w-1.5 h-1.5 bg-blue-500/50 rounded-full animate-bounce"
+                style="animation-duration: 2.5s;"></div>
+            <div class="absolute bottom-32 left-[20%] w-2 h-2 bg-indigo-500/50 rounded-full animate-bounce"
+                style="animation-duration: 3s;"></div>
+            <div class="absolute bottom-40 right-[25%] w-1.5 h-1.5 bg-purple-500/50 rounded-full animate-bounce"
+                style="animation-duration: 1.8s;"></div>
+            <div class="absolute top-1/2 left-[5%] w-1 h-1 bg-cyan-500/50 rounded-full animate-bounce"
+                style="animation-duration: 2.2s;"></div>
+        </div>
 
-            @if ($errors->any())
-                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    @foreach ($errors->all() as $error)
-                        <p class="text-red-600 text-sm">{{ $error }}</p>
-                    @endforeach
-                </div>
-            @endif
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
 
-            <form action="{{ route('login') }}" method="POST" class="space-y-6">
-                @csrf
-
-                <div>
-                    <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fa-solid fa-envelope text-slate-400"></i>
+                <!-- Left Side: Value Proposition -->
+                <div class="order-2 lg:order-1 space-y-8">
+                    <!-- Main Heading -->
+                    <div class="space-y-4">
+                        <div
+                            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-violet-500/10 border border-violet-500/20">
+                            <span class="relative flex h-2 w-2">
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-violet-500"></span>
+                            </span>
+                            <span class="text-sm font-medium text-violet-600 font-['Archivo']">Welcome Back</span>
                         </div>
-                        <input type="email" id="email" name="email" value="{{ old('email') }}" required
-                            autofocus
-                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                            placeholder="admin@portfolio.com">
+                        <h1
+                            class="text-4xl md:text-5xl lg:text-6xl font-bold text-zinc-900 leading-tight font-['Space_Grotesk']">
+                            Continue Your
+                            <span
+                                class="bg-gradient-to-r from-violet-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                PM Journey
+                            </span>
+                        </h1>
+                        <p class="text-lg text-zinc-600 max-w-lg font-['Archivo']">
+                            Sign in to access your personalized dashboard, saved tools, and continue making data-driven
+                            product decisions.
+                        </p>
+                    </div>
+
+                    <!-- Feature Highlights -->
+                    <div class="space-y-4">
+                        <!-- Feature 1 -->
+                        <div class="group relative">
+                            <div
+                                class="absolute -inset-0.5 bg-gradient-to-r from-violet-500 to-blue-500 rounded-2xl blur opacity-0 group-hover:opacity-20 transition duration-300">
+                            </div>
+                            <div
+                                class="relative backdrop-blur-xl bg-white/70 border border-white/60 rounded-2xl p-5 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer flex items-center gap-4">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-violet-500/30">
+                                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-zinc-900 font-['Space_Grotesk']">Your Personal Dashboard
+                                    </h3>
+                                    <p class="text-sm text-zinc-600 font-['Archivo']">Access all your saved calculations
+                                        and analytics in one place.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feature 2 -->
+                        <div class="group relative">
+                            <div
+                                class="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl blur opacity-0 group-hover:opacity-20 transition duration-300">
+                            </div>
+                            <div
+                                class="relative backdrop-blur-xl bg-white/70 border border-white/60 rounded-2xl p-5 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer flex items-center gap-4">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/30">
+                                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-zinc-900 font-['Space_Grotesk']">Secure & Private</h3>
+                                    <p class="text-sm text-zinc-600 font-['Archivo']">Your data is encrypted and
+                                        protected with enterprise-grade security.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div class="group relative">
+                            <div
+                                class="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl blur opacity-0 group-hover:opacity-20 transition duration-300">
+                            </div>
+                            <div
+                                class="relative backdrop-blur-xl bg-white/70 border border-white/60 rounded-2xl p-5 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer flex items-center gap-4">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-purple-500/30">
+                                    <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-zinc-900 font-['Space_Grotesk']">AI-Powered Insights</h3>
+                                    <p class="text-sm text-zinc-600 font-['Archivo']">Get smart recommendations based on
+                                        your product data.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Proof -->
+                    <div class="backdrop-blur-xl bg-white/50 border border-white/60 rounded-2xl p-6 shadow-lg">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="flex -space-x-3">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-400 to-violet-600 flex items-center justify-center text-white text-sm font-bold ring-2 ring-white">
+                                    J</div>
+                                <div
+                                    class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-sm font-bold ring-2 ring-white">
+                                    M</div>
+                                <div
+                                    class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white text-sm font-bold ring-2 ring-white">
+                                    A</div>
+                                <div
+                                    class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-white text-xs font-medium ring-2 ring-white">
+                                    +500</div>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-1">
+                                    @for ($i = 0; $i < 5; $i++)
+                                        <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                        </svg>
+                                    @endfor
+                                </div>
+                                <p class="text-sm text-zinc-600 font-['Archivo']">Trusted by PMs worldwide</p>
+                            </div>
+                        </div>
+                        <blockquote class="text-zinc-700 italic font-['Archivo']">
+                            "I use ProductOS daily to track my product metrics. It's become an essential part of my
+                            workflow."
+                        </blockquote>
+                        <p class="text-sm text-zinc-500 mt-2 font-['Archivo']">— James L., Product Lead at StartupXYZ
+                        </p>
                     </div>
                 </div>
 
-                <div>
-                    <label for="password" class="block text-sm font-medium text-slate-700 mb-2">Password</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fa-solid fa-lock text-slate-400"></i>
+                <!-- Right Side: Login Form -->
+                <div class="order-1 lg:order-2">
+                    <div class="relative group">
+                        <!-- Glow Effect -->
+                        <div
+                            class="absolute -inset-1 bg-gradient-to-r from-violet-600 via-blue-600 to-purple-600 rounded-3xl blur-lg opacity-30 group-hover:opacity-40 transition-opacity duration-500">
                         </div>
-                        <input type="password" id="password" name="password" required
-                            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                            placeholder="••••••••">
+
+                        <!-- Card Container -->
+                        <div
+                            class="relative backdrop-blur-xl bg-white/80 border border-white/60 rounded-3xl p-8 md:p-10 shadow-2xl shadow-violet-500/10">
+
+                            <!-- Header -->
+                            <div class="text-center mb-8">
+                                <div
+                                    class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500 to-blue-600 shadow-lg shadow-violet-500/30 mb-5">
+                                    <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24"
+                                        stroke="currentColor" stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+                                    </svg>
+                                </div>
+                                <h2 class="text-2xl md:text-3xl font-bold text-zinc-900 font-['Space_Grotesk']">
+                                    Welcome Back
+                                </h2>
+                                <p class="text-zinc-600 mt-2 font-['Archivo']">Sign in to access your dashboard</p>
+                            </div>
+
+                            <!-- Error Messages -->
+                            @if ($errors->any())
+                                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                                    @foreach ($errors->all() as $error)
+                                        <p class="text-red-600 text-sm flex items-center gap-2">
+                                            <svg class="w-4 h-4 flex-shrink-0" fill="currentColor"
+                                                viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            {{ $error }}
+                                        </p>
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            <form action="{{ route('login') }}" method="POST" class="space-y-5">
+                                @csrf
+
+                                <!-- Email Input -->
+                                <div class="space-y-2">
+                                    <label for="email"
+                                        class="block text-sm font-semibold text-zinc-700 font-['Archivo']">
+                                        Email Address
+                                    </label>
+                                    <div class="relative group/input">
+                                        <div
+                                            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <svg class="w-5 h-5 text-zinc-400 group-focus-within/input:text-violet-500 transition-colors"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                stroke-width="1.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                                            </svg>
+                                        </div>
+                                        <input id="email" type="email" name="email"
+                                            value="{{ old('email') }}" required autofocus
+                                            class="w-full pl-12 pr-4 py-3.5 bg-white/60 border border-zinc-200 rounded-xl focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 outline-none text-zinc-900 placeholder-zinc-400 transition-all duration-200 font-['Archivo']"
+                                            placeholder="john@example.com">
+                                    </div>
+                                </div>
+
+                                <!-- Password Input -->
+                                <div class="space-y-2">
+                                    <label for="password"
+                                        class="block text-sm font-semibold text-zinc-700 font-['Archivo']">
+                                        Password
+                                    </label>
+                                    <div class="relative group/input">
+                                        <div
+                                            class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                            <svg class="w-5 h-5 text-zinc-400 group-focus-within/input:text-violet-500 transition-colors"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                stroke-width="1.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                                            </svg>
+                                        </div>
+                                        <input id="password" type="password" name="password" required
+                                            class="w-full pl-12 pr-4 py-3.5 bg-white/60 border border-zinc-200 rounded-xl focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10 outline-none text-zinc-900 placeholder-zinc-400 transition-all duration-200 font-['Archivo']"
+                                            placeholder="••••••••">
+                                    </div>
+                                </div>
+
+                                <!-- Remember Me & Forgot Password -->
+                                <div class="flex items-center justify-between">
+                                    <label class="flex items-center space-x-2 cursor-pointer group">
+                                        <input type="checkbox" name="remember"
+                                            class="w-4 h-4 rounded border-zinc-300 text-violet-600 focus:ring-violet-500 cursor-pointer">
+                                        <span
+                                            class="text-sm text-zinc-600 group-hover:text-zinc-900 transition-colors font-['Archivo']">Remember
+                                            me</span>
+                                    </label>
+                                    <a href="#"
+                                        class="text-sm font-medium text-violet-600 hover:text-violet-700 transition-colors font-['Archivo']">
+                                        Forgot password?
+                                    </a>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="pt-3">
+                                    <button type="submit"
+                                        class="relative w-full py-4 bg-gradient-to-r from-violet-600 via-blue-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg shadow-violet-500/30 transform transition-all duration-300 hover:shadow-xl hover:shadow-violet-500/40 hover:scale-[1.02] focus:ring-4 focus:ring-violet-500/30 active:scale-[0.98] cursor-pointer overflow-hidden group/btn">
+                                        <div
+                                            class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700">
+                                        </div>
+                                        <span
+                                            class="relative flex items-center justify-center gap-2 font-['Space_Grotesk']">
+                                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                                            </svg>
+                                            Sign In
+                                        </span>
+                                    </button>
+                                </div>
+                            </form>
+
+                            <!-- Divider -->
+                            <div class="relative my-6">
+                                <div class="absolute inset-0 flex items-center">
+                                    <div class="w-full border-t border-zinc-200/80"></div>
+                                </div>
+                                <div class="relative flex justify-center text-sm">
+                                    <span class="px-4 bg-white/80 text-zinc-500 font-['Archivo']">or continue
+                                        with</span>
+                                </div>
+                            </div>
+
+                            <!-- Social Login -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <button type="button"
+                                    class="flex items-center justify-center gap-2 px-4 py-3 bg-white/60 border border-zinc-200 rounded-xl hover:bg-zinc-50 hover:border-zinc-300 transition-all duration-200 cursor-pointer group">
+                                    <svg class="w-5 h-5" viewBox="0 0 24 24">
+                                        <path fill="#4285F4"
+                                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                        <path fill="#34A853"
+                                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                        <path fill="#FBBC05"
+                                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                                        <path fill="#EA4335"
+                                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                                    </svg>
+                                    <span
+                                        class="text-sm font-medium text-zinc-700 group-hover:text-zinc-900 font-['Archivo']">Google</span>
+                                </button>
+                                <button type="button"
+                                    class="flex items-center justify-center gap-2 px-4 py-3 bg-white/60 border border-zinc-200 rounded-xl hover:bg-zinc-50 hover:border-zinc-300 transition-all duration-200 cursor-pointer group">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                                    </svg>
+                                    <span
+                                        class="text-sm font-medium text-zinc-700 group-hover:text-zinc-900 font-['Archivo']">GitHub</span>
+                                </button>
+                            </div>
+
+                            <!-- Register Link -->
+                            <div class="text-center mt-6">
+                                <p class="text-zinc-600 text-sm font-['Archivo']">
+                                    Don't have an account?
+                                    <a href="{{ route('register') }}"
+                                        class="font-semibold text-violet-600 hover:text-blue-600 transition-colors duration-200 ml-1">
+                                        Create one
+                                        <svg class="inline-block w-4 h-4 ml-0.5" fill="none" viewBox="0 0 24 24"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                                        </svg>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trust Badges -->
+                    <div class="flex items-center justify-center gap-6 mt-6 text-zinc-500 text-xs font-['Archivo']">
+                        <div class="flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>SSL Secured</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span>Privacy Protected</span>
+                        </div>
                     </div>
                 </div>
-
-                <div class="flex items-center justify-between">
-                    <label class="flex items-center space-x-2 cursor-pointer">
-                        <input type="checkbox" name="remember"
-                            class="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary">
-                        <span class="text-sm text-slate-600">Remember me</span>
-                    </label>
-                </div>
-
-                <button type="submit"
-                    class="w-full py-3 px-4 bg-gradient-to-r from-teal-900 to-primary text-white font-semibold rounded-lg hover:shadow-lg transition-all">
-                    <i class="fa-solid fa-right-to-bracket mr-2"></i>
-                    Sign In
-                </button>
-            </form>
-        </div>
-
-        <!-- Footer -->
-        <div class="text-center mt-6">
-            <a href="{{ url('/') }}" class="text-teal-200 hover:text-white transition-colors text-sm">
-                <i class="fa-solid fa-arrow-left mr-1"></i>
-                Back to Homepage
-            </a>
+            </div>
         </div>
     </div>
-</body>
-
-</html>
+</x-layout.app>
