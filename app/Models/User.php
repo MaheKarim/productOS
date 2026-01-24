@@ -67,4 +67,9 @@ class User extends Authenticatable
     {
         return $this->is_active;
     }
+
+    public function careerAssessments()
+    {
+        return $this->hasMany(CareerAssessment::class);
+    }
 }

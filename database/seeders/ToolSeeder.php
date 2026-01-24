@@ -38,7 +38,8 @@ class ToolSeeder extends Seeder
                 'AB' => 'A/B Test',
                 'Sample' => 'Sample Size',
                 'NPS' => 'NPS',
-                'PMF' => 'PMF Score'
+                'PMF' => 'PMF Score',
+                'CareerCompass' => 'PM Career Compass'
             ],
             'Execution & Delivery' => [
                 'Velocity' => 'Velocity',
@@ -58,10 +59,13 @@ class ToolSeeder extends Seeder
             ]);
 
             foreach ($tools as $key => $toolName) {
+                $customUrl = $toolName === 'PM Career Compass' ? '/tools/career-compass' : null;
+
                 Tool::create([
                     'name' => $toolName,
                     'slug' => \Str::slug($toolName),
                     'category_id' => $category->id,
+                    'custom_url' => $customUrl,
                     'description' => $this->getDescriptionFor($toolName),
                     'difficulty' => $this->getDifficultyFor($toolName),
                     'time_estimate' => $this->getTimeFor($toolName),
@@ -86,6 +90,7 @@ class ToolSeeder extends Seeder
             'CAC' => 'Calculate Customer Acquisition Cost accurately.',
             'LTV' => 'Estimate Customer Lifetime Value.',
             'RICE' => 'Prioritize features using Reach, Impact, Confidence, and Effort.',
+            'PM Career Compass' => 'Comprehensive PM career assessment tool that evaluates your environment, skills, and provides personalized recommendations.',
         ];
         return $descriptions[$name] ?? "Calculate and analyze {$name} for your product.";
     }
@@ -93,7 +98,7 @@ class ToolSeeder extends Seeder
     private function getDifficultyFor($name)
     {
         return match ($name) {
-            'TAM / SAM / SOM', 'LTV', 'Weighted Scoring' => 'Advanced',
+            'TAM / SAM / SOM', 'LTV', 'Weighted Scoring', 'PM Career Compass' => 'Advanced',
             'RICE', 'ICE', 'CAC' => 'Medium',
             default => 'Easy'
         };
@@ -102,7 +107,7 @@ class ToolSeeder extends Seeder
     private function getTimeFor($name)
     {
         return match ($name) {
-            'TAM / SAM / SOM', 'Weighted Scoring' => '15 mins',
+            'TAM / SAM / SOM', 'Weighted Scoring', 'PM Career Compass' => '15 mins',
             'LTV', 'ROI Calculator' => '10 mins',
             default => '5 mins'
         };

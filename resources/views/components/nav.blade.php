@@ -34,7 +34,7 @@
                         Get Started
                     </a>
                 @else
-                    <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('admin.dashboard') }}"
+                    <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}"
                         class="px-4 py-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white text-sm font-semibold rounded-lg hover:shadow-lg hover:shadow-violet-500/30 transition-all cursor-pointer flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -94,7 +94,7 @@
                         class="block px-4 py-3 text-base font-bold text-white bg-gradient-to-r from-blue-600 to-violet-600 rounded-lg cursor-pointer text-center">Get
                         Started</a>
                 @else
-                    <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('admin.dashboard') }}"
+                    <a href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}"
                         class="flex items-center gap-2 px-4 py-3 text-base font-bold text-white bg-gradient-to-r from-violet-600 to-purple-600 rounded-lg cursor-pointer">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round"

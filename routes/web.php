@@ -20,6 +20,16 @@ use App\Http\Controllers\Admin\DirectoryCategoryController;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Career Compass Tool (before generic tools routes)
+Route::prefix('tools/career-compass')->name('career-compass.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\CareerCompassController::class, 'index'])->name('index');
+    Route::get('/assess', [\App\Http\Controllers\CareerCompassController::class, 'assess'])->name('assess');
+    Route::get('/results/{id?}', [\App\Http\Controllers\CareerCompassController::class, 'results'])->name('results');
+    Route::get('/history', [\App\Http\Controllers\CareerCompassController::class, 'history'])
+        ->middleware('auth')->name('history');
+});
+
 // Tools
 Route::get('/tools', [ToolsController::class, 'index'])->name('tools.index');
 Route::get('/tools/{category}', [ToolsController::class, 'category'])->name('tools.category');

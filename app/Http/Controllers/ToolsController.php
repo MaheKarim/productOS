@@ -31,6 +31,7 @@ class ToolsController extends Controller
                     'category' => $c->name,
                     'categorySlug' => $c->slug,
                     'description' => $t->description,
+                    'customUrl' => $t->custom_url,
                 ];
             });
         })->values();

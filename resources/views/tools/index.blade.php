@@ -87,7 +87,7 @@
                         class="absolute top-full left-0 right-0 mt-3 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl overflow-hidden shadow-2xl z-50">
                         <div class="p-2 max-h-64 overflow-y-auto">
                             <template x-for="tool in filteredTools.slice(0, 5)" :key="tool.slug">
-                                <a :href="`/tools/${tool.categorySlug}/${tool.slug}`"
+                                <a :href="tool.customUrl || `/tools/${tool.categorySlug}/${tool.slug}`"
                                     class="flex items-center gap-3 p-3 hover:bg-white/10 rounded-lg transition-colors cursor-pointer group">
                                     <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
                                         <svg class="w-5 h-5 text-blue-300" fill="none" stroke="currentColor"
@@ -372,11 +372,16 @@
                         <!-- Tools Grid -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach ($category->tools as $tool)
-                                <a href="{{ route('tools.show', ['category' => $category->slug, 'tool' => $tool->slug]) }}"
-                                    class="group block bg-white rounded-2xl p-6 border border-slate-200 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 cursor-pointer transform hover:-translate-y-1">
-                                    <!-- Tool Icon -->
-                                    <div
-                                        class="w-12 h-12 rounded-xl flex items-center justify-center mb-4
+                                @if ($tool->custom_url)
+                                    <a href="{{ $tool->custom_url }}"
+                                        class="group block bg-white rounded-2xl p-6 border border-slate-200 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 cursor-pointer transform hover:-translate-y-1">
+                                    @else
+                                        <a href="{{ route('tools.show', ['category' => $category->slug, 'tool' => $tool->slug]) }}"
+                                            class="group block bg-white rounded-2xl p-6 border border-slate-200 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-500/10 transition-all duration-300 cursor-pointer transform hover:-translate-y-1">
+                                @endif
+                                <!-- Tool Icon -->
+                                <div
+                                    class="w-12 h-12 rounded-xl flex items-center justify-center mb-4
                                         @if ($category->name == 'Strategy & Validation') bg-gradient-to-br from-emerald-400 to-emerald-600
                                         @elseif($category->name == 'SaaS Metrics') bg-gradient-to-br from-blue-400 to-blue-600
                                         @elseif($category->name == 'Prioritization') bg-gradient-to-br from-purple-400 to-purple-600
@@ -393,49 +398,48 @@
                                         @elseif($category->name == 'Growth & Engagement') shadow-rose-500/30
                                         @else shadow-slate-500/30 @endif
                                     ">
-                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
-                                            </path>
-                                        </svg>
-                                    </div>
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                                        </path>
+                                    </svg>
+                                </div>
 
-                                    <h3
-                                        class="font-bold text-lg text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
-                                        {{ $tool->name }}
-                                    </h3>
-                                    <p class="text-sm text-slate-500 mb-4 line-clamp-2">
-                                        {{ $tool->description }}
-                                    </p>
+                                <h3
+                                    class="font-bold text-lg text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                                    {{ $tool->name }}
+                                </h3>
+                                <p class="text-sm text-slate-500 mb-4 line-clamp-2">
+                                    {{ $tool->description }}
+                                </p>
 
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-2">
-                                            <span
-                                                class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
-                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        stroke-width="2"
-                                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                </svg>
-                                                {{ $tool->time_estimate }}
-                                            </span>
-                                            <span
-                                                class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-lg
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            {{ $tool->time_estimate }}
+                                        </span>
+                                        <span
+                                            class="inline-flex items-center text-xs font-medium px-2.5 py-1 rounded-lg
                                                 @if ($tool->difficulty === 'Easy') bg-emerald-100 text-emerald-700
                                                 @elseif($tool->difficulty === 'Medium') bg-amber-100 text-amber-700
                                                 @else bg-red-100 text-red-700 @endif
                                             ">
-                                                {{ $tool->difficulty }}
-                                            </span>
-                                        </div>
-                                        <svg class="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors transform group-hover:translate-x-1"
-                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 5l7 7-7 7"></path>
-                                        </svg>
+                                            {{ $tool->difficulty }}
+                                        </span>
                                     </div>
+                                    <svg class="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors transform group-hover:translate-x-1"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
                                 </a>
                             @endforeach
                         </div>

@@ -17,7 +17,12 @@
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    <!-- Chart.js (for Career Compass and analytics) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    @stack('head')
 </head>
 
 <body class="flex min-h-full flex-col font-sans text-zinc-900 selection:bg-blue-100 selection:text-blue-900">

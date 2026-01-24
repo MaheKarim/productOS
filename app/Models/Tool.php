@@ -13,6 +13,7 @@ class Tool extends Model
         'category_id',
         'name',
         'slug',
+        'custom_url',
         'description',
         'difficulty',
         'time_estimate',
