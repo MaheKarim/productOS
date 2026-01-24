@@ -41,6 +41,13 @@ Route::get('/tools/{category}/{tool}', [ToolsController::class, 'show'])->name('
 Route::get('/portfolio', [CaseStudyController::class, 'index'])->name('portfolio.index');
 Route::get('/portfolio/{slug}', [CaseStudyController::class, 'show'])->name('portfolio.show');
 
+// Prompt Library (Public)
+Route::prefix('prompts')->name('prompts.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\PromptLibraryController::class, 'index'])->name('index');
+    Route::get('/{slug}', [\App\Http\Controllers\PromptLibraryController::class, 'show'])->name('show');
+    Route::post('/{id}/copy', [\App\Http\Controllers\PromptLibraryController::class, 'trackCopy'])->name('copy');
+});
+
 // Pages
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/services', [PageController::class, 'services'])->name('services');
@@ -140,5 +147,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     // User Management
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->names('admin.users');
     Route::patch('users/{user}/toggle', [\App\Http\Controllers\Admin\UserController::class, 'toggle'])->name('admin.users.toggle');
+
+    // Prompt Library Management
+    Route::resource('prompts', \App\Http\Controllers\Admin\PromptController::class)->names('admin.prompts');
+    Route::post('prompts/{prompt}/toggle', [\App\Http\Controllers\Admin\PromptController::class, 'toggleStatus'])->name('admin.prompts.toggle');
+    Route::post('prompts/{prompt}/feature', [\App\Http\Controllers\Admin\PromptController::class, 'toggleFeatured'])->name('admin.prompts.feature');
+    Route::post('prompts/{prompt}/duplicate', [\App\Http\Controllers\Admin\PromptController::class, 'duplicate'])->name('admin.prompts.duplicate');
 });
 

@@ -17,6 +17,8 @@
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('services') ? 'text-blue-600' : '' }}">Services</a>
                 <a href="{{ route('about') }}"
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('about') ? 'text-blue-600' : '' }}">About</a>
+                <a href="{{ route('prompts.index') }}"
+                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('prompts.*') ? 'text-blue-600 font-bold' : '' }}">Prompts</a>
                 <a href="{{ route('tools.index') }}"
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('tools.*') ? 'text-blue-600 font-bold' : '' }}">Tools</a>
                 <a href="{{ route('directory.index') }}"
@@ -79,6 +81,8 @@
                 class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">Services</a>
             <a href="{{ route('about') }}"
                 class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">About</a>
+            <a href="{{ route('prompts.index') }}"
+                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">Prompts</a>
             <a href="{{ route('tools.index') }}"
                 class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">Toolkit</a>
             <a href="{{ route('directory.index') }}"

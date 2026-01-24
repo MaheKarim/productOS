@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
             TamSamSomSeeder::class,
             DirectoryCategorySeeder::class,
             DirectoryItemSeeder::class,
+            PromptCategorySeeder::class,
+            PromptSeeder::class,
         ]);
     }
 }

@@ -157,6 +157,18 @@
                         <span
                             class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-indigo-500/20 text-indigo-400 font-bold">{{ \App\Models\Tool::count() }}</span>
                     </a>
+
+                    {{-- Prompt Library Management --}}
+                    <a href="{{ route('admin.prompts.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.prompts.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="prompts">
+                        <i data-lucide="message-square-text"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.prompts.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        Prompt Library
+                        <span
+                            class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-amber-500/20 text-amber-400 font-bold">{{ \App\Models\Prompt::count() }}</span>
+                    </a>
+
                     {{-- Directory Management --}}
                     <div class="cms-settings-group mb-2">
                         <button onclick="toggleDirectoryMenu()"
