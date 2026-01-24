@@ -20,6 +20,8 @@ class AdminSeeder extends Seeder
                 'email' => 'admin@productos.bd',
                 'password' => Hash::make('productos'),
                 'email_verified_at' => now(),
+                'role' => 'admin',
+                'is_active' => true,
             ]
         );
 

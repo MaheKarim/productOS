@@ -53,16 +53,25 @@ Route::prefix('directory')->name('directory.')->group(function () {
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 // Auth Routes
+Route::get('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'register']);
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Admin Routes (Protected by auth middleware)
+// User Dashboard & Profile
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\User\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [\App\Http\Controllers\User\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [\App\Http\Controllers\User\ProfileController::class, 'update'])->name('profile.update');
+});
+
+// Admin Routes (Protected by auth and role:admin middleware)
 use App\Http\Controllers\Admin\DashboardController;
 
 // ...
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
     // Hero
@@ -115,5 +124,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     });
     // Main Directory Resource
     Route::resource('directory', AdminDirectoryController::class)->names('admin.directory');
+
+    // User Management
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->names('admin.users');
+    Route::patch('users/{user}/toggle', [\App\Http\Controllers\Admin\UserController::class, 'toggle'])->name('admin.users.toggle');
 });
 

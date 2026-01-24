@@ -22,6 +22,10 @@ class User extends Authenticatable
         'email',
         'password',
         'avatar',
+        'role',
+        'is_active',
+        'username',
+        'bio',
     ];
 
     /**
@@ -44,6 +48,23 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
+            'last_login_at' => 'datetime',
         ];
+    }
+
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isActive(): bool
+    {
+        return $this->is_active;
     }
 }

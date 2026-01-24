@@ -31,7 +31,24 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended(route('admin.dashboard'));
+
+            if (Auth::user()->role === 'admin') {
+                return redirect()->intended(route('admin.dashboard'));
+            }
+
+            Auth::user()->update([
+                'last_login_at' => now(),
+            ]);
+
+            \App\Models\ActivityLog::create([
+                'user_id' => Auth::id(),
+                'action' => 'Logged In',
+                'description' => 'User logged in successfully.',
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+            ]);
+
+            return redirect()->intended(route('dashboard'));
         }
 
         return back()->withErrors([
