@@ -76,6 +76,18 @@
                                 class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900 placeholder:text-slate-400"
                                 placeholder="e.g., 5 mins">
                         </div>
+
+                        <!-- Custom URL -->
+                        <div>
+                            <label for="custom_url" class="block text-sm font-bold text-slate-700 mb-2">Custom URL
+                                (Optional)</label>
+                            <input type="text" id="custom_url" name="custom_url"
+                                value="{{ old('custom_url', $tool->custom_url) }}"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900 placeholder:text-slate-400"
+                                placeholder="e.g., /tools/career-compass">
+                            <p class="text-xs text-slate-500 mt-1">Use this for tools with custom routes. Leave empty for
+                                standard tool pages.</p>
+                        </div>
                     </div>
 
                     <!-- Description -->
@@ -146,7 +158,8 @@ Write detailed content about the tool here using Markdown...
 
                         <!-- When to Use -->
                         <div>
-                            <label for="when_to_use" class="block text-sm font-bold text-slate-700 mb-2">When to Use</label>
+                            <label for="when_to_use" class="block text-sm font-bold text-slate-700 mb-2">When to
+                                Use</label>
                             <textarea id="when_to_use" name="when_to_use" rows="3"
                                 class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all text-slate-900 placeholder:text-slate-400"
                                 placeholder="e.g., Early stage idea validation... ">{{ old('when_to_use', $tool->when_to_use) }}</textarea>

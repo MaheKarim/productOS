@@ -117,7 +117,13 @@
                                         </div>
                                         <div>
                                             <p class="font-bold text-slate-900">{{ $tool->name }}</p>
-                                            <p class="text-xs text-slate-500">{{ $tool->time_estimate }}</p>
+                                            <p class="text-xs text-slate-500">
+                                                {{ $tool->time_estimate }}
+                                                @if ($tool->custom_url)
+                                                    <br><span class="text-indigo-600 font-medium">→
+                                                        {{ $tool->custom_url }}</span>
+                                                @endif
+                                            </p>
                                         </div>
                                     </div>
                                 </td>
