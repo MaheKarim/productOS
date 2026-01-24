@@ -169,6 +169,17 @@
                             class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-amber-500/20 text-amber-400 font-bold">{{ \App\Models\Prompt::count() }}</span>
                     </a>
 
+                    {{-- Roadmap Management --}}
+                    <a href="{{ route('admin.roadmap.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.roadmap.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="roadmap">
+                        <i data-lucide="map"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.roadmap.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        PM Roadmap
+                        <span
+                            class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-teal-500/20 text-teal-400 font-bold">{{ \App\Models\RoadmapTopic::count() }}</span>
+                    </a>
+
                     {{-- Directory Management --}}
                     <div class="cms-settings-group mb-2">
                         <button onclick="toggleDirectoryMenu()"

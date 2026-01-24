@@ -33,6 +33,10 @@
                         class="px-6 py-3 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20 transition-colors border border-white/10 backdrop-blur-md">
                         Explore Tools
                     </a>
+                    <a href="{{ route('roadmap.index') }}"
+                        class="px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold rounded-xl hover:from-yellow-500 hover:to-orange-600 transition-colors shadow-lg shadow-orange-500/20 flex items-center gap-2">
+                        <i class="fa-solid fa-map"></i> My Roadmap
+                    </a>
                 </div>
             </div>
         </div>
@@ -68,6 +72,21 @@
                         {{ Auth::user()->created_at->format('F d, Y') }}
                     </span>
                 </div>
+            </div>
+        </div>
+
+        <!-- PM Roadmap Progress -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                <div>
+                    <h3 class="font-bold text-slate-900">Your PM Roadmap Progress</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Track your Product Manager skill development</p>
+                </div>
+                <a href="{{ route('roadmap.index') }}" class="text-indigo-600 text-sm font-semibold hover:underline">View
+                    Full Roadmap →</a>
+            </div>
+            <div class="p-6">
+                <livewire:roadmap.analytics />
             </div>
         </div>
 

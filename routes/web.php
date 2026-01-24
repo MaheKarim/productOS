@@ -78,12 +78,19 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+
 // User Dashboard & Profile
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\User\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [\App\Http\Controllers\User\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [\App\Http\Controllers\User\ProfileController::class, 'update'])->name('profile.update');
 });
+
+// Public Roadmap
+Route::get('/roadmap', [\App\Http\Controllers\RoadmapController::class, 'index'])->name('roadmap.index');
+Route::post('/roadmap/status', [\App\Http\Controllers\RoadmapController::class, 'updateStatus'])
+    ->middleware('auth')
+    ->name('roadmap.update-status');
 
 // Admin Routes (Protected by auth and role:admin middleware)
 use App\Http\Controllers\Admin\DashboardController;
@@ -153,5 +160,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('prompts/{prompt}/toggle', [\App\Http\Controllers\Admin\PromptController::class, 'toggleStatus'])->name('admin.prompts.toggle');
     Route::post('prompts/{prompt}/feature', [\App\Http\Controllers\Admin\PromptController::class, 'toggleFeatured'])->name('admin.prompts.feature');
     Route::post('prompts/{prompt}/duplicate', [\App\Http\Controllers\Admin\PromptController::class, 'duplicate'])->name('admin.prompts.duplicate');
+
+    // PM Roadmap Management
+    Route::resource('roadmap', \App\Http\Controllers\Admin\RoadmapController::class, ['parameters' => ['roadmap' => 'topic']])->names('admin.roadmap');
 });
 

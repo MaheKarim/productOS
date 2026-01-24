@@ -14,7 +14,13 @@
         href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
         rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+
+    <!-- Chart.js for Roadmap Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    @livewireStyles
 
     <script>
         tailwind.config = {
@@ -183,6 +189,8 @@
             @yield('content')
         </div>
     </main>
+
+    @livewireScripts
 </body>
 
 </html>
