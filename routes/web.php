@@ -163,5 +163,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
     // PM Roadmap Management
     Route::resource('roadmap', \App\Http\Controllers\Admin\RoadmapController::class, ['parameters' => ['roadmap' => 'topic']])->names('admin.roadmap');
+
+    // AI Provider Management
+    Route::resource('ai-providers', \App\Http\Controllers\Admin\AiProviderController::class)->names('admin.ai-providers');
+    Route::patch('ai-providers/{provider}/toggle', [\App\Http\Controllers\Admin\AiProviderController::class, 'toggleActive'])->name('admin.ai-providers.toggle');
+    Route::patch('ai-providers/{provider}/set-default', [\App\Http\Controllers\Admin\AiProviderController::class, 'setDefault'])->name('admin.ai-providers.set-default');
+    Route::post('ai-providers/{provider}/test', [\App\Http\Controllers\Admin\AiProviderController::class, 'testConnection'])->name('admin.ai-providers.test');
+    Route::get('ai-providers/{provider}/models', [\App\Http\Controllers\Admin\AiProviderController::class, 'models'])->name('admin.ai-providers.models');
+    Route::post('ai-providers/{provider}/models', [\App\Http\Controllers\Admin\AiProviderController::class, 'storeModel'])->name('admin.ai-providers.models.store');
+    Route::delete('ai-providers/{provider}/models/{model}', [\App\Http\Controllers\Admin\AiProviderController::class, 'destroyModel'])->name('admin.ai-providers.models.destroy');
 });
 

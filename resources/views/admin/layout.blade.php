@@ -220,6 +220,14 @@
                             class="mr-3 w-5 h-5 {{ request()->routeIs('admin.users.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
                         User Management
                     </a>
+
+                    <a href="{{ route('admin.ai-providers.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.ai-providers.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="ai-providers">
+                        <i data-lucide="brain"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.ai-providers.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        AI Providers
+                    </a>
                     {{-- Collapsible CMS Group --}}
                     <div class="cms-settings-group">
                         <button onclick="toggleCmsSettings()"
