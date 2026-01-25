@@ -174,6 +174,9 @@ class AiProviderService
             $payload['temperature'] = $options['temperature'];
         }
 
+        // Start timing the request
+        $startTime = microtime(true);
+
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $apiKey,
             'Content-Type' => 'application/json',
@@ -181,17 +184,80 @@ class AiProviderService
             ->timeout($provider->timeout ?? 30)
             ->post($provider->base_url . '/chat/completions', $payload);
 
+        // Calculate response time in milliseconds
+        $responseTimeMs = (int) ((microtime(true) - $startTime) * 1000);
+
         if ($response->successful()) {
+            $data = $response->json();
+
+            // Extract token usage from response
+            $inputTokens = $data['usage']['prompt_tokens'] ?? null;
+            $outputTokens = $data['usage']['completion_tokens'] ?? null;
+
+            // Calculate cost (basic estimation - can be refined per model)
+            $cost = $this->calculateCost($provider, $model, $inputTokens, $outputTokens);
+
+            // Log successful request
+            \App\Models\AiRequestLog::logSuccess(
+                $provider->id,
+                $model,
+                $responseTimeMs,
+                $inputTokens,
+                $outputTokens,
+                $cost,
+                '/chat/completions'
+            );
+
             return [
                 'success' => true,
-                'data' => $response->json(),
+                'data' => $data,
             ];
         }
 
+        $errorMessage = $response->json('error.message') ?? 'Unknown error';
+
+        // Log failed request
+        \App\Models\AiRequestLog::logError(
+            $provider->id,
+            $model,
+            $responseTimeMs,
+            $errorMessage,
+            '/chat/completions'
+        );
+
         return [
             'success' => false,
-            'error' => $response->json('error.message') ?? 'Unknown error',
+            'error' => $errorMessage,
             'status' => $response->status(),
         ];
+    }
+
+    /**
+     * Calculate cost based on token usage.
+     * Default rates - can be overridden per provider/model.
+     */
+    protected function calculateCost(AiProvider $provider, string $model, ?int $inputTokens, ?int $outputTokens): float
+    {
+        if (!$inputTokens && !$outputTokens) {
+            return 0;
+        }
+
+        // Check if there's a model-specific rate
+        $providerModel = $provider->models()->where('model_name', $model)->first();
+
+        if ($providerModel && $providerModel->cost_per_1k_input && $providerModel->cost_per_1k_output) {
+            $inputCost = (($inputTokens ?? 0) / 1000) * $providerModel->cost_per_1k_input;
+            $outputCost = (($outputTokens ?? 0) / 1000) * $providerModel->cost_per_1k_output;
+            return $inputCost + $outputCost;
+        }
+
+        // Default rates (approximate for GPT-4 class models)
+        $defaultInputRate = 0.01;  // $0.01 per 1K tokens
+        $defaultOutputRate = 0.03; // $0.03 per 1K tokens
+
+        $inputCost = (($inputTokens ?? 0) / 1000) * $defaultInputRate;
+        $outputCost = (($outputTokens ?? 0) / 1000) * $defaultOutputRate;
+
+        return $inputCost + $outputCost;
     }
 }

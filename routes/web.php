@@ -165,6 +165,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::resource('roadmap', \App\Http\Controllers\Admin\RoadmapController::class, ['parameters' => ['roadmap' => 'topic']])->names('admin.roadmap');
 
     // AI Provider Management
+    Route::get('ai-providers/health', [\App\Http\Controllers\Admin\AiHealthController::class, 'index'])->name('admin.ai-providers.health');
+    Route::get('ai-providers/health/chart-data', [\App\Http\Controllers\Admin\AiHealthController::class, 'chartData'])->name('admin.ai-providers.health.data');
     Route::resource('ai-providers', \App\Http\Controllers\Admin\AiProviderController::class)->names('admin.ai-providers');
     Route::patch('ai-providers/{provider}/toggle', [\App\Http\Controllers\Admin\AiProviderController::class, 'toggleActive'])->name('admin.ai-providers.toggle');
     Route::patch('ai-providers/{provider}/set-default', [\App\Http\Controllers\Admin\AiProviderController::class, 'setDefault'])->name('admin.ai-providers.set-default');

@@ -146,28 +146,109 @@
                 </div>
             </div>
 
-            {{-- Recent Activity / Empty State Placeholder --}}
-            <div class="bg-white rounded-[2.5rem] p-10 border border-slate-200/60 shadow-sm overflow-hidden relative">
-                <div class="flex items-center justify-between mb-8">
-                    <h3 class="text-xl font-bold text-slate-900 tracking-tight">Recent Activity</h3>
-                    <button
-                        class="text-xs font-bold text-indigo-600 uppercase tracking-widest px-4 py-2 bg-indigo-50 rounded-full">Coming
-                        Soon</button>
+            {{-- AI Provider Health Section --}}
+            <div class="bg-white rounded-[2.5rem] p-8 border border-slate-200/60 shadow-sm overflow-hidden relative">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+                            <i data-lucide="activity" class="w-5 h-5 text-indigo-600"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 tracking-tight">AI Provider Health</h3>
+                    </div>
+                    <a href="{{ route('admin.ai-providers.health') }}"
+                        class="text-xs font-bold text-indigo-600 uppercase tracking-widest px-4 py-2 bg-indigo-50 rounded-full hover:bg-indigo-100 transition-colors">
+                        Full Dashboard
+                    </a>
                 </div>
 
-                <div class="flex flex-col items-center justify-center py-12 text-center">
-                    <div class="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6">
-                        <i data-lucide="activity" class="w-10 h-10 text-slate-300"></i>
+                {{-- AI Stats Cards --}}
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    {{-- Total Requests --}}
+                    <div class="bg-slate-50 rounded-2xl p-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="zap" class="w-4 h-4 text-indigo-500"></i>
+                            <span class="text-xs font-medium text-slate-500 uppercase">Requests</span>
+                        </div>
+                        <p class="text-2xl font-bold text-slate-900">{{ number_format($aiStats['total_requests']) }}</p>
+                        <p class="text-xs text-slate-400 mt-1">Last 24h</p>
                     </div>
-                    <h4 class="text-lg font-bold text-slate-900 mb-2">Activity Tracking Paused</h4>
-                    <p class="text-slate-500 max-w-sm mb-8 leading-relaxed italic">"We're preparing the event log system for
-                        the SaaS transition. Stay tuned for real-time updates."</p>
-                    <div class="flex space-x-2">
-                        <div class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></div>
-                        <div class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse delay-75"></div>
-                        <div class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse delay-150"></div>
+
+                    {{-- Avg Response Time --}}
+                    <div class="bg-slate-50 rounded-2xl p-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="timer" class="w-4 h-4 text-teal-500"></i>
+                            <span class="text-xs font-medium text-slate-500 uppercase">Avg Time</span>
+                        </div>
+                        <p class="text-2xl font-bold text-slate-900">{{ $aiStats['avg_response_time'] }}<span
+                                class="text-sm text-slate-400">ms</span></p>
+                        <p class="text-xs text-slate-400 mt-1">Response</p>
+                    </div>
+
+                    {{-- Error Rate --}}
+                    <div class="bg-slate-50 rounded-2xl p-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="{{ $aiStats['error_rate'] > 5 ? 'alert-triangle' : 'check-circle' }}"
+                                class="w-4 h-4 {{ $aiStats['error_rate'] > 5 ? 'text-red-500' : 'text-emerald-500' }}"></i>
+                            <span class="text-xs font-medium text-slate-500 uppercase">Error Rate</span>
+                        </div>
+                        <p class="text-2xl font-bold {{ $aiStats['error_rate'] > 5 ? 'text-red-600' : 'text-slate-900' }}">
+                            {{ $aiStats['error_rate'] }}<span class="text-sm text-slate-400">%</span></p>
+                        <p class="text-xs text-slate-400 mt-1">{{ $aiStats['error_count'] }} errors</p>
+                    </div>
+
+                    {{-- Total Cost --}}
+                    <div class="bg-slate-50 rounded-2xl p-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="dollar-sign" class="w-4 h-4 text-amber-500"></i>
+                            <span class="text-xs font-medium text-slate-500 uppercase">Cost</span>
+                        </div>
+                        <p class="text-2xl font-bold text-slate-900">${{ number_format($aiStats['total_cost'], 2) }}</p>
+                        <p class="text-xs text-slate-400 mt-1">{{ number_format($aiStats['total_tokens']) }} tokens</p>
                     </div>
                 </div>
+
+                {{-- Provider Performance --}}
+                @if (count($providerStats) > 0)
+                    <div class="border-t border-slate-100 pt-4">
+                        <h4 class="text-sm font-bold text-slate-600 uppercase tracking-wider mb-3">By Provider</h4>
+                        <div class="space-y-2">
+                            @foreach ($providerStats as $provider)
+                                <div
+                                    class="flex items-center justify-between p-3 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-8 h-8 rounded-lg flex items-center justify-center shadow-sm
+                                            {{ $provider['slug'] === 'openrouter' ? 'bg-gradient-to-br from-violet-500 to-purple-600' : '' }}
+                                            {{ $provider['slug'] === 'groq' ? 'bg-gradient-to-br from-orange-500 to-amber-500' : '' }}
+                                            {{ $provider['slug'] === 'zai' ? 'bg-gradient-to-br from-cyan-500 to-blue-600' : '' }}
+                                            {{ $provider['slug'] === 'gemini' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' : '' }}">
+                                            <i data-lucide="cpu" class="w-4 h-4 text-white"></i>
+                                        </div>
+                                        <span class="font-semibold text-slate-700">{{ $provider['name'] }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-4 text-sm">
+                                        <span class="text-slate-600">{{ $provider['total_requests'] }} req</span>
+                                        <span
+                                            class="font-mono text-slate-500">{{ $provider['avg_response_time'] }}ms</span>
+                                        <span
+                                            class="px-2 py-0.5 rounded-full text-xs font-medium
+                                            {{ $provider['error_rate'] > 5 ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700' }}">
+                                            {{ $provider['error_rate'] }}%
+                                        </span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <div class="border-t border-slate-100 pt-6 text-center">
+                        <div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i data-lucide="inbox" class="w-6 h-6 text-slate-300"></i>
+                        </div>
+                        <p class="text-slate-500 text-sm">No AI requests logged yet.</p>
+                        <p class="text-slate-400 text-xs mt-1">Data will appear as requests are made.</p>
+                    </div>
+                @endif
             </div>
         </div>
 
