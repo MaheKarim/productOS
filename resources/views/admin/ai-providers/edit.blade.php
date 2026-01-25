@@ -102,30 +102,107 @@
                             @enderror
                         </div>
 
-                        {{-- Default Model --}}
-                        <div>
+                        {{-- Default Model (Searchable) --}}
+                        <div x-data="modelSelector({
+                            initial: '{{ old('default_model', $provider->default_model) }}',
+                            predefined: {{ json_encode($predefinedModels) }},
+                            discovered: {{ json_encode($discoveredModels->map(fn($m) => ['id' => $m->model_name, 'name' => $m->display_name])) }}
+                        })" class="relative" @click.outside="close()">
+
                             <label for="default_model" class="block text-sm font-medium text-slate-700 mb-2">Default
                                 Model</label>
-                            <select name="default_model" id="default_model"
-                                class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
-                                x-model="selectedModel">
-                                <option value="">Select a model</option>
-                                @foreach ($predefinedModels as $modelId => $modelName)
-                                    <option value="{{ $modelId }}"
-                                        {{ old('default_model', $provider->default_model) === $modelId ? 'selected' : '' }}>
-                                        {{ $modelName }}
-                                    </option>
-                                @endforeach
-                                <option value="custom"
-                                    {{ !array_key_exists($provider->default_model, $predefinedModels) && $provider->default_model ? 'selected' : '' }}>
-                                    Custom model...</option>
-                            </select>
-                            <div x-show="selectedModel === 'custom'" class="mt-3">
-                                <input type="text" name="custom_model"
-                                    value="{{ !array_key_exists($provider->default_model, $predefinedModels) ? $provider->default_model : '' }}"
-                                    class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
-                                    placeholder="Enter custom model name">
+
+                            {{-- Specific Hidden Input for Form Submission --}}
+                            <input type="hidden" name="default_model" x-model="value">
+
+                            {{-- Search Input / Display --}}
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i data-lucide="search" class="h-5 w-5 text-slate-400"></i>
+                                </div>
+                                <input type="text" x-model="search" @focus="open()" @input="open()"
+                                    @keydown.enter.prevent="selectCustom()" @keydown.escape="close()"
+                                    class="w-full pl-10 pr-10 py-3 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
+                                    placeholder="Search or enter model name..." autocomplete="off">
+
+                                {{-- Clear/Chevron Icon --}}
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                                    @click="toggle()">
+                                    <template x-if="search">
+                                        <i data-lucide="x" class="h-4 w-4 text-slate-400 hover:text-slate-600"
+                                            @click.stop="clear()"></i>
+                                    </template>
+                                    <template x-if="!search">
+                                        <i data-lucide="chevron-down" class="h-4 w-4 text-slate-400"></i>
+                                    </template>
+                                </div>
                             </div>
+
+                            {{-- Dropdown Results --}}
+                            <div x-show="isOpen" x-transition:enter="transition ease-out duration-100"
+                                x-transition:enter-start="opacity-0 scale-95"
+                                x-transition:enter-end="opacity-100 scale-100"
+                                x-transition:leave="transition ease-in duration-75"
+                                x-transition:leave-start="opacity-100 scale-100"
+                                x-transition:leave-end="opacity-0 scale-95"
+                                class="absolute z-50 mt-1 w-full bg-white rounded-xl shadow-xl border border-slate-100 max-h-60 overflow-auto"
+                                style="display: none;">
+
+                                {{-- Discovered Models Group --}}
+                                <template x-if="filteredDiscovered.length > 0">
+                                    <div>
+                                        <div
+                                            class="px-3 py-2 text-xs font-bold text-slate-500 bg-slate-50 uppercase tracking-wider">
+                                            Discovered Models</div>
+                                        <template x-for="model in filteredDiscovered" :key="model.id">
+                                            <div @click="select(model.id)"
+                                                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer flex items-center justify-between group">
+                                                <span x-text="model.name"
+                                                    class="font-medium text-slate-700 group-hover:text-indigo-700"></span>
+                                                <span x-text="model.id"
+                                                    class="text-xs text-slate-400 group-hover:text-indigo-500 font-mono"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                {{-- Predefined Models Group --}}
+                                <template x-if="filteredPredefined.length > 0">
+                                    <div>
+                                        <div
+                                            class="px-3 py-2 text-xs font-bold text-slate-500 bg-slate-50 uppercase tracking-wider border-t border-slate-100">
+                                            Recommended Models</div>
+                                        <template x-for="(name, id) in filteredPredefined" :key="id">
+                                            <div @click="select(id)"
+                                                class="px-4 py-2 hover:bg-indigo-50 cursor-pointer flex items-center justify-between group">
+                                                <span x-text="name"
+                                                    class="font-medium text-slate-700 group-hover:text-indigo-700"></span>
+                                                <span x-text="id"
+                                                    class="text-xs text-slate-400 group-hover:text-indigo-500 font-mono"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                {{-- Custom Input Option --}}
+                                <div @click="selectCustom()"
+                                    class="px-4 py-3 hover:bg-indigo-50 cursor-pointer border-t border-slate-100"
+                                    x-show="search && !hasExactMatch">
+                                    <div class="flex items-center text-indigo-600">
+                                        <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
+                                        <span class="font-medium">Use custom model: <span x-text="search"
+                                                class="font-bold"></span></span>
+                                    </div>
+                                </div>
+
+                                {{-- No Results --}}
+                                <div x-show="!search && filteredDiscovered.length === 0 && Object.keys(filteredPredefined).length === 0"
+                                    class="px-4 py-8 text-center text-slate-500">
+                                    <p>No models found.</p>
+                                    <p class="text-xs mt-1">Type to enter a custom model ID.</p>
+                                </div>
+                            </div>
+
                             @error('default_model')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -266,8 +343,104 @@
     <script>
         function editProviderForm() {
             return {
-                updateApiKey: false,
-                selectedModel: '{{ array_key_exists($provider->default_model, $predefinedModels) ? $provider->default_model : ($provider->default_model ? 'custom' : '') }}'
+                updateApiKey: false
+            }
+        }
+
+        function modelSelector(config) {
+            return {
+                value: config.initial || '',
+                search: config.initial || '',
+                isOpen: false,
+                predefined: config.predefined || {},
+                discovered: config.discovered || [],
+
+                init() {
+                    // If initial value exists, set the search/display text
+                    if (this.value) {
+                        // Check predefined
+                        if (this.predefined[this.value]) {
+                            this.search = this.predefined[this.value];
+                        }
+                        // Check discovered
+                        else {
+                            const found = this.discovered.find(m => m.id === this.value);
+                            if (found) {
+                                this.search = found.name;
+                            } else {
+                                // Custom value
+                                this.search = this.value;
+                            }
+                        }
+                    }
+                },
+
+                get filteredPredefined() {
+                    if (!this.search) return this.predefined;
+                    // If search matches ID exactly, return that
+                    if (this.predefined[this.search]) return {
+                        [this.search]: this.predefined[this.search]
+                    };
+
+                    const term = this.search.toLowerCase();
+                    return Object.fromEntries(
+                        Object.entries(this.predefined).filter(([id, name]) =>
+                            name.toLowerCase().includes(term) || id.toLowerCase().includes(term)
+                        )
+                    );
+                },
+
+                get filteredDiscovered() {
+                    if (!this.search) return this.discovered;
+                    const term = this.search.toLowerCase();
+                    return this.discovered.filter(m =>
+                        m.name.toLowerCase().includes(term) || m.id.toLowerCase().includes(term)
+                    );
+                },
+
+                get hasExactMatch() {
+                    // Check if current search matches an existing ID
+                    return this.discovered.some(m => m.id === this.search) ||
+                        Object.keys(this.predefined).includes(this.search);
+                },
+
+                open() {
+                    this.isOpen = true;
+                },
+                close() {
+                    this.isOpen = false;
+                },
+                toggle() {
+                    this.isOpen = !this.isOpen;
+                    if (this.isOpen) this.$nextTick(() => this.$el.querySelector('input').focus());
+                },
+
+                select(id) {
+                    this.value = id;
+                    // Find name for display
+                    if (this.predefined[id]) {
+                        this.search = this.predefined[id];
+                    } else {
+                        const found = this.discovered.find(m => m.id === id);
+                        if (found) this.search = found.name;
+                        else this.search = id;
+                    }
+                    this.close();
+                },
+
+                selectCustom() {
+                    if (this.search) {
+                        this.value = this.search;
+                        this.close();
+                    }
+                },
+
+                clear() {
+                    this.search = '';
+                    this.value = '';
+                    this.open();
+                    this.$nextTick(() => this.$el.querySelector('input').focus());
+                }
             }
         }
 

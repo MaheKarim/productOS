@@ -121,10 +121,17 @@ class AiProviderController extends Controller
             'gemini' => 'Gemini / Google AI Studio',
         ];
 
+        // Get discovered models from database
+        $discoveredModels = $ai_provider->models()
+            ->where('is_active', true)
+            ->orderBy('model_name')
+            ->get();
+
         return view('admin.ai-providers.edit', [
             'provider' => $ai_provider,
             'providerTypes' => $providerTypes,
             'predefinedModels' => AiProvider::getPredefinedModels($ai_provider->slug),
+            'discoveredModels' => $discoveredModels,
         ]);
     }
 
@@ -216,7 +223,17 @@ class AiProviderController extends Controller
         $result = $this->providerService->testConnection($provider);
 
         if ($result['success']) {
-            return back()->with('success', $result['message']);
+            // Auto-discover and save available models
+            $discoveryResult = $this->providerService->discoverAndSaveModels($provider);
+
+            $message = $result['message'];
+            if ($discoveryResult['saved_count'] > 0) {
+                $message .= " Discovered and saved {$discoveryResult['saved_count']} new models.";
+            } elseif ($discoveryResult['models_count'] > 0) {
+                $message .= " {$discoveryResult['models_count']} models already configured.";
+            }
+
+            return back()->with('success', $message);
         }
 
         return back()->with('error', $result['message']);
