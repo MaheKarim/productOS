@@ -144,6 +144,35 @@
                         Dashboard
                     </a>
 
+                    <div class="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">AI System
+                    </div>
+
+                    <!-- Youtube Summary-->
+                    <a href="{{ route('admin.videos.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.videos.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="yt-summarize">
+                        <i data-lucide="youtube"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.videos.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        YT Summarize
+                    </a>
+
+                    <!-- AI Providers -->
+                    <a href="{{ route('admin.ai-providers.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.ai-providers.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="ai-providers">
+                        <i data-lucide="brain"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.ai-providers.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        AI Providers
+                    </a>
+
+                    <a href="{{ route('admin.settings.prompts') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.settings.prompts') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}">
+                        <i data-lucide="terminal"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.settings.prompts') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        System Prompts
+                    </a>
+                    <!-- AI Models -->
+
                     <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Content
                         Management</div>
 
@@ -221,21 +250,6 @@
                         User Management
                     </a>
 
-                    <a href="{{ route('admin.ai-providers.index') }}"
-                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.ai-providers.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
-                        data-menu-name="ai-providers">
-                        <i data-lucide="brain"
-                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.ai-providers.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
-                        AI Providers
-                    </a>
-
-                    <a href="{{ route('admin.videos.index') }}"
-                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.videos.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
-                        data-menu-name="yt-summarize">
-                        <i data-lucide="youtube"
-                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.videos.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
-                        YT Summarize
-                    </a>
                     {{-- Collapsible CMS Group --}}
                     <div class="cms-settings-group">
                         <button onclick="toggleCmsSettings()"
@@ -310,13 +324,6 @@
                         <i data-lucide="settings"
                             class="mr-3 w-5 h-5 {{ request()->routeIs('admin.settings.index') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
                         Settings
-                    </a>
-
-                    <a href="{{ route('admin.settings.prompts') }}"
-                        class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.settings.prompts') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}">
-                        <i data-lucide="terminal"
-                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.settings.prompts') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
-                        System Prompts
                     </a>
                 </nav>
 
