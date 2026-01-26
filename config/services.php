@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'youtube' => [
+        'api_key' => env('YOUTUBE_API_KEY'),
+    ],
+
+    'transcript_api' => [
+        'key' => env('TRANSCRIPT_API_KEY'),
+        'base_url' => 'https://transcriptapi.com/api/v2',
+    ],
+
 ];

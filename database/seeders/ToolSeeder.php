@@ -11,8 +11,11 @@ class ToolSeeder extends Seeder
     public function run()
     {
         // Clear existing tools to ensure clean state
+        // Disable foreign key checks to allow truncating tables with constraints
+        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         Tool::truncate();
         ToolCategory::truncate();
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $categories = [
             'Strategy & Validation' => [

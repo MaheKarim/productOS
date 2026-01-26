@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "518faac79dde2147f91ef15f174e7914",
+    "content-hash": "47803b837776b8259d02300b584b88e5",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -6631,6 +6631,77 @@
                 }
             ],
             "time": "2024-11-21T01:49:47+00:00"
+        },
+        {
+            "name": "youble/youtube-trans-api",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pulak-ranjan/youble-youtube-trans-api.git",
+                "reference": "78ad56c9d6d97b2e09b5aa56a5684605fc84e987"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pulak-ranjan/youble-youtube-trans-api/zipball/78ad56c9d6d97b2e09b5aa56a5684605fc84e987",
+                "reference": "78ad56c9d6d97b2e09b5aa56a5684605fc84e987",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-simplexml": "*",
+                "guzzlehttp/guzzle": "^7.0",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "default-branch": true,
+            "bin": [
+                "bin/youtube-transcript"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Youble\\YouTubeTransApi\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Youble\\YouTubeTransApi\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "phpunit"
+                ],
+                "analyse": [
+                    "phpstan analyse src --level=5"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "pulak-ranjan",
+                    "email": "pulakranajanmahata0910@gmail.com"
+                }
+            ],
+            "description": "Fetch, translate and format YouTube captions in pure PHP – no official API key, no headless browser, no framework required.",
+            "keywords": [
+                "api",
+                "captions",
+                "subtitles",
+                "transcript",
+                "translate",
+                "youtube"
+            ],
+            "support": {
+                "source": "https://github.com/pulak-ranjan/youble-youtube-trans-api/tree/main",
+                "issues": "https://github.com/pulak-ranjan/youble-youtube-trans-api/issues"
+            },
+            "time": "2025-11-07T09:03:15+00:00"
         }
     ],
     "packages-dev": [
@@ -9158,7 +9229,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "youble/youtube-trans-api": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

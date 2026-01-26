@@ -17,11 +17,13 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('password'),
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@productos.bd'],
+            [
+                'name' => 'Admin User',
+                'password' => bcrypt('productos'),
+            ]
+        );
 
         $this->call([
             ToolSeeder::class,

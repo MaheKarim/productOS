@@ -174,5 +174,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('ai-providers/{provider}/models', [\App\Http\Controllers\Admin\AiProviderController::class, 'models'])->name('admin.ai-providers.models');
     Route::post('ai-providers/{provider}/models', [\App\Http\Controllers\Admin\AiProviderController::class, 'storeModel'])->name('admin.ai-providers.models.store');
     Route::delete('ai-providers/{provider}/models/{model}', [\App\Http\Controllers\Admin\AiProviderController::class, 'destroyModel'])->name('admin.ai-providers.models.destroy');
+
+    // Video Analysis Management
+    Route::get('/videos', \App\Livewire\Admin\VideoList::class)->name('admin.videos.index');
+    Route::get('/videos/upload', \App\Livewire\Admin\VideoUpload::class)->name('admin.videos.upload');
+    Route::get('/videos/{video}', \App\Livewire\Admin\VideoDetail::class)->name('admin.videos.show');
+
+    // YouTube Content Generation
+    Route::post('/youtube-content/generate', [\App\Http\Controllers\Admin\YouTubeContentController::class, 'generate'])->name('admin.youtube-content.generate');
+
+    // System Settings
+    Route::get('/settings/prompts', \App\Livewire\Admin\Settings\SystemPrompts::class)->name('admin.settings.prompts');
 });
 
