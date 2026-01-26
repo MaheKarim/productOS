@@ -84,6 +84,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\User\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [\App\Http\Controllers\User\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [\App\Http\Controllers\User\ProfileController::class, 'update'])->name('profile.update');
+
+    // User YT Summarize
+    Route::prefix('my/yt-summarize')->name('user.yt-summarize.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\User\YTSummarizeController::class, 'index'])->name('index');
+        Route::get('/{video}', [\App\Http\Controllers\User\YTSummarizeController::class, 'show'])->name('show');
+    });
 });
 
 // Public Roadmap
@@ -91,6 +97,12 @@ Route::get('/roadmap', [\App\Http\Controllers\RoadmapController::class, 'index']
 Route::post('/roadmap/status', [\App\Http\Controllers\RoadmapController::class, 'updateStatus'])
     ->middleware('auth')
     ->name('roadmap.update-status');
+
+// YT Summarize (Public)
+Route::prefix('yt-summarize')->name('yt-summarize.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\YTSummarizeController::class, 'index'])->name('index');
+    Route::get('/{video}', [\App\Http\Controllers\YTSummarizeController::class, 'show'])->name('show');
+});
 
 // Admin Routes (Protected by auth and role:admin middleware)
 use App\Http\Controllers\Admin\DashboardController;
