@@ -120,7 +120,7 @@
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i data-lucide="search" class="h-5 w-5 text-slate-400"></i>
                                 </div>
-                                <input type="text" x-model="search" @focus="open()" @input="open()"
+                                <input type="text" x-model="search" @focus="onFocus()" @input="onInput()"
                                     @keydown.enter.prevent="selectCustom()" @keydown.escape="close()"
                                     class="w-full pl-10 pr-10 py-3 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                                     placeholder="Search or enter model name..." autocomplete="off">
@@ -350,39 +350,48 @@
         function modelSelector(config) {
             return {
                 value: config.initial || '',
-                search: config.initial || '',
+                search: '',
+                displayText: '',
                 isOpen: false,
+                isSearching: false,
                 predefined: config.predefined || {},
                 discovered: config.discovered || [],
 
                 init() {
                     // If initial value exists, set the search/display text
                     if (this.value) {
-                        // Check predefined
-                        if (this.predefined[this.value]) {
-                            this.search = this.predefined[this.value];
-                        }
-                        // Check discovered
-                        else {
-                            const found = this.discovered.find(m => m.id === this.value);
-                            if (found) {
-                                this.search = found.name;
-                            } else {
-                                // Custom value
-                                this.search = this.value;
-                            }
-                        }
+                        this.setDisplayFromValue(this.value);
                     }
                 },
 
-                get filteredPredefined() {
-                    if (!this.search) return this.predefined;
-                    // If search matches ID exactly, return that
-                    if (this.predefined[this.search]) return {
-                        [this.search]: this.predefined[this.search]
-                    };
+                setDisplayFromValue(val) {
+                    // Check predefined
+                    if (this.predefined[val]) {
+                        this.displayText = this.predefined[val] + ' (' + val + ')';
+                    }
+                    // Check discovered
+                    else {
+                        const found = this.discovered.find(m => m.id === val);
+                        if (found) {
+                            this.displayText = found.name + ' (' + found.id + ')';
+                        } else {
+                            // Custom value - just show the ID
+                            this.displayText = val;
+                        }
+                    }
+                    this.search = this.displayText;
+                },
 
-                    const term = this.search.toLowerCase();
+                get searchTerm() {
+                    // Only filter if user is actively searching (not just displaying selected value)
+                    if (!this.isSearching) return '';
+                    return this.search.toLowerCase().trim();
+                },
+
+                get filteredPredefined() {
+                    const term = this.searchTerm;
+                    if (!term) return this.predefined;
+
                     return Object.fromEntries(
                         Object.entries(this.predefined).filter(([id, name]) =>
                             name.toLowerCase().includes(term) || id.toLowerCase().includes(term)
@@ -391,8 +400,9 @@
                 },
 
                 get filteredDiscovered() {
-                    if (!this.search) return this.discovered;
-                    const term = this.search.toLowerCase();
+                    const term = this.searchTerm;
+                    if (!term) return this.discovered;
+
                     return this.discovered.filter(m =>
                         m.name.toLowerCase().includes(term) || m.id.toLowerCase().includes(term)
                     );
@@ -400,8 +410,9 @@
 
                 get hasExactMatch() {
                     // Check if current search matches an existing ID
-                    return this.discovered.some(m => m.id === this.search) ||
-                        Object.keys(this.predefined).includes(this.search);
+                    const term = this.search.trim();
+                    return this.discovered.some(m => m.id === term) ||
+                        Object.keys(this.predefined).includes(term);
                 },
 
                 open() {
@@ -409,28 +420,46 @@
                 },
                 close() {
                     this.isOpen = false;
+                    this.isSearching = false;
+                    // Restore display text if user didn't select anything
+                    if (this.value && this.search !== this.displayText) {
+                        this.search = this.displayText;
+                    }
                 },
                 toggle() {
                     this.isOpen = !this.isOpen;
-                    if (this.isOpen) this.$nextTick(() => this.$el.querySelector('input').focus());
+                    if (this.isOpen) {
+                        this.$nextTick(() => this.$el.querySelector('input').focus());
+                    }
+                },
+
+                onInput() {
+                    this.isSearching = true;
+                    this.open();
+                },
+
+                onFocus() {
+                    this.open();
+                    // Select all text when focusing for easy replacement
+                    this.$nextTick(() => {
+                        const input = this.$el.querySelector('input');
+                        if (input) input.select();
+                    });
                 },
 
                 select(id) {
                     this.value = id;
-                    // Find name for display
-                    if (this.predefined[id]) {
-                        this.search = this.predefined[id];
-                    } else {
-                        const found = this.discovered.find(m => m.id === id);
-                        if (found) this.search = found.name;
-                        else this.search = id;
-                    }
+                    this.setDisplayFromValue(id);
+                    this.isSearching = false;
                     this.close();
                 },
 
                 selectCustom() {
-                    if (this.search) {
-                        this.value = this.search;
+                    const customValue = this.search.trim();
+                    if (customValue && customValue !== this.displayText) {
+                        this.value = customValue;
+                        this.displayText = customValue;
+                        this.isSearching = false;
                         this.close();
                     }
                 },
@@ -438,6 +467,8 @@
                 clear() {
                     this.search = '';
                     this.value = '';
+                    this.displayText = '';
+                    this.isSearching = true;
                     this.open();
                     this.$nextTick(() => this.$el.querySelector('input').focus());
                 }

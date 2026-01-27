@@ -188,19 +188,6 @@
                         @endforeach
                     </ul>
                 </div>
-
-                <!-- Transcript (Collapsed) -->
-                <div x-data="{ open: false }" class="bg-white rounded-lg shadow p-6">
-                    <button @click="open = !open"
-                        class="flex justify-between w-full text-left font-bold text-gray-800">
-                        <span>Full Transcript</span>
-                        <span x-text="open ? '-' : '+'"></span>
-                    </button>
-                    <div x-show="open"
-                        class="mt-4 p-4 bg-gray-50 rounded h-64 overflow-y-auto text-sm font-mono whitespace-pre-wrap">
-                        {{ $video->transcript }}
-                    </div>
-                </div>
             </div>
 
             <!-- Sidebar -->
