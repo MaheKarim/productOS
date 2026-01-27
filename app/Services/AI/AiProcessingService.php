@@ -3,6 +3,7 @@
 namespace App\Services\AI;
 
 use App\Models\AiProvider;
+use App\Models\AiRequestLog;
 use App\Models\Video;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -200,6 +201,7 @@ EOT;
      */
     protected function callApi(AiProvider $provider, string $prompt): string
     {
+        $startTime = microtime(true);
         $apiKey = $provider->api_key;
         $baseUrl = $provider->base_url;
         $model = $provider->default_model;
@@ -276,7 +278,7 @@ EOT;
         }
 
         if (!$response->successful()) {
-            $this->handleFailedResponse($response, $provider);
+            $this->handleFailedResponse($response, $provider, $startTime, $model);
         }
 
         $data = $response->json();
@@ -308,9 +310,35 @@ EOT;
             $tokensUsed = $data['usage']['total_tokens'] ?? null;
         }
 
+        // Calculate response time
+        $responseTimeMs = (int) ((microtime(true) - $startTime) * 1000);
+
+        // Extract token usage for logging
+        $inputTokens = null;
+        $outputTokens = null;
+        if ($isGemini) {
+            $inputTokens = $data['usageMetadata']['promptTokenCount'] ?? null;
+            $outputTokens = $data['usageMetadata']['candidatesTokenCount'] ?? null;
+        } else {
+            $inputTokens = $data['usage']['prompt_tokens'] ?? null;
+            $outputTokens = $data['usage']['completion_tokens'] ?? null;
+        }
+
+        // Log successful request to database
+        AiRequestLog::logSuccess(
+            $provider->id,
+            $model,
+            $responseTimeMs,
+            $inputTokens,
+            $outputTokens,
+            0, // Cost calculation can be added later
+            $isGemini ? '/models/' . $model . ':generateContent' : '/chat/completions'
+        );
+
         Log::info("AI API request successful", [
             'provider' => $provider->name,
             'tokens_used' => $tokensUsed,
+            'response_time_ms' => $responseTimeMs,
             'response_length' => strlen($content),
         ]);
 
@@ -322,12 +350,15 @@ EOT;
      *
      * @param \Illuminate\Http\Client\Response $response
      * @param AiProvider $provider
+     * @param float $startTime
+     * @param string $model
      * @throws Exception
      */
-    protected function handleFailedResponse($response, AiProvider $provider): void
+    protected function handleFailedResponse($response, AiProvider $provider, float $startTime = 0, string $model = ''): void
     {
         $status = $response->status();
         $body = $response->body();
+        $responseTimeMs = $startTime > 0 ? (int) ((microtime(true) - $startTime) * 1000) : 0;
 
         Log::error("AI API HTTP Error", [
             'provider' => $provider->name,
@@ -337,6 +368,17 @@ EOT;
 
         $errorMessage = "HTTP {$status}: " . $response->reason();
 
+        // Log failed request to database
+        if ($provider->id && $model) {
+            AiRequestLog::logError(
+                $provider->id,
+                $model,
+                $responseTimeMs,
+                $errorMessage,
+                '/chat/completions'
+            );
+        }
+
         // Provide more specific error messages
         switch ($status) {
             case 401:
@@ -344,6 +386,7 @@ EOT;
             case 403:
                 throw new Exception("Access forbidden for AI provider '{$provider->name}'. Your API key may not have permission.");
             case 429:
+            case 413:
                 throw new Exception("Rate limit exceeded for AI provider '{$provider->name}'. Please try again later.");
             case 500:
             case 502:

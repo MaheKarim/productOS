@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 use App\Models\HeroSection;
 use App\Models\AboutSection;
 use App\Models\Service;
@@ -18,7 +19,7 @@ use App\Models\AiProvider;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request): View
     {
         $stats = [
             // CMS Stats
@@ -42,8 +43,201 @@ class DashboardController extends Controller
         // AI Provider Stats by provider
         $providerStats = $this->getProviderStats();
 
-        return view('admin.dashboard', compact('stats', 'aiStats', 'providerStats'));
+        // Hero Metrics
+        $heroStats = $this->getHeroStats();
+
+        // Groq Rate Limits Analytics
+        $selectedModel = $request->get('model', 'all');
+        $groqRateLimits = $this->getGroqRateLimits($selectedModel);
+
+        return view('admin.dashboard', compact('stats', 'aiStats', 'providerStats', 'groqRateLimits', 'heroStats'));
     }
+
+    /**
+     * Get Hero metrics for the dashboard (24h vs previous 24h).
+     */
+    protected function getHeroStats(): array
+    {
+        $now = now();
+        $last24h = $now->copy()->subHours(24);
+        $prev24h = $now->copy()->subHours(48);
+
+        // 1. Total API Requests
+        $currentRequests = AiRequestLog::where('created_at', '>=', $last24h)->count();
+        $prevRequests = AiRequestLog::whereBetween('created_at', [$prev24h, $last24h])->count();
+
+        $requestsChange = 0;
+        if ($prevRequests > 0) {
+            $requestsChange = round((($currentRequests - $prevRequests) / $prevRequests) * 100, 1);
+        } else {
+            $requestsChange = $currentRequests > 0 ? 100 : 0;
+        }
+
+        // 2. Active Users (Mock for now, as we don't have detailed user activity logs linked yet)
+        // In a real app, calculate DAU from activity logs.
+        $currentUsers = \App\Models\User::count(); // Fallback to total users
+        $usersChange = 12.5; // Mock growth
+
+        // 3. Total Cost
+        $currentCost = AiRequestLog::where('created_at', '>=', $last24h)->sum('cost') ?? 0;
+        $prevCost = AiRequestLog::whereBetween('created_at', [$prev24h, $last24h])->sum('cost') ?? 0;
+
+        $costChange = 0;
+        if ($prevCost > 0) {
+            $costChange = round((($currentCost - $prevCost) / $prevCost) * 100, 1);
+        } else {
+            $costChange = $currentCost > 0 ? 100 : 0;
+        }
+
+        // 4. Avg Latency
+        $currentLatency = AiRequestLog::where('created_at', '>=', $last24h)->avg('response_time_ms') ?? 0;
+        $prevLatency = AiRequestLog::whereBetween('created_at', [$prev24h, $last24h])->avg('response_time_ms') ?? 0;
+
+        $latencyChange = 0;
+        if ($prevLatency > 0) {
+            $latencyChange = round((($currentLatency - $prevLatency) / $prevLatency) * 100, 1);
+        }
+
+        return [
+            'requests' => [
+                'value' => $currentRequests,
+                'change' => $requestsChange,
+                'trend' => $requestsChange >= 0 ? 'up' : 'down'
+            ],
+            'users' => [
+                'value' => $currentUsers,
+                'change' => $usersChange,
+                'trend' => 'up'
+            ],
+            'cost' => [
+                'value' => round($currentCost, 3),
+                'change' => $costChange,
+                'trend' => $costChange <= 0 ? 'good' : 'bad' // Cost going down is usually good, but context matters. Let's assume up is "spending more"
+            ],
+            'latency' => [
+                'value' => round($currentLatency),
+                'change' => $latencyChange,
+                'trend' => $latencyChange <= 0 ? 'good' : 'bad'
+            ]
+        ];
+    }
+    protected function getGroqRateLimits(string $selectedModel = 'all'): array
+    {
+        $groq = AiProvider::where('slug', 'groq')->first();
+
+        if (!$groq) {
+            return [
+                'available' => false,
+                'message' => 'Groq provider not configured',
+            ];
+        }
+
+        // Get all models used for Groq to populate selector
+        $availableModels = AiRequestLog::where('ai_provider_id', $groq->id)
+            ->distinct()
+            ->pluck('model')
+            ->filter()
+            ->values()
+            ->toArray();
+
+        // Default rate limits for Groq Free tier (Global)
+        $globalLimits = [
+            'rpm' => $groq->settings['rate_limits']['rpm'] ?? 30,
+            'tpm' => $groq->settings['rate_limits']['tpm'] ?? 30000,
+            'rpd' => $groq->settings['rate_limits']['rpd'] ?? 1000,
+            'tpd' => $groq->settings['rate_limits']['tpd'] ?? 500000,
+        ];
+
+        // Specific model limits (Example for Groq Free Tier)
+        $modelLimits = [
+            'llama-3.3-70b-versatile' => ['rpm' => 30, 'tpm' => 30000, 'rpd' => 1000, 'tpd' => 500000],
+            'llama-3.1-70b-versatile' => ['rpm' => 30, 'tpm' => 30000, 'rpd' => 1000, 'tpd' => 500000],
+            'llama-3.1-8b-instant' => ['rpm' => 30, 'tpm' => 30000, 'rpd' => 1000, 'tpd' => 500000],
+            'mixtral-8x7b-32768' => ['rpm' => 30, 'tpm' => 30000, 'rpd' => 1000, 'tpd' => 500000],
+            'gemma2-9b-it' => ['rpm' => 30, 'tpm' => 30000, 'rpd' => 1000, 'tpd' => 500000],
+            'llava-v1.5-7b-4096-preview' => ['rpm' => 30, 'tpm' => 30000, 'rpd' => 1000, 'tpd' => 500000],
+        ];
+
+        // Use selected model limits or global
+        $currentLimits = ($selectedModel !== 'all' && isset($modelLimits[$selectedModel]))
+            ? $modelLimits[$selectedModel]
+            : $globalLimits;
+
+        $now = now();
+        $minuteAgo = $now->copy()->subMinute();
+        $dayStart = $now->copy()->startOfDay();
+
+        // Base query
+        $query = AiRequestLog::where('ai_provider_id', $groq->id);
+
+        if ($selectedModel !== 'all') {
+            $query->where('model', $selectedModel);
+        }
+
+        // Requests per minute
+        $rpm = (clone $query)->where('created_at', '>=', $minuteAgo)->count();
+
+        // Tokens per minute
+        $tpm = (clone $query)->where('created_at', '>=', $minuteAgo)
+            ->selectRaw('SUM(COALESCE(input_tokens, 0) + COALESCE(output_tokens, 0)) as total')
+            ->value('total') ?? 0;
+
+        // Requests per day
+        $rpd = (clone $query)->where('created_at', '>=', $dayStart)->count();
+
+        // Tokens per day
+        $tpd = (clone $query)->where('created_at', '>=', $dayStart)
+            ->selectRaw('SUM(COALESCE(input_tokens, 0) + COALESCE(output_tokens, 0)) as total')
+            ->value('total') ?? 0;
+
+        // Calculate percentages
+        $usage = [
+            'rpm' => ['current' => $rpm, 'limit' => $currentLimits['rpm'], 'percent' => min(100, round(($rpm / max($currentLimits['rpm'], 1)) * 100))],
+            'tpm' => ['current' => $tpm, 'limit' => $currentLimits['tpm'], 'percent' => min(100, round(($tpm / max($currentLimits['tpm'], 1)) * 100))],
+            'rpd' => ['current' => $rpd, 'limit' => $currentLimits['rpd'], 'percent' => min(100, round(($rpd / max($currentLimits['rpd'], 1)) * 100))],
+            'tpd' => ['current' => $tpd, 'limit' => $currentLimits['tpd'], 'percent' => min(100, round(($tpd / max($currentLimits['tpd'], 1)) * 100))],
+        ];
+
+        // Generate recommendations
+        $recommendations = [];
+        if ($usage['rpm']['percent'] > 70) {
+            $recommendations[] = ['type' => 'warning', 'message' => 'RPM usage is high (' . $usage['rpm']['percent'] . '%). Consider batching requests.'];
+        }
+        if ($usage['tpm']['percent'] > 70) {
+            $recommendations[] = ['type' => 'warning', 'message' => 'Token usage per minute is high. Consider using smaller context windows.'];
+        }
+        if ($usage['rpd']['percent'] > 80) {
+            $recommendations[] = ['type' => 'danger', 'message' => 'Daily request limit nearly reached. Upgrade to Developer plan for higher limits.'];
+        }
+        if ($usage['tpd']['percent'] > 80) {
+            $recommendations[] = ['type' => 'danger', 'message' => 'Daily token limit nearly reached. Consider upgrading your plan.'];
+        }
+        if (empty($recommendations)) {
+            $recommendations[] = ['type' => 'success', 'message' => 'All rate limits are within healthy ranges.'];
+        }
+
+        // Hourly trend data (last 24 hours) - use strftime for SQLite compatibility
+        $hourlyTrend = AiRequestLog::where('ai_provider_id', $groq->id)
+            ->where('created_at', '>=', $now->copy()->subHours(24))
+            ->selectRaw('strftime("%H:00", created_at) as hour, COUNT(*) as requests, SUM(COALESCE(input_tokens, 0) + COALESCE(output_tokens, 0)) as tokens')
+            ->groupBy('hour')
+            ->orderBy('hour')
+            ->get()
+            ->keyBy('hour')
+            ->toArray();
+
+        return [
+            'available' => true,
+            'provider' => $groq,
+            'usage' => $usage,
+            'recommendations' => $recommendations,
+            'hourlyTrend' => $hourlyTrend,
+            'lastUpdated' => $now->format('H:i:s'),
+            'availableModels' => $availableModels,
+            'selectedModel' => $selectedModel,
+        ];
+    }
+
 
     /**
      * Get AI health statistics for last 24 hours.

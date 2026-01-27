@@ -27,18 +27,17 @@
                     'label' => 'Pending Reviews',
                     'count' => $stats['directory_pending'],
                     'icon' => 'clock',
-                    'color' => 'orange', // Orange was not in map, using amber or adding to config? Tailwind supports orange.
-                    // Let's stick to safe colors defined in layout or common
-        'bg_class' => 'bg-orange-500/10',
-        'text_class' => 'text-orange-600',
-        'route' => 'admin.directory.index',
-    ],
-    [
-        'label' => 'Directory Clicks',
-        'count' => $stats['directory_clicks'],
-        'icon' => 'mouse-pointer', // lucide name
-        'color' => 'emerald',
-        'route' => 'admin.directory.analytics',
+                    'color' => 'orange',
+                    'bg_class' => 'bg-orange-500/10',
+                    'text_class' => 'text-orange-600',
+                    'route' => 'admin.directory.index',
+                ],
+                [
+                    'label' => 'Directory Clicks',
+                    'count' => $stats['directory_clicks'],
+                    'icon' => 'mouse-pointer',
+                    'color' => 'emerald',
+                    'route' => 'admin.directory.analytics',
                 ],
             ];
         @endphp
@@ -71,78 +70,114 @@
         @endforeach
     </div>
 
-    {{-- Middle Section: Secondary Stats & Quick Actions --}}
+    {{-- Middle Section: Secondary Stats --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {{-- Secondary Metrics --}}
-        <div class="lg:col-span-2 space-y-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {{-- Secondary Metrics & Health (Full Width now) --}}
+        <div class="lg:col-span-3 space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {{-- Featured Directory Items --}}
                 <div
-                    class="bg-white rounded-[2rem] p-8 border border-slate-200/60 shadow-sm flex items-center justify-between group hover:border-indigo-200 transition-soft">
-                    <div class="flex items-center space-x-6">
-                        <div
-                            class="w-16 h-16 rounded-full bg-amber-50 flex items-center justify-center group-hover:bg-amber-100 transition-colors">
-                            <i data-lucide="star" class="text-amber-500 w-8 h-8"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Featured Items</h4>
-                            <p class="text-3xl font-black text-slate-900 tracking-tight">{{ $stats['directory_featured'] }}
-                            </p>
-                        </div>
+                    class="relative group bg-[#0f172a] rounded-[2rem] p-6 border border-amber-500/10 overflow-hidden hover:border-amber-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_-5px_rgba(245,158,11,0.15)]">
+                    <div
+                        class="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-amber-500/10 transition-colors">
                     </div>
-                    <a href="{{ route('admin.directory.index', ['featured' => 1]) }}"
-                        class="text-indigo-600 font-bold text-sm hover:underline">View</a>
+
+                    <div class="relative z-10 flex flex-col h-full justify-between">
+                        <div class="mb-4">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="star" class="text-amber-500 w-6 h-6"></i>
+                            </div>
+                            <h4 class="text-xs font-bold text-amber-500 uppercase tracking-widest mb-1">Directory</h4>
+                            <p class="text-3xl font-black text-white tracking-tight">{{ $stats['directory_featured'] }}</p>
+                            <p class="text-xs text-slate-400 font-medium mt-1">Featured across platform</p>
+                        </div>
+                        <a href="{{ route('admin.directory.index', ['featured' => 1]) }}"
+                            class="flex items-center justify-between w-full p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 hover:border-amber-500/30 transition-all group/link">
+                            <span class="text-xs font-bold text-slate-300 group-hover/link:text-white">View Featured</span>
+                            <i data-lucide="arrow-right"
+                                class="w-4 h-4 text-slate-500 group-hover/link:text-amber-500 transition-colors"></i>
+                        </a>
+                    </div>
                 </div>
 
                 {{-- Impact Projects --}}
                 <div
-                    class="bg-white rounded-[2rem] p-8 border border-slate-200/60 shadow-sm flex items-center justify-between group hover:border-indigo-200 transition-soft">
-                    <div class="flex items-center space-x-6">
-                        <div
-                            class="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
-                            <i data-lucide="briefcase" class="text-emerald-600 w-8 h-8"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Projects</h4>
-                            <p class="text-3xl font-black text-slate-900 tracking-tight">{{ $stats['projects'] }}</p>
-                        </div>
+                    class="relative group bg-[#0f172a] rounded-[2rem] p-6 border border-emerald-500/10 overflow-hidden hover:border-emerald-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.15)]">
+                    <div
+                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-emerald-500/10 transition-colors">
                     </div>
-                    <a href="{{ route('admin.projects.index') }}"
-                        class="text-indigo-600 font-bold text-sm hover:underline">Manage</a>
+
+                    <div class="relative z-10 flex flex-col h-full justify-between">
+                        <div class="mb-4">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="briefcase" class="text-emerald-500 w-6 h-6"></i>
+                            </div>
+                            <h4 class="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-1">Projects</h4>
+                            <p class="text-3xl font-black text-white tracking-tight">{{ $stats['projects'] }}</p>
+                            <p class="text-xs text-slate-400 font-medium mt-1">Active implementations</p>
+                        </div>
+                        <a href="{{ route('admin.projects.index') }}"
+                            class="flex items-center justify-between w-full p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 hover:border-emerald-500/30 transition-all group/link">
+                            <span class="text-xs font-bold text-slate-300 group-hover/link:text-white">Manage
+                                Projects</span>
+                            <i data-lucide="arrow-right"
+                                class="w-4 h-4 text-slate-500 group-hover/link:text-emerald-500 transition-colors"></i>
+                        </a>
+                    </div>
                 </div>
 
                 {{-- Testimonials --}}
                 <div
-                    class="bg-white rounded-[2rem] p-8 border border-slate-200/60 shadow-sm flex items-center justify-between group hover:border-indigo-200 transition-soft">
-                    <div class="flex items-center space-x-6">
-                        <div
-                            class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
-                            <i data-lucide="message-square" class="text-slate-400 group-hover:text-indigo-600 w-8 h-8"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Testimonials</h4>
-                            <p class="text-3xl font-black text-slate-900 tracking-tight">{{ $stats['testimonials'] }}</p>
-                        </div>
+                    class="relative group bg-[#0f172a] rounded-[2rem] p-6 border border-violet-500/10 overflow-hidden hover:border-violet-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.15)]">
+                    <div
+                        class="absolute top-0 right-0 w-24 h-24 bg-violet-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-violet-500/10 transition-colors">
                     </div>
-                    <a href="{{ route('admin.testimonials.index') }}"
-                        class="text-indigo-600 font-bold text-sm hover:underline">View All</a>
+
+                    <div class="relative z-10 flex flex-col h-full justify-between">
+                        <div class="mb-4">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="message-square" class="text-violet-500 w-6 h-6"></i>
+                            </div>
+                            <h4 class="text-xs font-bold text-violet-500 uppercase tracking-widest mb-1">Testimonials</h4>
+                            <p class="text-3xl font-black text-white tracking-tight">{{ $stats['testimonials'] }}</p>
+                            <p class="text-xs text-slate-400 font-medium mt-1">Client feedback</p>
+                        </div>
+                        <a href="{{ route('admin.testimonials.index') }}"
+                            class="flex items-center justify-between w-full p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 hover:border-violet-500/30 transition-all group/link">
+                            <span class="text-xs font-bold text-slate-300 group-hover/link:text-white">View All</span>
+                            <i data-lucide="arrow-right"
+                                class="w-4 h-4 text-slate-500 group-hover/link:text-violet-500 transition-colors"></i>
+                        </a>
+                    </div>
                 </div>
 
                 {{-- Footer Config --}}
                 <div
-                    class="bg-white rounded-[2rem] p-8 border border-slate-200/60 shadow-sm flex items-center justify-between group hover:border-indigo-200 transition-soft">
-                    <div class="flex items-center space-x-6">
-                        <div
-                            class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-indigo-50 transition-colors">
-                            <i data-lucide="settings-2" class="text-slate-400 group-hover:text-indigo-600 w-8 h-8"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Configurations</h4>
-                            <p class="text-3xl font-black text-slate-900 tracking-tight">{{ $stats['footer'] }}</p>
-                        </div>
+                    class="relative group bg-[#0f172a] rounded-[2rem] p-6 border border-pink-500/10 overflow-hidden hover:border-pink-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_-5px_rgba(236,72,153,0.15)]">
+                    <div
+                        class="absolute top-0 right-0 w-24 h-24 bg-pink-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-pink-500/10 transition-colors">
                     </div>
-                    <a href="{{ route('admin.footer.index') }}"
-                        class="text-indigo-600 font-bold text-sm hover:underline">Manage</a>
+
+                    <div class="relative z-10 flex flex-col h-full justify-between">
+                        <div class="mb-4">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="settings-2" class="text-pink-500 w-6 h-6"></i>
+                            </div>
+                            <h4 class="text-xs font-bold text-pink-500 uppercase tracking-widest mb-1">Configuration</h4>
+                            <p class="text-3xl font-black text-white tracking-tight">{{ $stats['footer'] }}</p>
+                            <p class="text-xs text-slate-400 font-medium mt-1">System settings</p>
+                        </div>
+                        <a href="{{ route('admin.footer.index') }}"
+                            class="flex items-center justify-between w-full p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 hover:border-pink-500/30 transition-all group/link">
+                            <span class="text-xs font-bold text-slate-300 group-hover/link:text-white">Manage</span>
+                            <i data-lucide="arrow-right"
+                                class="w-4 h-4 text-slate-500 group-hover/link:text-pink-500 transition-colors"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -191,7 +226,8 @@
                                 class="w-4 h-4 {{ $aiStats['error_rate'] > 5 ? 'text-red-500' : 'text-emerald-500' }}"></i>
                             <span class="text-xs font-medium text-slate-500 uppercase">Error Rate</span>
                         </div>
-                        <p class="text-2xl font-bold {{ $aiStats['error_rate'] > 5 ? 'text-red-600' : 'text-slate-900' }}">
+                        <p
+                            class="text-2xl font-bold {{ $aiStats['error_rate'] > 5 ? 'text-red-600' : 'text-slate-900' }}">
                             {{ $aiStats['error_rate'] }}<span class="text-sm text-slate-400">%</span></p>
                         <p class="text-xs text-slate-400 mt-1">{{ $aiStats['error_count'] }} errors</p>
                     </div>
@@ -251,53 +287,240 @@
                 @endif
             </div>
         </div>
+    </div>
 
-        {{-- Quick Actions - Premium Sidebar Style --}}
-        <div
-            class="bg-indigo-900 rounded-[2.5rem] p-10 text-white shadow-xl shadow-indigo-900/20 relative overflow-hidden group">
-            {{-- Background Pattern --}}
-            <div class="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
-                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1" />
-                        </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#grid)" />
-                </svg>
-            </div>
+    {{-- Groq Neural Link Analytics (Live Connection Style - Full Width) --}}
+    <div class="mt-8 mb-12" x-data="{
+        refreshing: false,
+        lastUpdated: '{{ now()->format('H:i:s') }}',
+        selectedModel: '{{ $groqRateLimits['selectedModel'] }}',
+        async switchModel(model) {
+            this.refreshing = true;
+            window.location.href = '{{ route('admin.dashboard') }}?model=' + model;
+        },
+        async refresh() {
+            this.refreshing = true;
+            try {
+                const response = await fetch('{{ route('admin.dashboard') }}?model=' + this.selectedModel, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                if (response.ok) {
+                    window.location.reload();
+                }
+            } finally {
+                this.refreshing = false;
+            }
+        }
+    }">
 
-            <div class="relative z-10">
-                <h3 class="text-2xl font-bold mb-8 tracking-tight">Quick Actions</h3>
-                <div class="space-y-4">
-                    @php
-                        $actions = [
-                            ['label' => 'New Hero Unit', 'route' => 'admin.hero.create', 'icon' => 'plus-circle'],
-                            ['label' => 'Add New Service', 'route' => 'admin.services.create', 'icon' => 'plus-circle'],
-                            ['label' => 'Log Case Study', 'route' => 'admin.projects.create', 'icon' => 'plus-circle'],
-                        ];
-                    @endphp
+        @if ($groqRateLimits['available'])
+            <div class="relative bg-[#050b14] rounded-[32px] border border-cyan-900/30 overflow-hidden shadow-[0_0_50px_-12px_rgba(6,182,212,0.15)] group"
+                x-on:mouseenter="$refs.stream.style.animationDuration = '1s'"
+                x-on:mouseleave="$refs.stream.style.animationDuration = '3s'">
 
-                    @foreach ($actions as $action)
-                        <a href="{{ route($action['route']) }}"
-                            class="flex items-center justify-between px-6 py-4 bg-white/10 border border-white/10 rounded-2xl hover:bg-white/20 hover:scale-[1.02] transition-soft">
-                            <div class="flex items-center">
-                                <i data-lucide="{{ $action['icon'] }}" class="w-5 h-5 mr-3"></i>
-                                <span class="font-bold text-sm">{{ $action['label'] }}</span>
+                {{-- Background Tech Grid --}}
+                <div class="absolute inset-0 opacity-10 pointer-events-none"
+                    style="background-image: linear-gradient(#0891b2 1px, transparent 1px), linear-gradient(90deg, #0891b2 1px, transparent 1px); background-size: 40px 40px;">
+                </div>
+
+                <div
+                    class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-50">
+                </div>
+
+                <div class="relative z-10 p-8 md:p-12">
+                    {{-- Header / Status Bar --}}
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-16">
+                        <div class="flex items-center gap-4">
+                            <div class="relative">
+                                <div
+                                    class="w-3 h-3 bg-emerald-500 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.5)] animate-pulse">
+                                </div>
                             </div>
-                            <i data-lucide="chevron-right" class="w-4 h-4 opacity-50"></i>
-                        </a>
-                    @endforeach
+                            <div>
+                                <h3 class="text-lg font-mono font-bold text-cyan-50 tracking-widest uppercase">
+                                    <span class="text-cyan-500">></span> Neural Uplink Is Active
+                                </h3>
+                                <p class="text-xs font-mono text-cyan-800 uppercase tracking-wider">Latency: <span
+                                        class="text-emerald-400">24ms</span> // Secure Channel</p>
+                            </div>
+                        </div>
 
-                    <div class="pt-8 mt-8 border-t border-white/10">
-                        <a href="{{ url('/') }}" target="_blank"
-                            class="flex items-center justify-center w-full px-6 py-4 bg-white text-indigo-900 rounded-2xl font-bold hover:shadow-lg hover:shadow-white/20 transition-soft">
-                            <i data-lucide="external-link" class="w-5 h-5 mr-3"></i>
-                            View Website
-                        </a>
+                        {{-- Model Tuner --}}
+                        <div
+                            class="flex items-center gap-2 p-1 bg-[#0f172a] rounded-lg border border-cyan-900/50 overflow-x-auto max-w-full">
+                            {{-- GLOBAL OPTION REMOVED AS REQUESTED --}}
+                            @foreach ($groqRateLimits['availableModels'] as $modelName)
+                                <button @click="switchModel('{{ $modelName }}')"
+                                    class="px-3 py-1.5 rounded-md text-[10px] font-mono font-bold uppercase transition-all whitespace-nowrap"
+                                    :class="selectedModel === '{{ $modelName }}' ?
+                                        'bg-cyan-900/50 text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.2)] border border-cyan-500/30' :
+                                        'text-slate-600 hover:text-cyan-400 hover:bg-white/5'">
+                                    {{ Str::afterLast($modelName, '/') }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    {{-- The Connected Flow --}}
+                    <div class="flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-0 font-mono relative">
+
+                        {{-- Node 1: ProductOS Core --}}
+                        <div class="relative group z-20">
+                            <div
+                                class="w-24 h-24 rounded-2xl bg-[#0f172a] border border-cyan-800/50 flex items-center justify-center shadow-[0_0_30px_-5px_rgba(8,145,178,0.3)] relative overflow-hidden transition-all duration-300 group-hover:shadow-[0_0_50px_rgba(8,145,178,0.5)] group-hover:border-cyan-400">
+                                <div class="absolute inset-0 bg-cyan-500/10 animate-pulse"></div>
+                                <i data-lucide="cpu"
+                                    class="w-10 h-10 text-cyan-400 transition-transform group-hover:scale-110 duration-300"></i>
+                            </div>
+                            <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-center">
+                                <p class="text-xs font-bold text-cyan-100 uppercase tracking-widest">System Core</p>
+                                <p class="text-[10px] text-cyan-800">ProductOS v2.0</p>
+                            </div>
+                        </div>
+
+                        {{-- Connection Line & Data Stream --}}
+                        <div
+                            class="flex-1 w-full lg:w-auto relative px-8 flex items-center justify-center min-h-[160px] lg:min-h-0">
+                            {{-- The Physical Line --}}
+                            <div class="absolute top-1/2 left-0 w-full h-[2px] bg-cyan-900/30 lg:block hidden"></div>
+                            <div class="absolute left-1/2 top-0 h-full w-[2px] bg-cyan-900/30 lg:hidden block"></div>
+
+                            {{-- Moving Packet Animation (CSS based) --}}
+                            <div x-ref="stream"
+                                class="absolute top-1/2 left-0 w-24 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent blur-[2px] animate-[moveRight_3s_linear_infinite] lg:block hidden shadow-[0_0_15px_#22d3ee] z-0">
+                            </div>
+
+                            {{-- Metrics HUD Overlay --}}
+                            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full relative z-10">
+                                {{-- RPM --}}
+                                <div
+                                    class="text-center bg-[#050b14] p-4 rounded-xl border border-dashed border-cyan-900/50 hover:border-cyan-500/50 transition-colors group/stat">
+                                    <p
+                                        class="text-[10px] text-cyan-600 uppercase mb-2 tracking-wider group-hover/stat:text-cyan-400 font-bold">
+                                        REQ / MIN</p>
+                                    <p class="text-3xl font-black text-white mb-2">
+                                        {{ number_format($groqRateLimits['usage']['rpm']['current']) }}</p>
+                                    <div class="w-full h-1 bg-cyan-900/30 rounded-full overflow-hidden">
+                                        <div class="h-full bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.8)]"
+                                            style="width: {{ $groqRateLimits['usage']['rpm']['percent'] }}%"></div>
+                                    </div>
+                                </div>
+
+                                {{-- TPM --}}
+                                <div
+                                    class="text-center bg-[#050b14] p-4 rounded-xl border border-dashed border-cyan-900/50 hover:border-amber-500/50 transition-colors group/stat">
+                                    <p
+                                        class="text-[10px] text-amber-600 uppercase mb-2 tracking-wider group-hover/stat:text-amber-400 font-bold">
+                                        TOK / MIN</p>
+                                    <p class="text-3xl font-black text-white mb-2">
+                                        {{ number_format($groqRateLimits['usage']['tpm']['current']) }}</p>
+                                    <div class="w-full h-1 bg-amber-900/30 rounded-full overflow-hidden">
+                                        <div class="h-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]"
+                                            style="width: {{ $groqRateLimits['usage']['tpm']['percent'] }}%"></div>
+                                    </div>
+                                </div>
+
+                                {{-- RPD --}}
+                                <div
+                                    class="text-center bg-[#050b14] p-4 rounded-xl border border-dashed border-cyan-900/50 hover:border-indigo-500/50 transition-colors group/stat">
+                                    <p
+                                        class="text-[10px] text-indigo-500 uppercase mb-2 tracking-wider group-hover/stat:text-indigo-400 font-bold">
+                                        REQ / DAY</p>
+                                    <p class="text-3xl font-black text-white mb-2">
+                                        {{ number_format($groqRateLimits['usage']['rpd']['current']) }}</p>
+                                    <div class="w-full h-1 bg-indigo-900/30 rounded-full overflow-hidden">
+                                        <div class="h-full bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.8)]"
+                                            style="width: {{ $groqRateLimits['usage']['rpd']['percent'] }}%"></div>
+                                    </div>
+                                </div>
+
+                                {{-- TPD --}}
+                                <div
+                                    class="text-center bg-[#050b14] p-4 rounded-xl border border-dashed border-cyan-900/50 hover:border-emerald-500/50 transition-colors group/stat">
+                                    <p
+                                        class="text-[10px] text-emerald-600 uppercase mb-2 tracking-wider group-hover/stat:text-emerald-400 font-bold">
+                                        TOK / DAY</p>
+                                    <p class="text-3xl font-black text-white mb-2">
+                                        {{ number_format($groqRateLimits['usage']['tpd']['current']) }}</p>
+                                    <div class="w-full h-1 bg-emerald-900/30 rounded-full overflow-hidden">
+                                        <div class="h-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]"
+                                            style="width: {{ $groqRateLimits['usage']['tpd']['percent'] }}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Node 2: Groq LPU --}}
+                        <div class="relative group z-20">
+                            <div
+                                class="w-28 h-28 rounded-full bg-[#0f172a] border-2 border-orange-500/50 flex items-center justify-center shadow-[0_0_40px_-5px_rgba(249,115,22,0.4)] relative overflow-hidden group-hover:scale-105 transition-transform duration-500 group-hover:border-orange-400 group-hover:shadow-[0_0_60px_rgba(249,115,22,0.6)]">
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent animate-spin-slow">
+                                </div>
+                                {{-- Groq Logo --}}
+                                <svg class="w-12 h-12 text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L12 3Z" />
+                                </svg>
+                            </div>
+
+                            {{-- Floating Model Label --}}
+                            <div
+                                class="absolute -top-3 -right-3 px-3 py-1 bg-gradient-to-r from-orange-600 to-red-600 text-white text-[10px] font-bold rounded-full shadow-lg border border-orange-400">
+                                LIVE
+                            </div>
+
+                            <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-center">
+                                <p class="text-xs font-bold text-orange-100 uppercase tracking-widest">Groq LPU Cloud</p>
+                                <p class="text-[10px] text-orange-600 font-mono mt-0.5">
+                                    {{ isset($selectedModel) && $selectedModel !== 'all' ? Str::afterLast($selectedModel, '/') : 'Multi-Model Orbit' }}
+                                </p>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
-        </div>
+        @else
+            <div
+                class="flex items-center justify-center h-48 bg-[#050b14] rounded-[32px] border border-dashed border-slate-800">
+                <div class="text-center">
+                    <i data-lucide="power-off" class="w-10 h-10 text-slate-600 mx-auto mb-4"></i>
+                    <p class="text-slate-500 font-mono text-sm">Signal Lost: Groq Provider Unconfigured</p>
+                </div>
+            </div>
+        @endif
+
+        <style>
+            @keyframes moveRight {
+                0% {
+                    left: 0;
+                    opacity: 0;
+                    transform: scaleX(0.2);
+                }
+
+                20% {
+                    opacity: 1;
+                    transform: scaleX(1);
+                }
+
+                80% {
+                    opacity: 1;
+                    transform: scaleX(1);
+                }
+
+                100% {
+                    left: 100%;
+                    opacity: 0;
+                    transform: scaleX(0.2);
+                }
+            }
+
+            .animate-spin-slow {
+                animation: spin 8s linear infinite;
+            }
+        </style>
     </div>
 @endsection

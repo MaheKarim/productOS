@@ -22,11 +22,11 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#2563EB',
+                        primary: '#6366F1', // Bright Purple
                         secondary: '#3B82F6',
-                        cta: '#F97316',
+                        cta: '#FF6B35', // Specific Orange
                         dashboard: {
-                            sidebar: '#0F172A',
+                            sidebar: '#0A1628', // Deep Navy
                             bg: '#F8FAFC',
                             card: '#FFFFFF',
                             text: '#1E293B'
@@ -173,7 +173,8 @@
                     </a>
                     <!-- AI Models -->
 
-                    <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Content
+                    <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                        Content
                         Management</div>
 
                     {{-- Tools Management --}}
@@ -239,7 +240,8 @@
                         </div>
                     </div>
 
-                    <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System
+                    <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                        System
                     </div>
 
                     <a href="{{ route('admin.users.index') }}"
@@ -317,8 +319,9 @@
                         </div>
                     </div>
 
-                    <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System
-                    </div>
+                    <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                        System
+                        Settings</div>
                     <a href="{{ route('admin.settings.index') }}"
                         class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.settings.index') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}">
                         <i data-lucide="settings"
