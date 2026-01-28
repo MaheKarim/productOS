@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\FooterController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\SystemSettingsController;
 use App\Http\Controllers\ToolsController;
 use App\Http\Controllers\CaseStudyController;
 use App\Http\Controllers\PageController;
@@ -143,9 +144,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('footer/{footer}/toggle', [FooterController::class, 'toggle'])->name('admin.footer.toggle');
 
     // Settings
-    Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings.index');
-    Route::put('/settings/profile', [SettingsController::class, 'updateProfile'])->name('admin.settings.update-profile');
-    Route::put('/settings/password', [SettingsController::class, 'updatePassword'])->name('admin.settings.update-password');
+    // Profile Management
+    Route::get('/profile', [SettingsController::class, 'index'])->name('admin.profile.index');
+    Route::put('/profile/profile', [SettingsController::class, 'updateProfile'])->name('admin.profile.update-profile');
+    Route::put('/profile/password', [SettingsController::class, 'updatePassword'])->name('admin.profile.update-password');
+
+    // System Settings (Global)
+    Route::get('/settings', [SystemSettingsController::class, 'index'])->name('admin.settings.index');
+    Route::post('/settings', [SystemSettingsController::class, 'update'])->name('admin.settings.update');
 
     // Tools Management
     Route::resource('tools', \App\Http\Controllers\Admin\ToolsController::class)->names('admin.tools');

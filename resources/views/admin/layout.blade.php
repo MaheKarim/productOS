@@ -354,7 +354,12 @@
                                 {{ Auth::user()->name ?? 'Admin User' }}</p>
                             <p class="text-[10px] text-slate-500 truncate w-24">Administrator</p>
                         </div>
-                        <form action="{{ route('logout') }}" method="POST" class="ml-auto">
+                        <a href="{{ route('admin.profile.index') }}"
+                            class="ml-auto p-2 text-slate-500 hover:text-indigo-400 transition-colors mr-1"
+                            title="My Profile">
+                            <i data-lucide="user-cog" class="w-4 h-4"></i>
+                        </a>
+                        <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit" class="p-2 text-slate-500 hover:text-red-400 transition-colors">
                                 <i data-lucide="log-out" class="w-4 h-4"></i>

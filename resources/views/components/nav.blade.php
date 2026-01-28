@@ -13,8 +13,7 @@
                 <a href="{{ route('portfolio.index') }}"
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('portfolio.*') ? 'text-blue-600' : '' }}">Case
                     Studies</a>
-                <a href="{{ route('services') }}"
-                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('services') ? 'text-blue-600' : '' }}">Services</a>
+
                 <a href="{{ route('about') }}"
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('about') ? 'text-blue-600' : '' }}">About</a>
                 <a href="{{ route('prompts.index') }}"
@@ -86,8 +85,7 @@
             <a href="{{ route('portfolio.index') }}"
                 class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">Case
                 Studies</a>
-            <a href="{{ route('services') }}"
-                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">Services</a>
+
             <a href="{{ route('about') }}"
                 class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">About</a>
             <a href="{{ route('prompts.index') }}"
