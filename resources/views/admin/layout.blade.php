@@ -156,6 +156,15 @@
                         YT Summarize
                     </a>
 
+                    <!-- Book Library -->
+                    <a href="{{ route('admin.books.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.books.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="books">
+                        <i data-lucide="book-open"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.books.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        Book Library
+                    </a>
+
                     <!-- AI Providers -->
                     <a href="{{ route('admin.ai-providers.index') }}"
                         class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.ai-providers.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
@@ -173,8 +182,7 @@
                     </a>
                     <!-- AI Models -->
 
-                    <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                        Content
+                    <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Content
                         Management</div>
 
                     {{-- Tools Management --}}
@@ -240,8 +248,7 @@
                         </div>
                     </div>
 
-                    <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                        System
+                    <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System
                     </div>
 
                     <a href="{{ route('admin.users.index') }}"
@@ -319,9 +326,8 @@
                         </div>
                     </div>
 
-                    <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                        System
-                        Settings</div>
+                    <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System
+                    </div>
                     <a href="{{ route('admin.settings.index') }}"
                         class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.settings.index') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}">
                         <i data-lucide="settings"

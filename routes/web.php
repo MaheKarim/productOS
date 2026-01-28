@@ -37,6 +37,12 @@ Route::get('/tools', [ToolsController::class, 'index'])->name('tools.index');
 Route::get('/tools/{category}', [ToolsController::class, 'category'])->name('tools.category');
 Route::get('/tools/{category}/{tool}', [ToolsController::class, 'show'])->name('tools.show');
 
+// Book Library (Public)
+Route::controller(\App\Http\Controllers\BookLibraryController::class)->prefix('books')->name('books.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/{slug}', 'show')->name('show');
+});
+
 // Portfolio
 Route::get('/portfolio', [CaseStudyController::class, 'index'])->name('portfolio.index');
 Route::get('/portfolio/{slug}', [CaseStudyController::class, 'show'])->name('portfolio.show');
@@ -197,5 +203,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
     // System Settings
     Route::get('/settings/prompts', \App\Livewire\Admin\Settings\SystemPrompts::class)->name('admin.settings.prompts');
+
+    // Book Management
+    Route::resource('books', \App\Http\Controllers\Admin\BookController::class)->names('admin.books');
+    Route::post('books/{book}/process', [\App\Http\Controllers\Admin\BookController::class, 'process'])->name('admin.books.process');
+    Route::post('books/{book}/retry', [\App\Http\Controllers\Admin\BookController::class, 'process'])->name('admin.books.retry');
+    Route::post('books/{book}/toggle', [\App\Http\Controllers\Admin\BookController::class, 'toggleStatus'])->name('admin.books.toggle');
 });
 
