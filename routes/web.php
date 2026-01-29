@@ -28,7 +28,7 @@ Route::prefix('tools/career-compass')->name('career-compass.')->group(function (
     Route::get('/', [CareerCompassController::class, 'index'])->name('index');
     Route::get('/assess', [CareerCompassController::class, 'assess'])->name('assess');
     Route::get('/results/{id?}', [CareerCompassController::class, 'results'])->name('results');
-    Route::get('/download-pdf', [CareerCompassController::class, 'downloadPdf'])->name('pdf'); // Added PDF download route
+    Route::get('/download-pdf/{id?}', [CareerCompassController::class, 'downloadPdf'])->name('download-pdf'); // Added PDF download route
     Route::get('/history', [CareerCompassController::class, 'history'])
         ->middleware('auth')->name('history');
 });

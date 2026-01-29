@@ -42,6 +42,9 @@
     <!-- Footer -->
     <x-footer />
 
+    {{-- Support Section (appears after footer on all pages) --}}
+    @include('frontend.sections.support-section')
+
     @stack('scripts')
 </body>
 

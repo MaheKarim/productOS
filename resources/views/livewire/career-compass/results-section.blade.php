@@ -384,7 +384,7 @@
 
         <!-- Actions -->
         <div class="flex flex-wrap justify-center gap-6">
-            <a href="{{ route('career-compass.pdf') }}" target="_blank"
+            <a href="{{ route('career-compass.download-pdf') }}" target="_blank"
                 class="px-8 py-4 bg-white text-slate-700 font-bold rounded-2xl hover:bg-slate-50 border border-slate-200 transition-all flex items-center gap-3 shadow-md hover:shadow-lg active:scale-95">
                 <i data-lucide="file-down" class="w-5 h-5 text-blue-600"></i>
                 Download PDF

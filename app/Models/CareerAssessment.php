@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CareerAssessment extends Model
 {
+    public const MAX_ENVIRONMENT_SCORE = 12;
+    public const MAX_SKILLS_SCORE = 8;
+    public const MAX_IMPACT_SCORE = 96;
+
     protected $fillable = [
         'user_id',
         'session_id',

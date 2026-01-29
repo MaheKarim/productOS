@@ -38,6 +38,9 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'bio' => ['nullable', 'string'],
+            'job_role' => ['nullable', 'string', 'max:255'],
+            'years_of_experience' => ['nullable', 'numeric', 'min:0', 'max:50'],
+            'company_name' => ['nullable', 'string', 'max:255'],
         ]);
 
         // Handle Avatar (Placeholder Logic - normally would be file upload)

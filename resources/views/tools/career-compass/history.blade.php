@@ -26,16 +26,16 @@
                 class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-6 text-white shadow-lg shadow-blue-500/20">
                 <h3 class="font-bold text-lg mb-1">Latest Assessment</h3>
                 <p class="text-blue-100 text-sm mb-6">
-                    {{ $assessments->first() ? $assessments->first()->created_at->format('M d, Y') : 'No assessments yet' }}
+                    {{ $latestAssessment ? $latestAssessment->created_at->format('M d, Y') : 'No assessments yet' }}
                 </p>
 
-                @if ($assessments->first())
+                @if ($latestAssessment)
                     <div class="mb-6">
-                        <div class="text-4xl font-bold mb-1">{{ number_format($assessments->first()->impact_score, 1) }}
+                        <div class="text-4xl font-bold mb-1">{{ number_format($latestAssessment->impact_score, 1) }}
                         </div>
                         <div
                             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/20 border border-white/20 backdrop-blur-sm">
-                            {{ $assessments->first()->status_label }}
+                            {{ $latestAssessment->status_label }}
                         </div>
                     </div>
 
@@ -43,24 +43,27 @@
                         <div class="flex justify-between items-center text-sm">
                             <span class="text-blue-100">Environment</span>
                             <span
-                                class="font-bold">{{ number_format($assessments->first()->environment_score, 1) }}/12</span>
+                                class="font-bold">{{ number_format($latestAssessment->environment_score, 1) }}/{{ \App\Models\CareerAssessment::MAX_ENVIRONMENT_SCORE }}</span>
                         </div>
                         <div class="w-full bg-black/20 rounded-full h-1.5">
                             <div class="bg-white rounded-full h-1.5"
-                                style="width: {{ ($assessments->first()->environment_score / 12) * 100 }}%"></div>
+                                style="width: {{ ($latestAssessment->environment_score / \App\Models\CareerAssessment::MAX_ENVIRONMENT_SCORE) * 100 }}%">
+                            </div>
                         </div>
 
                         <div class="flex justify-between items-center text-sm pt-2">
                             <span class="text-blue-100">Skills</span>
-                            <span class="font-bold">{{ number_format($assessments->first()->skills_score, 1) }}/8</span>
+                            <span
+                                class="font-bold">{{ number_format($latestAssessment->skills_score, 1) }}/{{ \App\Models\CareerAssessment::MAX_SKILLS_SCORE }}</span>
                         </div>
                         <div class="w-full bg-black/20 rounded-full h-1.5">
                             <div class="bg-white rounded-full h-1.5"
-                                style="width: {{ ($assessments->first()->skills_score / 8) * 100 }}%"></div>
+                                style="width: {{ ($latestAssessment->skills_score / \App\Models\CareerAssessment::MAX_SKILLS_SCORE) * 100 }}%">
+                            </div>
                         </div>
                     </div>
 
-                    <a href="{{ route('career-compass.results', $assessments->first()->id) }}"
+                    <a href="{{ route('career-compass.results', $latestAssessment->id) }}"
                         class="mt-6 block w-full py-2.5 bg-white text-blue-700 text-center text-sm font-bold rounded-xl hover:bg-blue-50 transition-colors">
                         View Details
                     </a>
@@ -111,7 +114,8 @@
                                     <div class="flex items-center gap-2">
                                         <span
                                             class="font-bold text-slate-900">{{ number_format($assessment->impact_score, 1) }}</span>
-                                        <span class="text-xs text-slate-400">/ 96</span>
+                                        <span class="text-xs text-slate-400">/
+                                            {{ \App\Models\CareerAssessment::MAX_IMPACT_SCORE }}</span>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
@@ -147,6 +151,11 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination -->
+            <div class="px-6 py-4 border-t border-slate-100">
+                {{ $assessments->links() }}
+            </div>
         </div>
     </div>
 
@@ -160,15 +169,17 @@
             if (!ctx) return;
 
             // Prepare data (reverse to show oldest to newest)
-            const assessments = @json($assessments->reverse()->values());
+            const assessments = @json($chartAssessments->reverse()->values());
 
             const labels = assessments.map(a => new Date(a.created_at).toLocaleDateString(undefined, {
                 month: 'short',
                 day: 'numeric'
             }));
             const impactScores = assessments.map(a => a.impact_score);
-            const envScores = assessments.map(a => (a.environment_score / 12) * 96); // Normalized to scale
-            const skillScores = assessments.map(a => (a.skills_score / 8) * 96); // Normalized to scale
+            const envScores = assessments.map(a => (a.environment_score /
+                {{ \App\Models\CareerAssessment::MAX_ENVIRONMENT_SCORE }}) * 100); // Normalized to percentage
+            const skillScores = assessments.map(a => (a.skills_score /
+                {{ \App\Models\CareerAssessment::MAX_SKILLS_SCORE }}) * 100); // Normalized to percentage
 
             new Chart(ctx, {
                 type: 'line',

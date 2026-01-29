@@ -27,7 +27,33 @@ class CareerCompassController extends Controller
      */
     public function results(?int $id = null)
     {
-        return view('tools.career-compass.results', ['assessmentId' => $id]);
+        $assessment = null;
+
+        if ($id) {
+            $assessment = \App\Models\CareerAssessment::find($id);
+        } elseif (auth()->check()) {
+            $assessment = auth()->user()->careerAssessments()->latest('assessment_date')->first();
+        } else {
+            $assessmentData = session('career_compass_results');
+            if ($assessmentData) {
+                $assessment = is_array($assessmentData) ? new \App\Models\CareerAssessment($assessmentData) : $assessmentData;
+            }
+        }
+
+        if (!$assessment) {
+            return redirect()->route('career-compass.assess')->with('error', 'No assessment results found.');
+        }
+
+        // Generate recommendations
+        $recommendationEngine = new \App\Services\RecommendationEngine();
+        $recommendations = $recommendationEngine->generate($assessment);
+        $strengths = $recommendationEngine->getStrengths($assessment);
+
+        return view('tools.career-compass.results', [
+            'assessment' => $assessment,
+            'recommendations' => $recommendations,
+            'strengths' => $strengths
+        ]);
     }
 
     /**
@@ -35,22 +61,44 @@ class CareerCompassController extends Controller
      */
     public function history()
     {
-        $assessments = auth()->user()
-            ->careerAssessments()
+        $user = auth()->user();
+
+        // Get latest assessment for the summary card (always wants the most recent)
+        $latestAssessment = $user->careerAssessments()
+            ->orderBy('assessment_date', 'desc')
+            ->first();
+
+        // Get all assessments for the chart (to show full trend)
+        $chartAssessments = $user->careerAssessments()
             ->orderBy('assessment_date', 'desc')
             ->get();
 
-        return view('tools.career-compass.history', ['assessments' => $assessments]);
+        // Get paginated assessments for the history table
+        $assessments = $user->careerAssessments()
+            ->orderBy('assessment_date', 'desc')
+            ->paginate(10);
+
+        return view('tools.career-compass.history', [
+            'assessments' => $assessments,
+            'latestAssessment' => $latestAssessment,
+            'chartAssessments' => $chartAssessments
+        ]);
     }
 
     /**
      * Download results as PDF
      */
-    public function downloadPdf(\App\Services\RecommendationEngine $recommendationEngine)
+    public function downloadPdf(\App\Services\RecommendationEngine $recommendationEngine, ?int $id = null)
     {
         $assessmentData = null;
 
-        if (auth()->check()) {
+        if ($id) {
+            $assessmentData = \App\Models\CareerAssessment::find($id);
+            // Ensure user owns this assessment if logged in
+            if (auth()->check() && $assessmentData && $assessmentData->user_id !== auth()->id()) {
+                abort(403);
+            }
+        } elseif (auth()->check()) {
             // Check if there is a recent assessment in session that matches the user
             // Or get the latest assessment from DB if session is empty but user has history
             if (session()->has('career_compass_results')) {

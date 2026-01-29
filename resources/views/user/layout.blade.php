@@ -346,6 +346,12 @@
             <h1 class="text-lg font-semibold text-slate-900 hidden md:block">@yield('header', 'Dashboard')</h1>
 
             <div class="flex items-center gap-4 ml-auto">
+                <a href="{{ route('home') }}"
+                    class="flex items-center justify-center w-9 h-9 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all border border-slate-200 hover:border-blue-200 group"
+                    title="Go to Site">
+                    <i
+                        class="fa-solid fa-rocket text-sm text-orange-500 group-hover:text-amber-500 transition-colors"></i>
+                </a>
                 <span class="text-sm text-slate-500 hidden sm:block">Welcome, <span
                         class="font-medium text-slate-700">{{ Auth::user()->name }}</span></span>
             </div>
@@ -365,6 +371,11 @@
             @endif
 
             @yield('content')
+
+            {{-- Support Section (appears at total bottom of scrollable area) --}}
+            <div class="mt-12">
+                @include('frontend.sections.support-section')
+            </div>
         </div>
     </main>
 

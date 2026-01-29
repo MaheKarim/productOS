@@ -59,6 +59,38 @@
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
+                            <div>
+                                <label for="job_role" class="block text-sm font-semibold text-slate-700 mb-2">Job
+                                    Role</label>
+                                <input type="text" name="job_role" id="job_role"
+                                    value="{{ old('job_role', Auth::user()->job_role) }}"
+                                    placeholder="e.g. Senior Product Manager"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-slate-50 focus:bg-white text-slate-900">
+                                @error('job_role')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="company_name" class="block text-sm font-semibold text-slate-700 mb-2">Company
+                                    Name</label>
+                                <input type="text" name="company_name" id="company_name"
+                                    value="{{ old('company_name', Auth::user()->company_name) }}" placeholder="e.g. Google"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-slate-50 focus:bg-white text-slate-900">
+                                @error('company_name')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label for="years_of_experience"
+                                    class="block text-sm font-semibold text-slate-700 mb-2">Years of Experience</label>
+                                <input type="number" name="years_of_experience" id="years_of_experience" step="0.5"
+                                    value="{{ old('years_of_experience', Auth::user()->years_of_experience) }}"
+                                    placeholder="e.g. 5"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all bg-slate-50 focus:bg-white text-slate-900">
+                                @error('years_of_experience')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
                             <div class="md:col-span-2">
                                 <label for="bio" class="block text-sm font-semibold text-slate-700 mb-2">Bio / About
                                     Me</label>
