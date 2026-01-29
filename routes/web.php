@@ -215,5 +215,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('books/{book}/process', [\App\Http\Controllers\Admin\BookController::class, 'process'])->name('admin.books.process');
     Route::post('books/{book}/retry', [\App\Http\Controllers\Admin\BookController::class, 'process'])->name('admin.books.retry');
     Route::post('books/{book}/toggle', [\App\Http\Controllers\Admin\BookController::class, 'toggleStatus'])->name('admin.books.toggle');
+
+    // Support Section Management
+    Route::get('support-section', [\App\Http\Controllers\Admin\SupportSectionController::class, 'index'])->name('admin.support-section.index');
+    Route::post('support-section', [\App\Http\Controllers\Admin\SupportSectionController::class, 'store'])->name('admin.support-section.store');
+    Route::post('support-section/{support}/toggle', [\App\Http\Controllers\Admin\SupportSectionController::class, 'toggle'])->name('admin.support-section.toggle');
+    Route::delete('support-section/remove-image', [\App\Http\Controllers\Admin\SupportSectionController::class, 'removeImage'])->name('admin.support-section.remove-image');
 });
 

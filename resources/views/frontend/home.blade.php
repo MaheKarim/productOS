@@ -3,7 +3,14 @@
 @section('title', 'Home')
 
 @section('content')
-    @include('frontend.sections.hero')
+    {{-- New Value Proposition Section (replaces Hero) --}}
+    @include('frontend.sections.value-proposition')
+
+    {{-- Social Proof / Testimonials Section --}}
+    @include('frontend.sections.social-proof')
+
+    {{-- Features Hub Section --}}
+    @include('frontend.sections.features-hub')
 
     @php
         // UI/UX Pro Max: Populate mock data if DB is empty to showcase the design
@@ -150,9 +157,7 @@
         }
     @endphp
 
-    @include('frontend.sections.about')
-
-    @include('frontend.sections.skills')
+    {{-- About section removed - replaced by Social Proof section above --}}
     @include('frontend.sections.toolkit')
 
     @include('frontend.sections.services')

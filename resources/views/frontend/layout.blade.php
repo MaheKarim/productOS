@@ -176,6 +176,9 @@
 
     @include('frontend.sections.footer')
 
+    {{-- Support Section (appears after footer on all pages) --}}
+    @include('frontend.sections.support-section')
+
     <script>
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

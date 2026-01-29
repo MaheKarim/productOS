@@ -312,6 +312,12 @@
                                         'label' => 'Footer',
                                         'name' => 'footer',
                                     ],
+                                    [
+                                        'route' => 'admin.support-section.index',
+                                        'icon' => 'coffee',
+                                        'label' => 'Support Section',
+                                        'name' => 'support-section',
+                                    ],
                                 ];
                             @endphp
 
