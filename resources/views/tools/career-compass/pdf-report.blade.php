@@ -237,10 +237,18 @@
     <div class="section">
         <div class="section-title">Key Recommendations</div>
         @foreach ($recommendations as $rec)
-            <div class="recommendation"
-                style="border-left-color: {{ $rec['type'] === 'critical' ? '#ef4444' : ($rec['type'] === 'strength' ? '#10b981' : '#f59e0b') }}">
-                <div class="rec-title">{{ $rec['variable'] }}</div>
-                <div class="rec-desc">{{ $rec['text'] }}</div>
+            @php
+                $type = $rec['severity'] ?? ($rec['type'] ?? 'info');
+                $borderColor = match ($type) {
+                    'critical' => '#ef4444',
+                    'strength' => '#10b981',
+                    'warning' => '#f59e0b',
+                    default => '#3b82f6',
+                };
+            @endphp
+            <div class="recommendation" style="border-left-color: {{ $borderColor }}">
+                <div class="rec-title">{{ $rec['title'] ?? ($rec['variable'] ?? 'Recommendation') }}</div>
+                <div class="rec-desc">{{ $rec['description'] ?? ($rec['text'] ?? '') }}</div>
             </div>
         @endforeach
     </div>

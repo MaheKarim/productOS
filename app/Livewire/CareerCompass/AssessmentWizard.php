@@ -162,7 +162,12 @@ class AssessmentWizard extends Component
 
     public function nextStep(): void
     {
-        if ($this->currentStep < 4) {
+        if ($this->currentStep == 3) {
+            $this->calculateResults();
+            return;
+        }
+
+        if ($this->currentStep < 3) {
             $this->currentStep++;
             $this->saveToSession();
         }
@@ -178,7 +183,7 @@ class AssessmentWizard extends Component
 
     public function goToStep(int $step): void
     {
-        if ($step >= 1 && $step <= 4) {
+        if ($step >= 1 && $step <= 3) {
             $this->currentStep = $step;
             $this->saveToSession();
         }
@@ -273,9 +278,8 @@ class AssessmentWizard extends Component
     {
         return match ($this->currentStep) {
             1 => 0,
-            2 => 33,
-            3 => 66,
-            4 => 100,
+            2 => 50,
+            3 => 100,
             default => 0,
         };
     }
@@ -348,6 +352,44 @@ class AssessmentWizard extends Component
         return $engine->getStrengths($assessment);
     }
 
+    public function getRecommendationsPreview(): array
+    {
+        $tempAssessment = new CareerAssessment([
+            'manager_score' => $this->manager,
+            'resources_score' => $this->resources,
+            'team_score' => $this->team,
+            'scope_score' => $this->scope,
+            'compensation_score' => $this->compensation,
+            'culture_score' => $this->culture,
+            'communication_score' => $this->communication,
+            'leadership_score' => $this->leadership,
+            'strategy_score' => $this->strategy,
+            'execution_score' => $this->execution,
+        ]);
+
+        $engine = new RecommendationEngine();
+        return $engine->generate($tempAssessment);
+    }
+
+    public function getStrengthsPreview(): array
+    {
+        $tempAssessment = new CareerAssessment([
+            'manager_score' => $this->manager,
+            'resources_score' => $this->resources,
+            'team_score' => $this->team,
+            'scope_score' => $this->scope,
+            'compensation_score' => $this->compensation,
+            'culture_score' => $this->culture,
+            'communication_score' => $this->communication,
+            'leadership_score' => $this->leadership,
+            'strategy_score' => $this->strategy,
+            'execution_score' => $this->execution,
+        ]);
+
+        $engine = new RecommendationEngine();
+        return $engine->getStrengths($tempAssessment);
+    }
+
     public function render()
     {
         return view('livewire.career-compass.assessment-wizard', [
@@ -355,8 +397,8 @@ class AssessmentWizard extends Component
             'status' => $this->getStatus(),
             'statusLabel' => $this->getStatusLabel(),
             'statusColor' => $this->getStatusColor(),
-            'recommendations' => $this->showResults ? $this->getRecommendations() : [],
-            'strengths' => $this->showResults ? $this->getStrengths() : [],
+            'recommendations' => $this->showResults ? $this->getRecommendations() : ($this->currentStep == 4 ? $this->getRecommendationsPreview() : []),
+            'strengths' => $this->showResults ? $this->getStrengths() : ($this->currentStep == 4 ? $this->getStrengthsPreview() : []),
         ]);
     }
 }

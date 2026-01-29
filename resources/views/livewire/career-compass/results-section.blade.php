@@ -1,41 +1,65 @@
-<div class="pt-28 pb-20 px-4">
+<div class="pt-28 pb-20 px-4 font-open-sans">
     <div class="max-w-5xl mx-auto">
         <!-- Score Hero -->
         <div
-            class="bg-gradient-to-br from-indigo-500 via-violet-500 to-purple-600 rounded-3xl p-8 md:p-12 text-center text-white mb-8 shadow-2xl shadow-indigo-500/30 relative overflow-hidden">
-            <!-- Background Pattern -->
+            class="bg-gradient-to-br from-blue-700 via-indigo-700 to-violet-800 rounded-[3rem] p-10 md:p-16 text-center text-white mb-12 shadow-2xl shadow-indigo-500/30 relative overflow-hidden group">
+            <!-- Background Elements -->
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10">
+            </div>
             <div
-                class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px]">
+                class="absolute -left-20 -bottom-20 w-80 h-80 bg-white/10 rounded-full blur-3xl transition-transform group-hover:scale-110 duration-700">
+            </div>
+            <div
+                class="absolute -right-20 -top-20 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl transition-transform group-hover:scale-110 duration-700">
             </div>
 
             <div class="relative z-10">
-                <p class="text-indigo-100 mb-2 font-medium">🎯 Your Career Impact Score</p>
-                <div class="text-7xl md:text-8xl font-bold mb-2">{{ number_format($impactScore, 1) }}</div>
-                <p class="text-xl text-indigo-200 mb-4">out of 96 points</p>
+                <p class="text-indigo-100 mb-6 font-bold uppercase tracking-[0.3em] text-xs">Career Velocity Index</p>
+                <div class="flex items-center justify-center gap-6 mb-4">
+                    <div class="h-px w-10 bg-white/20"></div>
+                    <div
+                        class="text-8xl md:text-9xl font-black font-poppins tracking-tighter drop-shadow-2xl tabular-nums">
+                        {{ number_format($impactScore, 0) }}
+                    </div>
+                    <div class="h-px w-10 bg-white/20"></div>
+                </div>
+                <p class="text-xl text-indigo-200 mb-10 font-medium">Impact Score <span class="opacity-40">/ 96</span>
+                </p>
 
                 <div
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-lg font-bold
+                    class="inline-flex items-center gap-4 px-8 py-4 rounded-3xl text-xl font-black font-poppins shadow-inner-white backdrop-blur-xl border border-white/20
                     {{ $status === 'exceptional'
-                        ? 'bg-yellow-400 text-yellow-900'
+                        ? 'bg-yellow-400 text-yellow-950'
                         : ($status === 'thriving'
-                            ? 'bg-emerald-400 text-emerald-900'
+                            ? 'bg-emerald-400 text-emerald-950'
                             : ($status === 'growing'
-                                ? 'bg-amber-400 text-amber-900'
+                                ? 'bg-amber-400 text-amber-950'
                                 : ($status === 'struggling'
-                                    ? 'bg-orange-400 text-orange-900'
-                                    : 'bg-red-400 text-red-900'))) }}">
+                                    ? 'bg-orange-400 text-orange-950'
+                                    : 'bg-red-400 text-red-950'))) }}">
+                    <i data-lucide="{{ $status === 'exceptional' ? 'trophy' : ($status === 'thriving' ? 'trending-up' : 'activity') }}"
+                        class="w-6 h-6"></i>
                     {{ $statusLabel }}
                 </div>
 
-                <div class="mt-6 flex flex-wrap justify-center gap-8 text-sm">
-                    <div>
-                        <span class="text-indigo-200">Environment</span>
-                        <div class="text-2xl font-bold">{{ number_format($environmentTotal, 2) }} / 12</div>
+                <div class="mt-12 flex flex-wrap justify-center gap-12">
+                    <div class="group/item cursor-help">
+                        <span
+                            class="text-indigo-200 text-xs font-black uppercase tracking-widest block mb-2 opacity-60">Environment</span>
+                        <div
+                            class="text-3xl font-black font-poppins tabular-nums group-hover/item:text-emerald-400 transition-colors">
+                            {{ number_format($environmentTotal, 1) }} <span class="text-sm font-bold opacity-40">/
+                                12</span>
+                        </div>
                     </div>
-                    <div class="hidden sm:block w-px h-12 bg-white/20"></div>
-                    <div>
-                        <span class="text-indigo-200">Skills</span>
-                        <div class="text-2xl font-bold">{{ number_format($skillsTotal, 2) }} / 8</div>
+                    <div class="hidden sm:block w-px h-16 bg-white/10"></div>
+                    <div class="group/item cursor-help">
+                        <span
+                            class="text-indigo-200 text-xs font-black uppercase tracking-widest block mb-2 opacity-60">Skills</span>
+                        <div
+                            class="text-3xl font-black font-poppins tabular-nums group-hover/item:text-amber-400 transition-colors">
+                            {{ number_format($skillsTotal, 1) }} <span class="text-sm font-bold opacity-40">/ 8</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -44,190 +68,232 @@
         <!-- Charts Grid with Chart.js + Alpine.js -->
         <div class="grid md:grid-cols-2 gap-6 mb-8">
             <!-- Environment Radar Chart -->
-            <div class="bg-white rounded-2xl p-6 shadow-lg border border-slate-200" x-data x-init="$nextTick(() => {
-                if (typeof Chart !== 'undefined') {
-                    new Chart($refs.envChart.getContext('2d'), {
-                        type: 'radar',
-                        data: {
-                            labels: ['Manager', 'Resources', 'Team', 'Scope', 'Compensation', 'Culture'],
-                            datasets: [{
-                                label: 'Your Scores',
-                                data: [{{ $manager }}, {{ $resources }}, {{ $team }}, {{ $scope }}, {{ $compensation }}, {{ $culture }}],
-                                backgroundColor: 'rgba(16, 185, 129, 0.2)',
-                                borderColor: 'rgba(16, 185, 129, 1)',
-                                borderWidth: 2,
-                                pointBackgroundColor: 'rgba(16, 185, 129, 1)',
-                                pointBorderColor: '#fff',
-                            }, {
-                                label: 'Maximum',
-                                data: [2, 2, 2, 2, 2, 2],
-                                backgroundColor: 'rgba(148, 163, 184, 0.1)',
-                                borderColor: 'rgba(148, 163, 184, 0.5)',
-                                borderWidth: 1,
-                                borderDash: [5, 5],
-                                pointRadius: 0
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: { r: { beginAtZero: true, max: 2, ticks: { stepSize: 0.5 } } },
-                            plugins: { legend: { display: false } }
-                        }
-                    });
-                }
-            })">
-                <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                    <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                            </path>
-                        </svg>
+            <div class="glass-card rounded-[2.5rem] p-8 shadow-xl shadow-blue-500/5 transition-all hover:shadow-2xl hover:shadow-blue-500/10"
+                x-data x-init="$nextTick(() => {
+                    if (typeof Chart !== 'undefined') {
+                        new Chart($refs.envChart.getContext('2d'), {
+                            type: 'radar',
+                            data: {
+                                labels: ['Manager', 'Resources', 'Team', 'Scope', 'Compensation', 'Culture'],
+                                datasets: [{
+                                    label: 'Your Scores',
+                                    data: [{{ $manager }}, {{ $resources }}, {{ $team }}, {{ $scope }}, {{ $compensation }}, {{ $culture }}],
+                                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                                    borderColor: 'rgba(59, 130, 246, 1)',
+                                    borderWidth: 3,
+                                    pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+                                    pointBorderColor: '#fff',
+                                    pointHoverRadius: 6,
+                                }, {
+                                    label: 'Maximum',
+                                    data: [2, 2, 2, 2, 2, 2],
+                                    backgroundColor: 'transparent',
+                                    borderColor: 'rgba(148, 163, 184, 0.2)',
+                                    borderWidth: 1,
+                                    borderDash: [5, 5],
+                                    pointRadius: 0
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    r: {
+                                        beginAtZero: true,
+                                        max: 2,
+                                        ticks: { display: false, stepSize: 0.5 },
+                                        grid: { color: 'rgba(148, 163, 184, 0.1)' },
+                                        angleLines: { color: 'rgba(148, 163, 184, 0.1)' },
+                                        pointLabels: { font: { family: 'Poppins', size: 10, weight: '600' } }
+                                    }
+                                },
+                                plugins: { legend: { display: false } }
+                            }
+                        });
+                    }
+                })">
+                <div class="flex items-center justify-between mb-8">
+                    <h3
+                        class="font-black text-slate-900 flex items-center gap-3 font-poppins uppercase tracking-wider text-sm">
+                        <div
+                            class="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shadow-inner">
+                            <i data-lucide="building-2" class="w-5 h-5"></i>
+                        </div>
+                        Environment Analysis
+                    </h3>
+                    <div
+                        class="bg-blue-50 px-3 py-1 rounded-full text-[10px] font-black text-blue-600 uppercase tracking-widest border border-blue-100">
+                        Max 12 pts
                     </div>
-                    Environment Breakdown
-                </h3>
-                <div class="relative" style="height: 280px;">
+                </div>
+
+                <div class="relative" style="height: 300px;">
                     <canvas x-ref="envChart"></canvas>
                 </div>
-                <div class="mt-4 text-center">
-                    <span class="text-sm text-slate-500">Total: </span>
-                    <span class="text-lg font-bold text-emerald-600">{{ number_format($environmentTotal, 2) }} /
-                        12</span>
+                <div class="mt-8 pt-6 border-t border-slate-50 flex items-center justify-between">
+                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Aggregate</span>
+                    <span
+                        class="text-2xl font-black text-blue-600 font-poppins">{{ number_format($environmentTotal, 1) }}
+                        <span class="text-xs font-bold text-slate-300">/ 12</span></span>
                 </div>
             </div>
 
             <!-- Skills Bar Chart -->
-            <div class="bg-white rounded-2xl p-6 shadow-lg border border-slate-200" x-data x-init="$nextTick(() => {
-                if (typeof Chart !== 'undefined') {
-                    const data = [{{ $communication }}, {{ $leadership }}, {{ $strategy }}, {{ $execution }}];
-                    const colors = data.map(v => v >= 1.5 ? 'rgba(16, 185, 129, 0.8)' : (v < 1 ? 'rgba(239, 68, 68, 0.8)' : 'rgba(245, 158, 11, 0.8)'));
-                    new Chart($refs.skillsChart.getContext('2d'), {
-                        type: 'bar',
-                        data: {
-                            labels: ['Communication', 'Leadership', 'Strategy', 'Execution'],
-                            datasets: [{ label: 'Score', data: data, backgroundColor: colors, borderRadius: 8, barThickness: 40 }]
-                        },
-                        options: {
-                            indexAxis: 'y',
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            scales: { x: { beginAtZero: true, max: 2 }, y: { grid: { display: false } } },
-                            plugins: { legend: { display: false } }
-                        }
-                    });
-                }
-            })">
-                <h3 class="font-bold text-slate-900 mb-4 flex items-center gap-2">
-                    <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
-                            </path>
-                        </svg>
+            <div class="glass-card rounded-[2.5rem] p-8 shadow-xl shadow-amber-500/5 transition-all hover:shadow-2xl hover:shadow-amber-500/10"
+                x-data x-init="$nextTick(() => {
+                    if (typeof Chart !== 'undefined') {
+                        const data = [{{ $communication }}, {{ $leadership }}, {{ $strategy }}, {{ $execution }}];
+                        const colors = data.map(v => v >= 1.5 ? 'rgba(245, 158, 11, 0.8)' : (v < 1 ? 'rgba(239, 68, 68, 0.8)' : 'rgba(251, 191, 36, 0.8)'));
+                        new Chart($refs.skillsChart.getContext('2d'), {
+                            type: 'bar',
+                            data: {
+                                labels: ['Communication', 'Leadership', 'Strategy', 'Execution'],
+                                datasets: [{ label: 'Score', data: data, backgroundColor: colors, borderRadius: 12, barThickness: 32 }]
+                            },
+                            options: {
+                                indexAxis: 'y',
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    x: { beginAtZero: true, max: 2, display: false },
+                                    y: {
+                                        grid: { display: false },
+                                        ticks: { font: { family: 'Poppins', weight: '600', size: 11 }, color: '#1e293b' }
+                                    }
+                                },
+                                plugins: { legend: { display: false } }
+                            }
+                        });
+                    }
+                })">
+                <div class="flex items-center justify-between mb-8">
+                    <h3
+                        class="font-black text-slate-900 flex items-center gap-3 font-poppins uppercase tracking-wider text-sm">
+                        <div
+                            class="w-10 h-10 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center shadow-inner">
+                            <i data-lucide="sparkles" class="w-5 h-5"></i>
+                        </div>
+                        Skill Proficiency
+                    </h3>
+                    <div
+                        class="bg-amber-50 px-3 py-1 rounded-full text-[10px] font-black text-amber-600 uppercase tracking-widest border border-amber-100">
+                        Max 8 pts
                     </div>
-                    Skills Breakdown
-                </h3>
-                <div class="relative" style="height: 280px;">
+                </div>
+
+                <div class="relative" style="height: 300px;">
                     <canvas x-ref="skillsChart"></canvas>
                 </div>
-                <div class="mt-4 text-center">
-                    <span class="text-sm text-slate-500">Total: </span>
-                    <span class="text-lg font-bold text-amber-600">{{ number_format($skillsTotal, 2) }} / 8</span>
+                <div class="mt-8 pt-6 border-t border-slate-50 flex items-center justify-between">
+                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Aggregate</span>
+                    <span class="text-2xl font-black text-amber-600 font-poppins">{{ number_format($skillsTotal, 1) }}
+                        <span class="text-xs font-bold text-slate-300">/ 8</span></span>
                 </div>
             </div>
         </div>
 
         <!-- Impact Gauge -->
-        <div class="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 mb-8" x-data x-init="$nextTick(() => {
-            if (typeof Chart !== 'undefined') {
-                const score = {{ $impactScore }};
-                let color = '#ef4444';
-                if (score >= 81) color = '#eab308';
-                else if (score >= 61) color = '#22c55e';
-                else if (score >= 41) color = '#f59e0b';
-                else if (score >= 21) color = '#f97316';
-        
-                new Chart($refs.gaugeChart.getContext('2d'), {
-                    type: 'doughnut',
-                    data: {
-                        datasets: [{
-                            data: [score, 96 - score],
-                            backgroundColor: [color, 'rgba(226, 232, 240, 0.5)'],
-                            borderWidth: 0,
-                            circumference: 180,
-                            rotation: 270
+        <div class="glass-card rounded-[2.5rem] p-10 shadow-xl shadow-indigo-500/5 mb-12" x-data
+            x-init="$nextTick(() => {
+                if (typeof Chart !== 'undefined') {
+                    const score = {{ $impactScore }};
+                    let color = '#3b82f6';
+                    if (score >= 81) color = '#7c3aed';
+                    else if (score >= 61) color = '#10b981';
+                    else if (score >= 41) color = '#f59e0b';
+                    else if (score >= 21) color = '#f97316';
+                    else color = '#ef4444';
+            
+                    new Chart($refs.gaugeChart.getContext('2d'), {
+                        type: 'doughnut',
+                        data: {
+                            datasets: [{
+                                data: [score, 96 - score],
+                                backgroundColor: [color, 'rgba(226, 232, 240, 0.4)'],
+                                borderWidth: 0,
+                                circumference: 180,
+                                rotation: 270,
+                                borderRadius: 20
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: '82%',
+                            plugins: { legend: { display: false }, tooltip: { enabled: false } }
+                        },
+                        plugins: [{
+                            id: 'centerText',
+                            afterDraw: function(chart) {
+                                const ctx = chart.ctx;
+                                const centerX = chart.width / 2;
+                                const centerY = chart.height - 30;
+                                ctx.save();
+                                ctx.textAlign = 'center';
+                                ctx.font = 'black 48px Poppins, sans-serif';
+                                ctx.fillStyle = '#1e293b';
+                                ctx.fillText(score.toFixed(0), centerX, centerY - 10);
+                                ctx.font = 'bold 10px Poppins, sans-serif';
+                                ctx.fillStyle = '#94a3b8';
+                                ctx.letterSpacing = '2px';
+                                ctx.fillText('OUT OF 96', centerX, centerY + 15);
+                                ctx.restore();
+                            }
                         }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: '75%',
-                        plugins: { legend: { display: false }, tooltip: { enabled: false } }
-                    },
-                    plugins: [{
-                        id: 'centerText',
-                        afterDraw: function(chart) {
-                            const ctx = chart.ctx;
-                            const centerX = chart.width / 2;
-                            const centerY = chart.height - 30;
-                            ctx.save();
-                            ctx.textAlign = 'center';
-                            ctx.font = 'bold 32px Inter, sans-serif';
-                            ctx.fillStyle = '#1e293b';
-                            ctx.fillText(score.toFixed(1), centerX, centerY - 10);
-                            ctx.font = '12px Inter, sans-serif';
-                            ctx.fillStyle = '#64748b';
-                            ctx.fillText('out of 96', centerX, centerY + 15);
-                            ctx.restore();
-                        }
-                    }]
-                });
-            }
-        })">
-            <h3 class="font-bold text-slate-900 mb-4 flex items-center justify-center gap-2">
-                <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
-                Impact Score Distribution
+                    });
+                }
+            })">
+            <h3
+                class="font-black text-slate-900 mb-10 flex items-center justify-center gap-3 font-poppins uppercase tracking-wider text-sm">
+                <i data-lucide="zap" class="w-5 h-5 text-yellow-500"></i>
+                Impact Potential Gauge
             </h3>
             <div class="flex items-center justify-center">
-                <div class="relative" style="width: 300px; height: 180px;">
+                <div class="relative" style="width: 400px; height: 220px;">
                     <canvas x-ref="gaugeChart"></canvas>
                 </div>
             </div>
-            <div class="flex justify-between max-w-md mx-auto mt-4 text-xs text-slate-500">
-                <span>0 - Critical</span>
-                <span>24 - Struggling</span>
-                <span>48 - Growing</span>
-                <span>72 - Thriving</span>
-                <span>96 - Peak</span>
+            <div
+                class="flex justify-between max-w-lg mx-auto mt-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                <span>Critical</span>
+                <span class="hidden sm:inline">Struggling</span>
+                <span>Growing</span>
+                <span class="hidden sm:inline">Thriving</span>
+                <span>Peak</span>
             </div>
         </div>
 
         <!-- Strengths -->
         @if (count($strengths) > 0)
-            <div class="bg-emerald-50 rounded-2xl p-6 mb-8 border border-emerald-200">
-                <h3 class="font-bold text-emerald-800 mb-4 flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    💪 Your Top Strengths
+            <div
+                class="glass-card rounded-[2.5rem] p-10 mb-12 border border-emerald-100 shadow-xl shadow-emerald-500/5 relative overflow-hidden">
+                <div class="absolute -right-20 -top-20 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl"></div>
+                <h3
+                    class="font-black text-emerald-800 mb-8 flex items-center gap-3 font-poppins uppercase tracking-wider text-sm">
+                    <i data-lucide="award" class="w-5 h-5"></i>
+                    Competitive Strengths
                 </h3>
-                <div class="grid md:grid-cols-3 gap-4">
+                <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
                     @foreach ($strengths as $strength)
-                        <div class="bg-white rounded-xl p-4 border border-emerald-200">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="font-semibold text-emerald-700">{{ $strength['label'] }}</span>
-                                <span
-                                    class="text-lg font-bold text-emerald-600">{{ number_format($strength['score'], 2) }}/2</span>
+                        <div
+                            class="bg-white/50 backdrop-blur-md rounded-2xl p-6 border border-emerald-100/50 shadow-sm group hover:shadow-md transition-all">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="font-bold text-slate-900 font-poppins">{{ $strength['label'] }}</span>
+                                <div
+                                    class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center font-black tabular-nums">
+                                    {{ number_format($strength['score'], 1) }}
+                                </div>
                             </div>
-                            <span
-                                class="inline-block px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-full">
-                                {{ $strength['level'] === 'excellent' ? '✨ EXCELLENT' : '✓ GOOD' }}
-                            </span>
+                            <div class="flex items-center gap-2">
+                                <span
+                                    class="px-2.5 py-1 bg-emerald-100/80 text-emerald-700 text-[9px] font-black rounded-lg uppercase tracking-wider">
+                                    {{ $strength['level'] === 'excellent' ? '✨ ELITE' : '✓ PRO' }}
+                                </span>
+                                <div class="flex-1 h-1 bg-emerald-100 rounded-full overflow-hidden">
+                                    <div class="h-full bg-emerald-500 rounded-full"
+                                        style="width: {{ ($strength['score'] / 2) * 100 }}%"></div>
+                                </div>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -236,61 +302,51 @@
 
         <!-- Recommendations -->
         @if (count($recommendations) > 0)
-            <div class="bg-white rounded-2xl p-6 mb-8 shadow-lg border border-slate-200">
-                <h3 class="font-bold text-slate-900 mb-6 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4">
-                        </path>
-                    </svg>
-                    🎯 Your Priority Actions
+            <div class="glass-card rounded-[2.5rem] p-10 mb-12 border border-blue-100 shadow-xl shadow-blue-500/5">
+                <h3
+                    class="font-black text-slate-900 mb-10 flex items-center gap-3 font-poppins uppercase tracking-wider text-sm">
+                    <i data-lucide="map" class="w-5 h-5 text-blue-600"></i>
+                    Personalized Growth Roadmap
                 </h3>
-                <div class="space-y-6">
+                <div class="space-y-8">
                     @foreach ($recommendations as $index => $rec)
                         <div
-                            class="rounded-xl p-5 border-2 
-                            {{ $rec['severity'] === 'critical'
-                                ? 'border-red-200 bg-red-50'
-                                : ($rec['severity'] === 'warning'
-                                    ? 'border-orange-200 bg-orange-50'
-                                    : 'border-blue-200 bg-blue-50') }}">
-                            <div class="flex items-start gap-4">
+                            class="group relative bg-white/40 backdrop-blur-md rounded-[2rem] p-8 border border-white/40 shadow-sm hover:shadow-xl transition-all duration-300">
+                            <div class="flex flex-col md:flex-row items-start gap-8">
                                 <div
-                                    class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white shrink-0
-                                    {{ $rec['severity'] === 'critical'
-                                        ? 'bg-red-500'
-                                        : ($rec['severity'] === 'warning'
-                                            ? 'bg-orange-500'
-                                            : 'bg-blue-500') }}">
-                                    #{{ $index + 1 }}
+                                    class="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-xl text-white shrink-0 shadow-lg {{ $rec['severity'] === 'critical' ? 'bg-rose-500 shadow-rose-500/20' : ($rec['severity'] === 'warning' ? 'bg-orange-500 shadow-orange-500/20' : 'bg-blue-600 shadow-blue-500/20') }}">
+                                    {{ $index + 1 }}
                                 </div>
                                 <div class="flex-1">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <h4 class="font-bold text-slate-900">{{ $rec['title'] }}</h4>
+                                    <div class="flex flex-wrap items-center gap-4 mb-4">
+                                        <h4 class="text-xl font-black text-slate-900 font-poppins">{{ $rec['title'] }}
+                                        </h4>
                                         <span
-                                            class="px-2 py-0.5 text-xs font-medium rounded-full
-                                            {{ $rec['severity'] === 'critical'
-                                                ? 'bg-red-200 text-red-700'
-                                                : ($rec['severity'] === 'warning'
-                                                    ? 'bg-orange-200 text-orange-700'
-                                                    : 'bg-blue-200 text-blue-700') }}">
-                                            {{ $rec['label'] }}: {{ number_format($rec['score'], 2) }}/2
+                                            class="px-3 py-1 text-[10px] font-black rounded-xl uppercase tracking-widest {{ $rec['severity'] === 'critical' ? 'bg-rose-100 text-rose-700' : ($rec['severity'] === 'warning' ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700') }}">
+                                            {{ $rec['label'] }}: {{ number_format($rec['score'], 1) }} / 2.0
                                         </span>
                                     </div>
                                     @if (!empty($rec['actions']))
-                                        <ul class="space-y-1 mb-3">
+                                        <div class="grid sm:grid-cols-2 gap-4 mb-6">
                                             @foreach ($rec['actions'] as $action)
-                                                <li class="flex items-start gap-2 text-sm text-slate-700">
-                                                    <span class="text-slate-400">☐</span>
-                                                    {{ $action }}
-                                                </li>
+                                                <div
+                                                    class="flex items-start gap-3 p-4 bg-white/60 rounded-2xl border border-slate-100">
+                                                    <i data-lucide="arrow-right-circle"
+                                                        class="w-4 h-4 text-slate-300 mt-0.5"></i>
+                                                    <p class="text-sm font-medium text-slate-600">{{ $action }}
+                                                    </p>
+                                                </div>
                                             @endforeach
-                                        </ul>
+                                        </div>
                                     @endif
                                     @if (!empty($rec['timeline']))
-                                        <p class="text-xs text-slate-500">
-                                            <strong>Timeline:</strong> {{ $rec['timeline'] }}
-                                        </p>
+                                        <div
+                                            class="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-xl w-fit border border-slate-100 shadow-inner">
+                                            <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i>
+                                            <span
+                                                class="text-xs font-bold text-slate-500 tracking-tighter uppercase">{{ $rec['timeline'] }}
+                                                <span class="opacity-50 font-medium lowercase">strategy</span></span>
+                                        </div>
                                     @endif
                                 </div>
                             </div>
@@ -302,22 +358,24 @@
 
         <!-- Save Prompt for Guests -->
         @guest
-            <div class="bg-gradient-to-r from-indigo-50 to-violet-50 rounded-2xl p-6 mb-8 border border-indigo-200">
-                <div class="flex flex-col md:flex-row items-center gap-6">
-                    <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center shrink-0">
-                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4">
-                            </path>
-                        </svg>
+            <div
+                class="bg-gradient-to-r from-blue-700 to-indigo-800 rounded-[2.5rem] p-10 mb-12 text-white shadow-2xl shadow-blue-500/20 relative overflow-hidden group">
+                <div
+                    class="absolute -right-10 -bottom-10 w-48 h-48 bg-white/10 rounded-full blur-3xl transition-transform group-hover:scale-125">
+                </div>
+                <div class="flex flex-col md:flex-row items-center gap-10 relative">
+                    <div
+                        class="w-20 h-20 bg-white/15 backdrop-blur-md rounded-3xl flex items-center justify-center shrink-0 border border-white/10 shadow-xl">
+                        <i data-lucide="history" class="w-10 h-10 text-white"></i>
                     </div>
                     <div class="flex-1 text-center md:text-left">
-                        <h4 class="font-bold text-indigo-900 text-lg mb-1">Want to track your progress over time?</h4>
-                        <p class="text-indigo-700">Create a free account to save unlimited assessments, track trends, and
-                            compare scores over 6-12 months.</p>
+                        <h4 class="text-2xl font-black font-poppins mb-2 tracking-tight">Preserve Your Assessment History
+                        </h4>
+                        <p class="text-blue-100 font-medium leading-relaxed">Join 2,000+ PMs and unlock long-term
+                            trajectory tracking, peer benchmarks, and a permanent record of your growth journey.</p>
                     </div>
                     <a href="{{ route('register') }}"
-                        class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-colors whitespace-nowrap">
+                        class="px-10 py-5 bg-white text-blue-700 font-black rounded-2xl hover:shadow-2xl hover:scale-105 transition-all whitespace-nowrap shadow-xl">
                         Create Free Account
                     </a>
                 </div>
@@ -325,33 +383,21 @@
         @endguest
 
         <!-- Actions -->
-        <div class="flex flex-wrap justify-center gap-4">
+        <div class="flex flex-wrap justify-center gap-6">
             <a href="{{ route('career-compass.pdf') }}" target="_blank"
-                class="px-6 py-3 bg-white text-indigo-600 font-medium rounded-xl hover:bg-slate-50 border border-indigo-200 transition-colors flex items-center gap-2 shadow-sm">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                    </path>
-                </svg>
-                Download Report
+                class="px-8 py-4 bg-white text-slate-700 font-bold rounded-2xl hover:bg-slate-50 border border-slate-200 transition-all flex items-center gap-3 shadow-md hover:shadow-lg active:scale-95">
+                <i data-lucide="file-down" class="w-5 h-5 text-blue-600"></i>
+                Download PDF
             </a>
             <button wire:click="retakeAssessment"
-                class="px-6 py-3 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors cursor-pointer flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
-                    </path>
-                </svg>
-                Retake Assessment
+                class="px-8 py-4 bg-slate-100 text-slate-700 font-bold rounded-2xl hover:bg-slate-200 transition-all cursor-pointer flex items-center gap-3 shadow-sm hover:shadow-md active:scale-95">
+                <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                New Assessment
             </button>
             <a href="{{ route('career-compass.index') }}"
-                class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl hover:bg-indigo-700 transition-colors flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                    </path>
-                </svg>
-                Back to Career Compass
+                class="px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-black rounded-2xl hover:shadow-2xl hover:shadow-blue-500/30 transition-all flex items-center gap-3 active:scale-95 shadow-lg shadow-blue-500/20">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                Back to Dashboard
             </a>
         </div>
     </div>

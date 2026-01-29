@@ -1,4 +1,31 @@
-<div class="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
+@push('head')
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .font-open-sans {
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+@endpush
+
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 font-open-sans">
     @if (!$showResults)
         <!-- Assessment Wizard -->
         <div class="pt-28 pb-20 px-4">
@@ -10,11 +37,9 @@
                             @if ($currentStep == 1)
                                 Getting Started
                             @elseif($currentStep == 2)
-                                Part 1 of 3: Your Work Environment
+                                Part 1 of 2: Your Work Environment
                             @elseif($currentStep == 3)
-                                Part 2 of 3: Your Skills
-                            @elseif($currentStep == 4)
-                                Part 3 of 3: Review Your Scores
+                                Part 2 of 2: Your Skills
                             @endif
                         </span>
                         <span class="text-sm font-medium text-indigo-600">{{ $progressPercentage }}% Complete</span>
@@ -25,7 +50,7 @@
                     </div>
                     <!-- Step Indicators -->
                     <div class="flex justify-between mt-4">
-                        @foreach ([['Start', 1], ['Environment', 2], ['Skills', 3], ['Review', 4]] as $step)
+                        @foreach ([['Start', 1], ['Environment', 2], ['Skills', 3]] as $step)
                             <button wire:click="goToStep({{ $step[1] }})"
                                 class="flex flex-col items-center gap-1 cursor-pointer group {{ $currentStep >= $step[1] ? '' : 'opacity-50' }}">
                                 <div
@@ -47,131 +72,182 @@
                 </div>
 
                 <!-- Step Content -->
-                <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+                <div
+                    class="glass-card rounded-[2.5rem] shadow-2xl shadow-blue-500/10 overflow-hidden transition-all duration-500">
                     <!-- Step 1: Intro -->
                     @if ($currentStep == 1)
-                        <div class="p-8 md:p-12 text-center">
+                        <div class="p-8 md:p-16 text-center">
                             <div
-                                class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-500/30">
-                                <span class="text-4xl">🧭</span>
+                                class="w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-blue-500/30 transform hover:scale-105 transition-transform duration-300">
+                                <i data-lucide="compass" class="w-12 h-12 text-white"></i>
                             </div>
-                            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">PM Career Compass</h1>
-                            <p class="text-lg text-slate-600 mb-8 max-w-xl mx-auto">
-                                Rate 10 factors on a scale of 0-2 to calculate your Impact Score and get personalized
-                                career recommendations.
+                            <h1
+                                class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 font-poppins tracking-tight">
+                                PM Career Compass</h1>
+                            <p class="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+                                Unlock your professional potential. Rate 10 critical factors to calculate your <span
+                                    class="font-bold text-blue-600">Impact Score</span> and receive a tailor-made career
+                                roadmap.
                             </p>
 
-                            <div class="bg-indigo-50 rounded-xl p-6 mb-8 max-w-md mx-auto border border-indigo-100">
-                                <p class="text-sm text-indigo-700 mb-3 font-medium">Scoring Guide</p>
-                                <div class="space-y-2 text-sm text-left">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-12 font-mono font-bold text-red-600">0-0.75</span>
-                                        <span class="text-slate-600">Poor / Problematic</span>
+                            <div
+                                class="bg-white/50 backdrop-blur-md rounded-2xl p-8 mb-10 max-w-lg mx-auto border border-blue-100/50 shadow-sm">
+                                <p
+                                    class="text-sm text-blue-800 mb-5 font-bold uppercase tracking-wider font-poppins text-left">
+                                    Scoring Guide</p>
+                                <div class="space-y-4 text-sm text-left">
+                                    <div class="flex items-center gap-4 group">
+                                        <div class="w-12 h-1 text-red-500 bg-red-500 rounded-full"></div>
+                                        <span
+                                            class="w-20 font-mono font-bold text-red-600 bg-red-50 px-2 py-1 rounded">0
+                                            - 0.75</span>
+                                        <span class="text-slate-600 font-medium italic">Critical Improvement
+                                            Needed</span>
                                     </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-12 font-mono font-bold text-amber-600">1.0</span>
-                                        <span class="text-slate-600">Neutral / Average</span>
+                                    <div class="flex items-center gap-4 group">
+                                        <div class="w-12 h-1 text-amber-500 bg-amber-500 rounded-full"></div>
+                                        <span
+                                            class="w-20 font-mono font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded">1.0</span>
+                                        <span class="text-slate-600 font-medium italic">Standard / Baseline</span>
                                     </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-12 font-mono font-bold text-emerald-600">1.25-2</span>
-                                        <span class="text-slate-600">Good / Excellent</span>
+                                    <div class="flex items-center gap-4 group">
+                                        <div class="w-12 h-1 text-emerald-500 bg-emerald-500 rounded-full"></div>
+                                        <span
+                                            class="w-20 font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">1.25
+                                            - 2</span>
+                                        <span class="text-slate-600 font-medium italic">Exceptional Performance</span>
                                     </div>
                                 </div>
                             </div>
 
                             <button wire:click="nextStep"
-                                class="px-8 py-4 bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-bold text-lg rounded-xl hover:from-indigo-600 hover:to-violet-700 transition-all shadow-lg shadow-indigo-500/30 cursor-pointer inline-flex items-center gap-3">
-                                <span>Start Assessment</span>
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                </svg>
+                                class="group px-10 py-5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold text-xl rounded-2xl hover:shadow-2xl hover:shadow-blue-500/40 transition-all cursor-pointer inline-flex items-center gap-4 active:scale-95 shadow-lg shadow-blue-500/20">
+                                <span>Begin Assessment</span>
+                                <i data-lucide="arrow-right"
+                                    class="w-6 h-6 group-hover:translate-x-1 transition-transform"></i>
                             </button>
                         </div>
 
                         <!-- Step 2: Environment -->
                     @elseif($currentStep == 2)
                         <div class="p-8 md:p-12">
-                            <div class="flex items-center gap-3 mb-8">
-                                <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                                        </path>
-                                    </svg>
+                            <div class="flex items-center justify-between mb-10 pb-6 border-b border-slate-100/50">
+                                <div class="flex items-center gap-5">
+                                    <div
+                                        class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center shadow-inner">
+                                        <i data-lucide="building-2" class="w-8 h-8"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-3xl font-bold text-slate-900 font-poppins">Work Environment</h2>
+                                        <p class="text-slate-500 font-medium">Quantify your primary external growth
+                                            factors</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h2 class="text-2xl font-bold text-slate-900">Work Environment</h2>
-                                    <p class="text-slate-500">Rate these 6 external factors (max 12 points)</p>
+                                <div
+                                    class="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-full border border-slate-100 text-slate-400 font-mono text-sm font-bold">
+                                    12 pts max
                                 </div>
                             </div>
 
-                            <div class="space-y-8">
+                            <div class="space-y-10">
                                 @foreach (['manager', 'resources', 'team', 'scope', 'compensation', 'culture'] as $variable)
                                     @php $config = $environmentConfig[$variable] ?? []; @endphp
-                                    <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                                        <div class="flex items-start justify-between mb-4">
+                                    <div class="group relative">
+                                        <div class="flex items-start justify-between mb-5">
                                             <div class="flex-1">
-                                                <h3 class="font-bold text-slate-900 mb-1">
-                                                    {{ $config['label'] ?? ucfirst($variable) }}</h3>
-                                                <p class="text-sm text-slate-600">{{ $config['question'] ?? '' }}</p>
+                                                <div class="flex items-center gap-2">
+                                                    <h3
+                                                        class="text-lg font-bold text-slate-900 font-poppins group-hover:text-blue-600 transition-colors">
+                                                        {{ $config['label'] ?? ucfirst($variable) }}</h3>
+                                                </div>
+                                                <p class="text-slate-500 font-medium leading-relaxed">
+                                                    {{ $config['question'] ?? '' }}</p>
                                             </div>
-                                            <div class="text-right">
-                                                <span
-                                                    class="text-2xl font-bold text-indigo-600">{{ number_format($$variable, 2) }}</span>
-                                                <span class="text-sm text-slate-400">/2</span>
+                                            <div class="text-right ml-4">
+                                                <div
+                                                    class="inline-flex items-baseline gap-1 bg-white px-3 py-1 rounded-xl shadow-sm border border-slate-100">
+                                                    <span
+                                                        class="text-3xl font-black text-blue-600 leading-none tabular-nums">{{ number_format($$variable, 2) }}</span>
+                                                    <span
+                                                        class="text-xs font-bold text-slate-300 uppercase tracking-tighter">/
+                                                        2.0</span>
+                                                </div>
                                             </div>
                                         </div>
-                                        <input type="range" wire:model.live="{{ $variable }}" min="0"
-                                            max="2" step="0.25"
-                                            class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
-                                        <div class="flex justify-between mt-2 text-xs text-slate-400">
-                                            <span>Poor</span>
-                                            <span>Average</span>
-                                            <span>Excellent</span>
+
+                                        <div class="relative px-1">
+                                            <input type="range" wire:model.live="{{ $variable }}" min="0"
+                                                max="2" step="0.25"
+                                                class="w-full h-2.5 bg-slate-100 rounded-full appearance-none cursor-pointer accent-blue-600 hover:accent-indigo-600 transition-all">
+                                            <div
+                                                class="flex justify-between mt-3 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                                <span>Poor</span>
+                                                <span class="text-slate-300">|</span>
+                                                <span>Baseline</span>
+                                                <span class="text-slate-300">|</span>
+                                                <span>Elite</span>
+                                            </div>
                                         </div>
+
                                         @if (!empty($config['why_matters']))
-                                            <p
-                                                class="mt-3 text-xs text-slate-500 bg-white rounded-lg p-3 border border-slate-100">
-                                                <strong>Why this matters:</strong> {{ $config['why_matters'] }}
-                                            </p>
+                                            <div
+                                                class="mt-5 p-4 bg-blue-50/50 rounded-2xl border border-blue-100/30 flex gap-3 shadow-inner">
+                                                <i data-lucide="info" class="w-4 h-4 text-blue-500 shrink-0 mt-0.5"></i>
+                                                <p class="text-xs text-blue-800 leading-relaxed italic">
+                                                    {{ $config['why_matters'] }}
+                                                </p>
+                                            </div>
                                         @endif
                                     </div>
                                 @endforeach
                             </div>
 
-                            <!-- Environment Total -->
-                            <div class="mt-8 bg-emerald-50 rounded-xl p-6 border border-emerald-200">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-bold text-emerald-800">Environment Total</span>
-                                    <span
-                                        class="text-2xl font-bold text-emerald-600">{{ number_format($environmentTotal, 2) }}
-                                        <span class="text-base font-normal text-emerald-500">/ 12</span></span>
+                            <!-- Environment Total Card -->
+                            <div
+                                class="mt-12 p-8 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl text-white shadow-xl shadow-blue-500/20 relative overflow-hidden group">
+                                <div
+                                    class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl transition-all group-hover:scale-150">
                                 </div>
-                                <div class="mt-3 h-3 bg-emerald-200 rounded-full overflow-hidden">
-                                    <div class="h-full bg-emerald-500 rounded-full transition-all duration-300"
-                                        style="width: {{ ($environmentTotal / 12) * 100 }}%"></div>
+                                <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
+                                    <div class="flex items-center gap-4">
+                                        <div class="p-3 bg-white/20 rounded-2xl backdrop-blur-md">
+                                            <i data-lucide="calculator" class="w-8 h-8"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-blue-100 font-bold uppercase tracking-widest text-xs mb-1">
+                                                Current Section Progress</p>
+                                            <h4 class="text-2xl font-black font-poppins">Environment Score</h4>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="flex flex-col items-end">
+                                            <div class="flex items-baseline gap-2">
+                                                <span
+                                                    class="text-5xl font-black tracking-tighter tabular-nums">{{ number_format($environmentTotal, 1) }}</span>
+                                                <span class="text-blue-200 font-bold opacity-60">/ 12.0</span>
+                                            </div>
+                                            <div
+                                                class="mt-4 w-48 h-2.5 bg-white/20 rounded-full overflow-hidden backdrop-blur-md">
+                                                <div class="h-full bg-white rounded-full shadow-[0_0_10px_white] transition-all duration-700 ease-out"
+                                                    style="width: {{ ($environmentTotal / 12) * 100 }}%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Navigation -->
-                            <div class="flex justify-between mt-8">
+                            <div class="flex justify-between mt-12 pt-8 border-t border-slate-100/50">
                                 <button wire:click="previousStep"
-                                    class="px-6 py-3 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors cursor-pointer flex items-center gap-2">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 19l-7-7 7-7"></path>
-                                    </svg>
-                                    Back
+                                    class="px-8 py-3.5 bg-white text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all cursor-pointer flex items-center gap-3 border border-slate-200">
+                                    <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                                    Previous
                                 </button>
                                 <button wire:click="nextStep"
-                                    class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-medium rounded-xl hover:from-indigo-600 hover:to-violet-700 transition-all cursor-pointer flex items-center gap-2">
+                                    class="group px-8 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold rounded-2xl hover:shadow-lg hover:shadow-blue-500/30 transition-all cursor-pointer flex items-center gap-3 shadow-md shadow-blue-500/10">
                                     Continue to Skills
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7"></path>
-                                    </svg>
+                                    <i data-lucide="chevron-right"
+                                        class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
                                 </button>
                             </div>
                         </div>
@@ -179,196 +255,137 @@
                         <!-- Step 3: Skills -->
                     @elseif($currentStep == 3)
                         <div class="p-8 md:p-12">
-                            <div class="flex items-center gap-3 mb-8">
-                                <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
-                                        </path>
-                                    </svg>
+                            <div class="flex items-center justify-between mb-10 pb-6 border-b border-slate-100/50">
+                                <div class="flex items-center gap-5">
+                                    <div
+                                        class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center shadow-inner">
+                                        <i data-lucide="sparkles" class="w-8 h-8"></i>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-3xl font-bold text-slate-900 font-poppins">Professional Skills
+                                        </h2>
+                                        <p class="text-slate-500 font-medium">Quantify your core product management
+                                            competencies</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h2 class="text-2xl font-bold text-slate-900">Your Skills</h2>
-                                    <p class="text-slate-500">Rate these 4 skill areas (max 8 points)</p>
+                                <div
+                                    class="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-full border border-slate-100 text-slate-400 font-mono text-sm font-bold">
+                                    8 pts max
                                 </div>
                             </div>
 
-                            <div class="space-y-8">
+                            <div class="space-y-10">
                                 @foreach (['communication', 'leadership', 'strategy', 'execution'] as $variable)
                                     @php $config = $skillsConfig[$variable] ?? []; @endphp
-                                    <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
-                                        <div class="flex items-start justify-between mb-4">
+                                    <div class="group relative">
+                                        <div class="flex items-start justify-between mb-5">
                                             <div class="flex-1">
-                                                <h3 class="font-bold text-slate-900 mb-1">
+                                                <h3
+                                                    class="text-lg font-bold text-slate-900 font-poppins group-hover:text-amber-600 transition-colors">
                                                     {{ $config['label'] ?? ucfirst($variable) }}</h3>
-                                                <p class="text-sm text-slate-600">{{ $config['question'] ?? '' }}</p>
+                                                <p class="text-slate-500 font-medium leading-relaxed">
+                                                    {{ $config['question'] ?? '' }}</p>
+
                                                 @if (!empty($config['examples']))
-                                                    <div class="mt-2 flex flex-wrap gap-2">
+                                                    <div class="mt-3 flex flex-wrap gap-2">
                                                         @foreach ($config['examples'] as $example)
                                                             <span
-                                                                class="text-xs bg-white px-2 py-1 rounded-md text-slate-500 border border-slate-200">{{ $example }}</span>
+                                                                class="text-[10px] font-bold uppercase tracking-wider bg-white px-2.5 py-1 rounded-lg text-slate-400 border border-slate-100 shadow-sm transition-all hover:border-amber-200 hover:text-amber-500">
+                                                                {{ $example }}
+                                                            </span>
                                                         @endforeach
                                                     </div>
                                                 @endif
                                             </div>
                                             <div class="text-right ml-4">
-                                                <span
-                                                    class="text-2xl font-bold text-amber-600">{{ number_format($$variable, 2) }}</span>
-                                                <span class="text-sm text-slate-400">/2</span>
+                                                <div
+                                                    class="inline-flex items-baseline gap-1 bg-white px-3 py-1 rounded-xl shadow-sm border border-slate-100">
+                                                    <span
+                                                        class="text-3xl font-black text-amber-600 leading-none tabular-nums">{{ number_format($$variable, 2) }}</span>
+                                                    <span
+                                                        class="text-xs font-bold text-slate-300 uppercase tracking-tighter">/
+                                                        2.0</span>
+                                                </div>
                                             </div>
                                         </div>
-                                        <input type="range" wire:model.live="{{ $variable }}" min="0"
-                                            max="2" step="0.25"
-                                            class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-600">
-                                        <div class="flex justify-between mt-2 text-xs text-slate-400">
-                                            <span>Needs Work</span>
-                                            <span>Competent</span>
-                                            <span>Expert</span>
+
+                                        <div class="relative px-1">
+                                            <input type="range" wire:model.live="{{ $variable }}"
+                                                min="0" max="2" step="0.25"
+                                                class="w-full h-2.5 bg-slate-100 rounded-full appearance-none cursor-pointer accent-amber-600 hover:accent-orange-500 transition-all">
+                                            <div
+                                                class="flex justify-between mt-3 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                                <span>Building</span>
+                                                <span class="text-slate-300">|</span>
+                                                <span>Proficient</span>
+                                                <span class="text-slate-300">|</span>
+                                                <span>Expert</span>
+                                            </div>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
 
-                            <!-- Skills Total -->
-                            <div class="mt-8 bg-amber-50 rounded-xl p-6 border border-amber-200">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-bold text-amber-800">Skills Total</span>
-                                    <span
-                                        class="text-2xl font-bold text-amber-600">{{ number_format($skillsTotal, 2) }}
-                                        <span class="text-base font-normal text-amber-500">/ 8</span></span>
+                            <!-- Skills Total Card -->
+                            <div
+                                class="mt-12 p-8 bg-gradient-to-br from-amber-500 to-orange-600 rounded-3xl text-white shadow-xl shadow-amber-500/20 relative overflow-hidden group">
+                                <div
+                                    class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl transition-all group-hover:scale-150">
                                 </div>
-                                <div class="mt-3 h-3 bg-amber-200 rounded-full overflow-hidden">
-                                    <div class="h-full bg-amber-500 rounded-full transition-all duration-300"
-                                        style="width: {{ ($skillsTotal / 8) * 100 }}%"></div>
+                                <div class="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
+                                    <div class="flex items-center gap-4">
+                                        <div class="p-3 bg-white/20 rounded-2xl backdrop-blur-md">
+                                            <i data-lucide="award" class="w-8 h-8"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-amber-100 font-bold uppercase tracking-widest text-xs mb-1">
+                                                Current Section Progress</p>
+                                            <h4 class="text-2xl font-black font-poppins">Skills Score</h4>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="flex flex-col items-end">
+                                            <div class="flex items-baseline gap-2">
+                                                <span
+                                                    class="text-5xl font-black tracking-tighter tabular-nums">{{ number_format($skillsTotal, 1) }}</span>
+                                                <span class="text-amber-100 font-bold opacity-60">/ 8.0</span>
+                                            </div>
+                                            <div
+                                                class="mt-4 w-48 h-2.5 bg-white/20 rounded-full overflow-hidden backdrop-blur-md">
+                                                <div class="h-full bg-white rounded-full shadow-[0_0_10px_white] transition-all duration-700 ease-out"
+                                                    style="width: {{ ($skillsTotal / 8) * 100 }}%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Navigation -->
-                            <div class="flex justify-between mt-8">
-                                <button wire:click="previousStep"
-                                    class="px-6 py-3 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors cursor-pointer flex items-center gap-2">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 19l-7-7 7-7"></path>
-                                    </svg>
+                            <div class="flex justify-between mt-12 pt-8 border-t border-slate-100/50">
+                                <button wire:click="previousStep" wire:loading.attr="disabled"
+                                    class="px-8 py-3.5 bg-white text-slate-600 font-bold rounded-2xl hover:bg-slate-50 transition-all cursor-pointer flex items-center gap-3 border border-slate-200 disabled:opacity-50">
+                                    <i data-lucide="chevron-left" class="w-5 h-5"></i>
                                     Back
                                 </button>
-                                <button wire:click="nextStep"
-                                    class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-medium rounded-xl hover:from-indigo-600 hover:to-violet-700 transition-all cursor-pointer flex items-center gap-2">
-                                    Review My Scores
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Step 4: Review -->
-                    @elseif($currentStep == 4)
-                        <div class="p-8 md:p-12">
-                            <div class="flex items-center gap-3 mb-8">
-                                <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h2 class="text-2xl font-bold text-slate-900">Review Your Assessment</h2>
-                                    <p class="text-slate-500">Confirm your scores before calculating results</p>
-                                </div>
-                            </div>
-
-                            <div class="grid md:grid-cols-2 gap-6 mb-8">
-                                <!-- Environment Summary -->
-                                <div class="bg-emerald-50 rounded-xl p-6 border border-emerald-200">
-                                    <h3 class="font-bold text-emerald-800 mb-4 flex items-center gap-2">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                                            </path>
-                                        </svg>
-                                        Environment Scores
-                                    </h3>
-                                    <div class="space-y-3">
-                                        @foreach (['manager' => 'Manager', 'resources' => 'Resources', 'team' => 'Team', 'scope' => 'Scope', 'compensation' => 'Compensation', 'culture' => 'Culture'] as $key => $label)
-                                            <div class="flex items-center justify-between">
-                                                <span class="text-slate-700">{{ $label }}</span>
-                                                <span
-                                                    class="font-mono font-bold {{ $$key >= 1.5 ? 'text-emerald-600' : ($$key < 1 ? 'text-red-500' : 'text-amber-600') }}">{{ number_format($$key, 2) }}</span>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <div
-                                        class="mt-4 pt-4 border-t border-emerald-200 flex items-center justify-between">
-                                        <span class="font-bold text-emerald-800">Total</span>
-                                        <span
-                                            class="text-xl font-bold text-emerald-600">{{ number_format($environmentTotal, 2) }}
-                                            / 12</span>
-                                    </div>
-                                </div>
-
-                                <!-- Skills Summary -->
-                                <div class="bg-amber-50 rounded-xl p-6 border border-amber-200">
-                                    <h3 class="font-bold text-amber-800 mb-4 flex items-center gap-2">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
-                                            </path>
-                                        </svg>
-                                        Skills Scores
-                                    </h3>
-                                    <div class="space-y-3">
-                                        @foreach (['communication' => 'Communication', 'leadership' => 'Leadership', 'strategy' => 'Strategy', 'execution' => 'Execution'] as $key => $label)
-                                            <div class="flex items-center justify-between">
-                                                <span class="text-slate-700">{{ $label }}</span>
-                                                <span
-                                                    class="font-mono font-bold {{ $$key >= 1.5 ? 'text-emerald-600' : ($$key < 1 ? 'text-red-500' : 'text-amber-600') }}">{{ number_format($$key, 2) }}</span>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    <div class="mt-4 pt-4 border-t border-amber-200 flex items-center justify-between">
-                                        <span class="font-bold text-amber-800">Total</span>
-                                        <span
-                                            class="text-xl font-bold text-amber-600">{{ number_format($skillsTotal, 2) }}
-                                            / 8</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Impact Preview -->
-                            <div
-                                class="bg-gradient-to-br from-indigo-500 to-violet-600 rounded-2xl p-8 text-center text-white mb-8">
-                                <p class="text-indigo-100 mb-2">Your Projected Impact Score</p>
-                                <div class="text-5xl font-bold mb-2">{{ number_format($impactScore, 1) }}</div>
-                                <p class="text-indigo-200">out of 96 points</p>
-                                <p class="text-sm mt-4 text-indigo-100">
-                                    Formula: {{ number_format($environmentTotal, 2) }} ×
-                                    {{ number_format($skillsTotal, 2) }} = {{ number_format($impactScore, 2) }}
-                                </p>
-                            </div>
-
-                            <!-- Navigation -->
-                            <div class="flex justify-between">
-                                <button wire:click="previousStep"
-                                    class="px-6 py-3 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors cursor-pointer flex items-center gap-2">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 19l-7-7 7-7"></path>
-                                    </svg>
-                                    Edit Scores
-                                </button>
-                                <button wire:click="calculateResults"
-                                    class="px-8 py-4 bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-bold text-lg rounded-xl hover:from-indigo-600 hover:to-violet-700 transition-all shadow-lg shadow-indigo-500/30 cursor-pointer flex items-center gap-3">
-                                    <span>Calculate My Impact Score</span>
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                                <button x-data="{ loading: false }"
+                                    x-on:click="
+                                        if (!loading) {
+                                            loading = true;
+                                            $wire.calculateResults().finally(() => { loading = false; });
+                                        }
+                                    "
+                                    x-bind:disabled="loading" x-bind:class="loading ? 'opacity-75 cursor-wait' : ''"
+                                    class="group px-10 py-4 bg-gradient-to-r from-orange-500 to-rose-600 text-white font-black rounded-2xl hover:shadow-2xl hover:shadow-orange-500/40 transition-all cursor-pointer flex items-center gap-4 shadow-lg shadow-orange-500/20 active:scale-95 disabled:opacity-75">
+                                    <span x-show="!loading">Generate My Roadmap</span>
+                                    <span x-show="loading" x-cloak>Generating...</span>
+                                    <i data-lucide="rocket" x-show="!loading"
+                                        class="w-6 h-6 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform"></i>
+                                    <svg x-show="loading" x-cloak class="animate-spin w-6 h-6"
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                            stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                                         </path>
                                     </svg>
                                 </button>
@@ -408,96 +425,92 @@
             aria-modal="true">
             <!-- Backdrop -->
             <div class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm transition-opacity"
-                wire:click="closeLoginModal"></div>
+                wire:click="closeLoginModal">
+            </div>
 
             <!-- Modal -->
             <div class="flex min-h-full items-center justify-center p-4">
-                <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all">
+                <div
+                    class="relative glass-card rounded-[2.5rem] shadow-2xl w-full max-w-md transform transition-all overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-indigo-600/5 -z-10"></div>
+
                     <!-- Close button -->
                     <button wire:click="closeLoginModal"
-                        class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
+                        class="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-900 transition-colors cursor-pointer z-10">
+                        <i data-lucide="x" class="w-6 h-6"></i>
                     </button>
 
-                    <div class="p-8 text-center">
+                    <div class="p-10 text-center">
                         <!-- Icon -->
                         <div
-                            class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-indigo-500/30">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                            </svg>
+                            class="w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl shadow-blue-500/20 transform -rotate-3 hover:rotate-0 transition-transform duration-300">
+                            <i data-lucide="user-check" class="w-10 h-10 text-white"></i>
                         </div>
 
                         <!-- Title -->
-                        <h3 class="text-2xl font-bold text-slate-900 mb-2">Get Your Full Results</h3>
-                        <p class="text-slate-600 mb-6">
-                            Login or create a free account to see your complete breakdown, personalized recommendations,
-                            and save your assessment for future tracking.
+                        <h3 class="text-3xl font-black text-slate-900 mb-3 font-poppins tracking-tight">Access Your
+                            Full
+                            Roadmap</h3>
+                        <p class="text-slate-500 font-medium mb-8 leading-relaxed">
+                            Join 2,000+ PMs tracking their career velocity. Sign in to unlock your personalized growth
+                            strategy.
                         </p>
 
                         <!-- Benefits -->
-                        <div class="bg-indigo-50 rounded-xl p-4 mb-6 text-left border border-indigo-100">
-                            <p class="text-sm font-medium text-indigo-800 mb-3">With an account you can:</p>
-                            <ul class="space-y-2 text-sm text-indigo-700">
-                                <li class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-indigo-500 shrink-0" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                    Save unlimited assessments
+                        <div
+                            class="bg-blue-50/50 backdrop-blur-md rounded-2xl p-6 mb-8 text-left border border-blue-100/50">
+                            <p class="text-xs font-black text-blue-800 mb-4 uppercase tracking-widest font-poppins">
+                                Premium
+                                Benefits</p>
+                            <ul class="space-y-4">
+                                <li class="flex items-center gap-3">
+                                    <div
+                                        class="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
+                                        <i data-lucide="save" class="w-3 h-3 text-blue-600"></i>
+                                    </div>
+                                    <span class="text-xs font-semibold text-slate-600">Save assessments & track
+                                        trends</span>
                                 </li>
-                                <li class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-indigo-500 shrink-0" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                    Track progress over time
+                                <li class="flex items-center gap-3">
+                                    <div
+                                        class="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
+                                        <i data-lucide="trending-up" class="w-3 h-3 text-blue-600"></i>
+                                    </div>
+                                    <span class="text-xs font-semibold text-slate-600">Progress velocity reports (6-12
+                                        mo)</span>
                                 </li>
-                                <li class="flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-indigo-500 shrink-0" fill="none"
-                                        stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                    Compare trends over 6-12 months
+                                <li class="flex items-center gap-3">
+                                    <div
+                                        class="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center shrink-0">
+                                        <i data-lucide="gift" class="w-3 h-3 text-blue-600"></i>
+                                    </div>
+                                    <span class="text-xs font-semibold text-slate-600">Exclusive PM career
+                                        resources</span>
                                 </li>
                             </ul>
                         </div>
 
                         <!-- Actions -->
-                        <div class="space-y-3">
+                        <div class="space-y-4">
                             <a href="{{ route('login') }}"
-                                class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-semibold rounded-xl hover:from-indigo-600 hover:to-violet-700 transition-all shadow-lg shadow-indigo-500/25">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
-                                    </path>
-                                </svg>
+                                class="w-full inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold rounded-2xl hover:shadow-2xl hover:shadow-blue-500/40 transition-all shadow-lg shadow-blue-500/20 active:scale-95">
+                                <i data-lucide="log-in" class="w-5 h-5"></i>
                                 Login to View Results
                             </a>
                             <a href="{{ route('register') }}"
-                                class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-slate-100 text-slate-700 font-semibold rounded-xl hover:bg-slate-200 transition-all">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
-                                    </path>
-                                </svg>
+                                class="w-full inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-slate-700 font-bold rounded-2xl hover:bg-slate-50 transition-all border border-slate-200">
+                                <i data-lucide="user-plus" class="w-5 h-5"></i>
                                 Create Free Account
                             </a>
                         </div>
 
                         <!-- Continue as Guest -->
-                        <div class="mt-6 pt-6 border-t border-slate-200">
+                        <div class="mt-8 pt-6 border-t border-slate-100/50">
                             <button wire:click="continueAsGuest"
-                                class="text-sm text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer underline">
-                                Continue as guest (limited features)
+                                class="group text-sm font-bold text-slate-400 hover:text-blue-600 transition-colors cursor-pointer flex items-center justify-center mx-auto gap-2">
+                                <span>Continue as guest</span>
+                                <i data-lucide="arrow-right"
+                                    class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                             </button>
                         </div>
                     </div>
@@ -506,3 +519,38 @@
         </div>
     @endif
 </div>
+
+@push('scripts')
+    <script>
+        // Initialize Lucide icons as soon as possible
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+
+        // Re-initialize after any Livewire update
+        document.addEventListener('livewire:initialized', () => {
+            lucide.createIcons();
+
+            Livewire.hook('morph.updated', ({
+                el,
+                component
+            }) => {
+                lucide.createIcons();
+            });
+
+            Livewire.on('stepChanged', () => {
+                setTimeout(() => {
+                    lucide.createIcons();
+                }, 50);
+            });
+
+            Livewire.on('resultsShown', () => {
+                setTimeout(() => {
+                    lucide.createIcons();
+                }, 100);
+            });
+        });
+    </script>
+@endpush
