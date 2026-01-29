@@ -102,7 +102,7 @@
             <div
                 class="pt-8 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500">
                 <div class="mb-4 md:mb-0">
-                    &copy; {{ date('Y') }} {{ $footer->copyright_text ?? 'Mahe Karim. All rights reserved.' }}
+                    {{ $footer->copyright_text ?? 'Mahe Karim. All rights reserved.' }}
                 </div>
                 <div class="flex items-center space-x-8">
                     @if ($footer->privacy_policy_url)

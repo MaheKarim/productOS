@@ -26,6 +26,11 @@ class User extends Authenticatable
         'is_active',
         'username',
         'bio',
+        'job_role',
+        'years_of_experience',
+        'company_name',
+        'onboarding_completed',
+        'onboarding_completed_at',
     ];
 
     /**
@@ -50,6 +55,8 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_active' => 'boolean',
             'last_login_at' => 'datetime',
+            'onboarding_completed' => 'boolean',
+            'onboarding_completed_at' => 'datetime',
         ];
     }
 

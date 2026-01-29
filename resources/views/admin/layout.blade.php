@@ -251,6 +251,14 @@
                     <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System
                     </div>
 
+                    <a href="{{ route('admin.onboarding.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.onboarding.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="onboarding">
+                        <i data-lucide="clipboard-list"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.onboarding.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        Onboarding
+                    </a>
+
                     <a href="{{ route('admin.users.index') }}"
                         class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.users.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
                         data-menu-name="users">

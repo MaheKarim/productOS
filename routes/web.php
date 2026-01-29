@@ -86,8 +86,14 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
-// User Dashboard & Profile
+// Onboarding Routes
 Route::middleware(['auth'])->group(function () {
+    Route::get('/complete-profile', [\App\Http\Controllers\UserOnboardingController::class, 'create'])->name('onboarding.create');
+    Route::post('/complete-profile', [\App\Http\Controllers\UserOnboardingController::class, 'store'])->name('onboarding.store');
+});
+
+// User Dashboard & Profile
+Route::middleware(['auth', 'onboarding'])->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\User\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [\App\Http\Controllers\User\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [\App\Http\Controllers\User\ProfileController::class, 'update'])->name('profile.update');
@@ -209,6 +215,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
     // System Settings
     Route::get('/settings/prompts', \App\Livewire\Admin\Settings\SystemPrompts::class)->name('admin.settings.prompts');
+
+    // Onboarding Settings
+    Route::get('/settings/onboarding', [\App\Http\Controllers\Admin\OnboardingSettingsController::class, 'index'])->name('admin.onboarding.index');
+    Route::post('/settings/onboarding', [\App\Http\Controllers\Admin\OnboardingSettingsController::class, 'update'])->name('admin.onboarding.update');
 
     // Book Management
     Route::resource('books', \App\Http\Controllers\Admin\BookController::class)->names('admin.books');
