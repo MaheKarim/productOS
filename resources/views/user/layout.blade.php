@@ -42,7 +42,30 @@
 <body class="bg-slate-50 text-slate-900 h-full flex overflow-hidden">
 
     <!-- Sidebar -->
-    <aside class="w-64 bg-white hidden md:flex flex-col shadow-sm">
+    <aside class="w-64 bg-white hidden md:flex flex-col shadow-sm" x-data="{
+        search: '',
+        items: [
+            { id: 'dashboard', label: 'Dashboard', route: '{{ route('dashboard') }}', icon: 'dashboard', section: 'Main' },
+            { id: 'career-compass', label: 'Career Compass', route: '{{ route('career-compass.history') }}', icon: 'map', section: 'Main' },
+            { id: 'yt-summarizer', label: 'YT Summarizer', route: '{{ route('user.yt-summarize.index') }}', icon: 'video', section: 'Main' },
+            { id: 'profile', label: 'Profile', route: '{{ route('profile.edit') }}', icon: 'user', section: 'Account' },
+            { id: 'settings', label: 'Settings', route: '#', icon: 'settings', section: 'Support' },
+            { id: 'help', label: 'Help', route: '#', icon: 'help', section: 'Support' }
+        ],
+        highlight(text) {
+            if (!this.search.trim()) return text;
+            const regex = new RegExp(`(${this.search.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<mark class=\'bg-yellow-200 rounded-px px-0.5 text-slate-900\'>$1</mark>');
+        },
+        isVisible(item) {
+            if (!this.search.trim()) return true;
+            return item.label.toLowerCase().includes(this.search.toLowerCase());
+        },
+        isSectionVisible(section) {
+            if (!this.search.trim()) return true;
+            return this.items.some(item => item.section === section && this.isVisible(item));
+        }
+    }">
         <!-- Brand Header -->
         <div class="px-4 py-5 border-b border-slate-100">
             <a href="{{ route('home') }}" class="flex items-center gap-3 group cursor-pointer">
@@ -60,21 +83,24 @@
         <!-- Search -->
         <div class="px-3 py-3">
             <div
-                class="flex items-center gap-2 px-3 py-2.5 bg-slate-50 rounded-lg border border-slate-100 text-slate-400 hover:border-slate-200 transition-colors cursor-pointer">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-lg border border-slate-100 text-slate-400 focus-within:border-blue-300 focus-within:ring-2 focus-within:ring-blue-100 transition-all group">
+                <svg class="w-4 h-4 group-focus-within:text-blue-500" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
-                <span class="text-sm">Search...</span>
-                <span class="ml-auto text-xs bg-white px-1.5 py-0.5 rounded border border-slate-200 font-mono">⌘K</span>
+                <input type="text" x-model="search" placeholder="Search..." @keydown.meta.k.window="$el.focus()"
+                    class="w-full bg-transparent border-none focus:ring-0 text-sm p-0 text-slate-600 placeholder:text-slate-400 outline-none">
+                <span
+                    class="ml-auto text-[10px] bg-white px-1.5 py-0.5 rounded border border-slate-200 font-mono text-slate-400 group-focus-within:hidden">⌘K</span>
             </div>
         </div>
 
         <!-- Main Navigation -->
         <nav class="flex-1 px-3 py-2 overflow-y-auto">
             <!-- Main Section -->
-            <div class="mb-6">
-                <a href="{{ route('dashboard') }}"
+            <div class="mb-6" x-show="isSectionVisible('Main')">
+                <a href="{{ route('dashboard') }}" x-show="isVisible({label: 'Dashboard'})"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('dashboard') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('dashboard') ? 'text-blue-600' : 'text-slate-400' }}"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,10 +108,10 @@
                             d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
                         </path>
                     </svg>
-                    <span>Dashboard</span>
+                    <span x-html="highlight('Dashboard')">Dashboard</span>
                 </a>
 
-                <a href="{{ route('career-compass.history') }}"
+                <a href="{{ route('career-compass.history') }}" x-show="isVisible({label: 'Career Compass'})"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('career-compass.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('career-compass.*') ? 'text-blue-600' : 'text-slate-400' }}"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -93,10 +119,10 @@
                             d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7">
                         </path>
                     </svg>
-                    <span>Career Compass</span>
+                    <span x-html="highlight('Career Compass')">Career Compass</span>
                 </a>
 
-                <a href="{{ route('user.yt-summarize.index') }}"
+                <a href="{{ route('user.yt-summarize.index') }}" x-show="isVisible({label: 'YT Summarizer'})"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('user.yt-summarize.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('user.yt-summarize.*') ? 'text-blue-600' : 'text-slate-400' }}"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,54 +130,54 @@
                             d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z">
                         </path>
                     </svg>
-                    <span>YT Summarizer</span>
+                    <span x-html="highlight('YT Summarizer')">YT Summarizer</span>
                 </a>
             </div>
 
             <!-- Account Section -->
-            <div class="mb-6">
+            <div class="mb-6" x-show="isSectionVisible('Account')">
                 <p class="px-3 mb-2 text-xs font-medium text-slate-400 uppercase tracking-wider">Account</p>
 
-                <a href="{{ route('profile.edit') }}"
+                <a href="{{ route('profile.edit') }}" x-show="isVisible({label: 'Profile'})"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('profile.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('profile.*') ? 'text-blue-600' : 'text-slate-400' }}"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
-                    <span>Profile</span>
+                    <span x-html="highlight('Profile')">Profile</span>
                 </a>
 
-                <a href="#"
+                <a href="#" x-show="isVisible({label: 'Notifications'})"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 cursor-not-allowed opacity-60">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
                         </path>
                     </svg>
-                    <span>Notifications</span>
+                    <span x-html="highlight('Notifications')">Notifications</span>
                     <span
                         class="ml-auto text-xs px-1.5 py-0.5 bg-slate-100 text-slate-400 rounded font-medium">Soon</span>
                 </a>
 
-                <a href="#"
+                <a href="#" x-show="isVisible({label: 'Billing'})"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 cursor-not-allowed opacity-60">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3-3v8a3 3 0 003 3z">
                         </path>
                     </svg>
-                    <span>Billing</span>
+                    <span x-html="highlight('Billing')">Billing</span>
                     <span
                         class="ml-auto text-xs px-1.5 py-0.5 bg-slate-100 text-slate-400 rounded font-medium">Soon</span>
                 </a>
             </div>
 
             <!-- Support Section -->
-            <div>
+            <div x-show="isSectionVisible('Support')">
                 <p class="px-3 mb-2 text-xs font-medium text-slate-400 uppercase tracking-wider">Support</p>
 
-                <a href="#"
+                <a href="#" x-show="isVisible({label: 'Settings'})"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
                     <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -160,17 +186,17 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
-                    <span>Settings</span>
+                    <span x-html="highlight('Settings')">Settings</span>
                 </a>
 
-                <a href="#"
+                <a href="#" x-show="isVisible({label: 'Help'})"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all cursor-pointer">
                     <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
                         </path>
                     </svg>
-                    <span>Help</span>
+                    <span x-html="highlight('Help')">Help</span>
                 </a>
             </div>
         </nav>
