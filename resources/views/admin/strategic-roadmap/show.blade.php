@@ -3,6 +3,16 @@
 @section('page-title', 'Session Details')
 
 @section('content')
+    <div class="mb-6">
+        <a href="{{ route('admin.strategic-roadmap.index') }}"
+            class="inline-flex items-center text-sm text-slate-500 hover:text-indigo-600 transition-colors">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Roadmaps
+        </a>
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Left Column: Session Info & Inputs -->
         <div class="space-y-6">
@@ -99,81 +109,115 @@
         <!-- Right Column: Generated Output -->
         <div class="lg:col-span-2 space-y-6">
             @if ($session->latestOutput)
-                @php
-                    $content = $session->latestOutput->content;
-                    // Decode if JSON string
-                    if (is_string($content)) {
-                        $content = json_decode($content, true);
-                    }
-                @endphp
-
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                     <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
                         <h3 class="font-bold text-slate-900">Generated Strategy</h3>
-                        <span class="text-xs text-slate-500">Provider: {{ $session->latestOutput->ai_model }}</span>
+                        <span class="text-xs text-slate-500">Provider: {{ $session->ai_model_used ?? 'Unknown' }}</span>
                     </div>
 
                     <div class="p-6 space-y-8">
-                        @if (isset($content['executive_summary']))
-                            <section>
-                                <h4 class="text-lg font-bold text-slate-900 mb-2">Executive Summary</h4>
-                                <p class="text-slate-600 leading-relaxed">{{ $content['executive_summary'] }}</p>
-                            </section>
-                        @endif
+                        @php
+                            $outputData = $session->latestOutput->getVersionForLevel($session->user_level);
+                        @endphp
 
-                        @if (isset($content['phases']))
-                            <section>
-                                <h4 class="text-lg font-bold text-slate-900 mb-4">Strategic Phases</h4>
-                                <div class="space-y-4">
-                                    @foreach ($content['phases'] as $phase)
-                                        <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                                            <div class="flex items-center justify-between mb-2">
-                                                <h5 class="font-bold text-indigo-700">{{ $phase['title'] ?? 'Phase' }}</h5>
-                                                <span
-                                                    class="text-xs font-medium bg-white px-2 py-1 rounded border border-slate-200">
-                                                    {{ $phase['duration'] ?? 'Duration N/A' }}
-                                                </span>
+                        @if ($outputData)
+                            <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100 mb-6">
+                                <h4 class="font-bold text-indigo-900 mb-1">
+                                    {{ $outputData['title'] ?? 'Strategic Roadmap' }}</h4>
+                                <p class="text-xs text-indigo-700">Level: {{ ucfirst($session->user_level) }}</p>
+                            </div>
+
+                            <!-- Phases -->
+                            @if (isset($outputData['phases']))
+                                <section>
+                                    <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Strategic
+                                        Phases</h4>
+                                    <div class="space-y-4">
+                                        @foreach ($outputData['phases'] as $phase)
+                                            <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <h5 class="font-bold text-slate-900">{{ $phase['title'] ?? 'Phase' }}
+                                                    </h5>
+                                                </div>
+
+                                                @if (isset($phase['checkpoints']))
+                                                    <ul class="space-y-2 mt-3">
+                                                        @foreach ($phase['checkpoints'] as $checkpoint)
+                                                            <li class="flex items-start gap-2 text-sm text-slate-600">
+                                                                <span class="text-green-500 mt-0.5">✓</span>
+                                                                {{ is_array($checkpoint) ? $checkpoint['text'] ?? '' : $checkpoint }}
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                @endif
+
+                                                @if (isset($phase['initiatives']))
+                                                    <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+                                                        @foreach ($phase['initiatives'] as $init)
+                                                            <div
+                                                                class="text-xs bg-slate-50 p-2 rounded border border-slate-100 text-slate-700">
+                                                                <strong>{{ is_array($init) ? $init['title'] ?? '' : $init }}</strong>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
                                             </div>
-                                            <p class="text-sm text-slate-600 mb-3">{{ $phase['objective'] ?? '' }}</p>
+                                        @endforeach
+                                    </div>
+                                </section>
+                            @endif
 
-                                            @if (isset($phase['action_items']))
-                                                <div class="space-y-1">
-                                                    @foreach ($phase['action_items'] as $item)
-                                                        <div class="flex items-start gap-2 text-sm text-slate-700">
-                                                            <i data-lucide="check"
-                                                                class="w-4 h-4 text-green-500 mt-0.5 shrink-0"></i>
-                                                            <span>{{ $item }}</span>
-                                                        </div>
-                                                    @endforeach
+                            <!-- Metrics -->
+                            @if (isset($outputData['metric_matrix']))
+                                <section>
+                                    <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Metric Matrix
+                                    </h4>
+                                    <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
+                                        @foreach (['acquisition', 'activation', 'retention', 'revenue', 'referral'] as $category)
+                                            @if (isset($outputData['metric_matrix'][$category]))
+                                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                                    <div class="text-[10px] uppercase font-bold text-slate-400 mb-2">
+                                                        {{ $category }}</div>
+                                                    <div class="flex flex-col gap-1">
+                                                        @foreach ($outputData['metric_matrix'][$category] as $metric)
+                                                            <span
+                                                                class="text-xs text-slate-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">{{ $metric }}</span>
+                                                        @endforeach
+                                                    </div>
                                                 </div>
                                             @endif
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </section>
-                        @endif
+                                        @endforeach
+                                    </div>
+                                </section>
+                            @endif
 
-                        @if (isset($content['metrics']))
-                            <section>
-                                <h4 class="text-lg font-bold text-slate-900 mb-4">Key Metrics</h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    @foreach ($content['metrics'] as $metric)
-                                        <div class="flex items-start gap-3 p-3 bg-white border border-slate-100 rounded-lg">
-                                            <div class="p-2 bg-blue-50 rounded-lg text-blue-600">
-                                                <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+                            <!-- Benchmarks -->
+                            @if (isset($outputData['benchmarks']))
+                                <section>
+                                    <h4 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Industry
+                                        Benchmarks</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        @foreach ($outputData['benchmarks'] as $key => $val)
+                                            <div class="p-3 bg-white border border-slate-200 rounded-lg">
+                                                <div class="text-xs font-bold text-slate-500 uppercase mb-1">
+                                                    {{ str_replace('_', ' ', $key) }}</div>
+                                                @if (is_array($val) && isset($val['good']))
+                                                    <div class="text-xs text-emerald-600 font-bold">Good:
+                                                        {{ $val['good'] }}</div>
+                                                    <div class="text-xs text-amber-600">Avg: {{ $val['average'] }}</div>
+                                                @else
+                                                    <div class="text-sm text-slate-700">
+                                                        {{ is_string($val) ? $val : json_encode($val) }}</div>
+                                                @endif
                                             </div>
-                                            <div>
-                                                <div class="font-medium text-slate-900">{{ $metric['name'] ?? 'Metric' }}
-                                                </div>
-                                                <div class="text-xs text-slate-500">{{ $metric['description'] ?? '' }}
-                                                </div>
-                                                <div class="mt-1 text-xs font-bold text-indigo-600">Target:
-                                                    {{ $metric['target'] ?? '-' }}</div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </section>
+                                        @endforeach
+                                    </div>
+                                </section>
+                            @endif
+                        @else
+                            <div class="text-center py-8 text-slate-500">
+                                No generated content available for this level.
+                            </div>
                         @endif
                     </div>
                 </div>
