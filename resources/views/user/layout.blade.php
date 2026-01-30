@@ -148,6 +148,18 @@
                     <span x-html="highlight('Profile')">Profile</span>
                 </a>
 
+                <a href="#" x-show="isVisible({label: 'Interview Prep'})"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 cursor-not-allowed opacity-60">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3-3v8a3 3 0 003 3z">
+                        </path>
+                    </svg>
+                    <span x-html="highlight('Interview Prep')">Interview Prep</span>
+                    <span
+                        class="ml-auto text-xs px-1.5 py-0.5 bg-slate-100 text-slate-400 rounded font-medium">Soon</span>
+                </a>
+
                 <a href="#" x-show="isVisible({label: 'Notifications'})"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 cursor-not-allowed opacity-60">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -373,9 +385,7 @@
             @yield('content')
 
             {{-- Support Section (appears at total bottom of scrollable area) --}}
-            <div class="mt-12">
-                @include('frontend.sections.support-section')
-            </div>
+
         </div>
     </main>
 

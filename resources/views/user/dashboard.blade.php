@@ -41,39 +41,7 @@
             </div>
         </div>
 
-        <!-- Quick Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Account Status -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
-                    <i class="fa-regular fa-id-badge text-xl"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-900">Account Status</h3>
-                <p class="text-slate-500 text-sm mt-1">Your current membership is active.</p>
-                <div class="mt-4 pt-4 border-t border-slate-50 flex items-center justify-between">
-                    <span class="text-xs font-semibold text-slate-400 uppercase">Role</span>
-                    <span
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        {{ ucfirst(Auth::user()->role) }}
-                    </span>
-                </div>
-            </div>
 
-            <!-- Join Date -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
-                    <i class="fa-regular fa-calendar-check text-xl"></i>
-                </div>
-                <h3 class="text-lg font-bold text-slate-900">Member Since</h3>
-                <p class="text-slate-500 text-sm mt-1">You joined the platform securely.</p>
-                <div class="mt-4 pt-4 border-t border-slate-50 flex items-center justify-between">
-                    <span class="text-xs font-semibold text-slate-400 uppercase">Date</span>
-                    <span class="text-sm font-medium text-slate-900">
-                        {{ Auth::user()->created_at->format('F d, Y') }}
-                    </span>
-                </div>
-            </div>
-        </div>
 
         <!-- PM Roadmap Progress -->
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
