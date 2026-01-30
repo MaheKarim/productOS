@@ -33,6 +33,9 @@ Route::prefix('tools/career-compass')->name('career-compass.')->group(function (
         ->middleware('auth')->name('history');
 });
 
+// Strategic Roadmap - Public Landing Page (must be before generic /tools/{category}/{tool})
+Route::get('/tools/strategic-roadmap', [\App\Http\Controllers\StrategicRoadmapController::class, 'publicLanding'])->name('strategic-roadmap.landing');
+
 // Tools
 Route::get('/tools', [ToolsController::class, 'index'])->name('tools.index');
 Route::get('/tools/{category}', [ToolsController::class, 'category'])->name('tools.category');
@@ -102,6 +105,19 @@ Route::middleware(['auth', 'onboarding'])->group(function () {
     Route::prefix('my/yt-summarize')->name('user.yt-summarize.')->group(function () {
         Route::get('/', [\App\Http\Controllers\User\YTSummarizeController::class, 'index'])->name('index');
         Route::get('/{video}', [\App\Http\Controllers\User\YTSummarizeController::class, 'show'])->name('show');
+    });
+
+    // Strategic Roadmap Generator
+    Route::prefix('my/strategic-roadmap')->name('user.strategic-roadmap.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\StrategicRoadmapController::class, 'index'])->name('index');
+        Route::get('/quick-start', [\App\Http\Controllers\StrategicRoadmapController::class, 'quickStart'])->name('quick-start');
+        Route::get('/advanced', [\App\Http\Controllers\StrategicRoadmapController::class, 'advancedInput'])->name('advanced');
+        Route::post('/quick-start', [\App\Http\Controllers\StrategicRoadmapController::class, 'storeQuickInput']);
+        Route::post('/advanced', [\App\Http\Controllers\StrategicRoadmapController::class, 'storeAdvancedInput']);
+        Route::get('/results/{id?}', [\App\Http\Controllers\StrategicRoadmapController::class, 'results'])->name('results');
+        Route::get('/history', [\App\Http\Controllers\StrategicRoadmapController::class, 'history'])->name('history');
+        Route::post('/progress', [\App\Http\Controllers\StrategicRoadmapController::class, 'updateProgress'])->name('progress');
+        Route::post('/metric', [\App\Http\Controllers\StrategicRoadmapController::class, 'updateMetric'])->name('metric');
     });
 });
 
@@ -193,6 +209,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
     // PM Roadmap Management
     Route::resource('roadmap', \App\Http\Controllers\Admin\RoadmapController::class, ['parameters' => ['roadmap' => 'topic']])->names('admin.roadmap');
+
+    // Strategic Roadmap Sessions (User Generated)
+    Route::resource('strategic-roadmap', \App\Http\Controllers\Admin\StrategicRoadmapController::class)->names('admin.strategic-roadmap');
 
     // AI Provider Management
     Route::get('ai-providers/health', [\App\Http\Controllers\Admin\AiHealthController::class, 'index'])->name('admin.ai-providers.health');

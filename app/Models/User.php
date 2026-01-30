@@ -79,4 +79,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(CareerAssessment::class);
     }
+
+    public function roadmapSessions()
+    {
+        return $this->hasMany(RoadmapSession::class);
+    }
+
+    public function roadmapProgress()
+    {
+        return $this->hasMany(UserRoadmapProgress::class);
+    }
 }
