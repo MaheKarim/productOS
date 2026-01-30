@@ -28,7 +28,7 @@ class SettingsTest extends TestCase
         $user = User::factory()->create();
         $originalEmail = $user->email;
 
-        $response = $this->actingAs($user)->put(route('admin.settings.update-profile'), [
+        $response = $this->actingAs($user)->put(route('admin.profile.update-profile'), [
             'name' => 'Test User Updated',
             'email' => 'new-email@example.com', // Should be ignored
         ]);
@@ -48,7 +48,7 @@ class SettingsTest extends TestCase
         $user = User::factory()->create();
         $file = UploadedFile::fake()->image('avatar.jpg');
 
-        $response = $this->actingAs($user)->put(route('admin.settings.update-profile'), [
+        $response = $this->actingAs($user)->put(route('admin.profile.update-profile'), [
             'name' => $user->name,
             'email' => $user->email,
             'avatar' => $file,
@@ -67,7 +67,7 @@ class SettingsTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->put(route('admin.settings.update-password'), [
+        $response = $this->actingAs($user)->put(route('admin.profile.update-password'), [
             'current_password' => 'password',
             'password' => 'new-password',
             'password_confirmation' => 'new-password',
@@ -83,7 +83,7 @@ class SettingsTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $response = $this->actingAs($user)->put(route('admin.settings.update-password'), [
+        $response = $this->actingAs($user)->put(route('admin.profile.update-password'), [
             'current_password' => 'wrong-password',
             'password' => 'new-password',
             'password_confirmation' => 'new-password',

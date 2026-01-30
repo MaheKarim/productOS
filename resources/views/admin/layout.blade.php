@@ -147,6 +147,15 @@
                     <div class="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">AI System
                     </div>
 
+                    {{-- Strategic Roadmap Sessions --}}
+                    <a href="{{ route('admin.strategic-roadmap.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.strategic-roadmap.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="strategic-roadmap">
+                        <i data-lucide="compass"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.strategic-roadmap.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        Strategic Roadmap
+                    </a>
+
                     <!-- Youtube Summary-->
                     <a href="{{ route('admin.videos.index') }}"
                         class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.videos.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
@@ -216,17 +225,6 @@
                         PM Roadmap
                         <span
                             class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-teal-500/20 text-teal-400 font-bold">{{ \App\Models\RoadmapTopic::count() }}</span>
-                    </a>
-
-                    {{-- Strategic Roadmap Sessions --}}
-                    <a href="{{ route('admin.strategic-roadmap.index') }}"
-                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.strategic-roadmap.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
-                        data-menu-name="strategic-roadmap">
-                        <i data-lucide="compass"
-                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.strategic-roadmap.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
-                        Strategic Roadmap
-                        <span
-                            class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-purple-500/20 text-purple-400 font-bold">{{ \App\Models\RoadmapSession::count() }}</span>
                     </a>
 
                     {{-- Directory Management --}}

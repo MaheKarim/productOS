@@ -211,6 +211,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::resource('roadmap', \App\Http\Controllers\Admin\RoadmapController::class, ['parameters' => ['roadmap' => 'topic']])->names('admin.roadmap');
 
     // Strategic Roadmap Sessions (User Generated)
+    Route::post('strategic-roadmap/settings', [\App\Http\Controllers\Admin\StrategicRoadmapController::class, 'updateSettings'])->name('admin.strategic-roadmap.settings');
     Route::resource('strategic-roadmap', \App\Http\Controllers\Admin\StrategicRoadmapController::class)->names('admin.strategic-roadmap');
 
     // AI Provider Management

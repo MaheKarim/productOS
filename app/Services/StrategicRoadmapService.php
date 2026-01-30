@@ -44,7 +44,10 @@ class StrategicRoadmapService
             'challenges' => $data['challenges'] ?? [],
             'input_context' => array_merge(
                 $session->input_context ?? [],
-                ['quick_input' => $data]
+                [
+                    'quick_input' => $data,
+                    'user_intent' => $data['user_intent'] ?? null
+                ]
             ),
         ]);
     }
@@ -65,7 +68,10 @@ class StrategicRoadmapService
             'current_metrics' => $data['current_metrics'] ?? [],
             'input_context' => array_merge(
                 $session->input_context ?? [],
-                ['advanced_input' => $data]
+                [
+                    'advanced_input' => $data,
+                    'user_intent' => $data['user_intent'] ?? null
+                ]
             ),
         ]);
     }
@@ -79,7 +85,19 @@ class StrategicRoadmapService
         $startTime = microtime(true);
 
         try {
-            $provider = $this->aiService->getActiveProvider();
+            // Check for provider override in settings
+            $providerId = \App\Models\Setting::where('group', 'strategic_roadmap')
+                ->where('key', 'provider_id')
+                ->value('value');
+
+            $provider = null;
+            if ($providerId) {
+                $provider = \App\Models\AiProvider::find($providerId);
+            }
+
+            if (!$provider) {
+                $provider = $this->aiService->getActiveProvider();
+            }
 
             if (!$provider) {
                 throw new \Exception('No active AI provider configured.');
@@ -91,6 +109,8 @@ class StrategicRoadmapService
                 'product_stage' => $session->product_stage,
                 'team_size' => $session->team_size,
                 'funding_stage' => $session->funding_stage,
+                'challenges' => $session->challenges,
+                'priorities' => $session->priorities,
             ]);
 
             $userPrompt = $this->promptBuilder->buildUserPrompt($session);
@@ -126,8 +146,8 @@ class StrategicRoadmapService
                 'simplified_version' => $session->user_level === 'junior' ? $parsedOutput : null,
                 'detailed_version' => $session->user_level === 'mid' ? $parsedOutput : null,
                 'strategic_version' => $session->user_level === 'senior' ? $parsedOutput : null,
-                'metric_framework' => $this->promptBuilder->getFrameworkForLevel($session->user_level, $session->product_type),
-                'benchmarks' => $this->getBenchmarksForContext($session),
+                'metric_framework' => $parsedOutput['metric_matrix'] ?? $this->promptBuilder->getFrameworkForLevel($session->user_level, $session->product_type),
+                'benchmarks' => isset($parsedOutput['benchmarks']) ? ['industry' => $parsedOutput['benchmarks'], 'source' => 'AI Generated'] : $this->getBenchmarksForContext($session),
                 'generation_time_ms' => $generationTimeMs,
                 'token_count' => $tokenCount,
             ]);

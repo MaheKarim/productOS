@@ -9,20 +9,112 @@ class RoadmapPromptBuilder
     /**
      * Build system prompt based on user level.
      */
+    /**
+     * Build system prompt based on user level.
+     */
     public function buildSystemPrompt(string $level, array $context): string
     {
+        // Check for custom prompt in settings
+        $settingKey = 'prompt_id_' . $level;
+        $customPromptId = \App\Models\Setting::where('group', 'strategic_roadmap')
+            ->where('key', $settingKey)
+            ->value('value');
+
+        if ($customPromptId) {
+            $customPrompt = \App\Models\SystemPrompt::find($customPromptId);
+            if ($customPrompt) {
+                // Use custom prompt content
+                $levelSpecificPrompt = $customPrompt->content;
+            } else {
+                // Fallback if ID invalid
+                $levelSpecificPrompt = match ($level) {
+                    'junior' => $this->getJuniorSystemPrompt($context),
+                    'mid' => $this->getMidSystemPrompt($context),
+                    'senior' => $this->getSeniorSystemPrompt($context),
+                    default => $this->getJuniorSystemPrompt($context),
+                };
+            }
+        } else {
+            // Default logic if no setting found
+            $levelSpecificPrompt = match ($level) {
+                'junior' => $this->getJuniorSystemPrompt($context),
+                'mid' => $this->getMidSystemPrompt($context),
+                'senior' => $this->getSeniorSystemPrompt($context),
+                default => $this->getJuniorSystemPrompt($context),
+            };
+        }
+
+        // Apply variable replacement for new templates
+        $levelSpecificPrompt = $this->replacePlaceholders($levelSpecificPrompt, $level, $context);
+
         $basePrompt = "You are a Senior Product Strategy Consultant with 15+ years of experience helping product managers create strategic roadmaps. You specialize in " . ($context['product_type'] ?? 'SaaS') . " products.";
 
-        $levelSpecificPrompt = match ($level) {
-            'junior' => $this->getJuniorSystemPrompt($context),
-            'mid' => $this->getMidSystemPrompt($context),
-            'senior' => $this->getSeniorSystemPrompt($context),
-            default => $this->getJuniorSystemPrompt($context),
-        };
+        // If template already includes "ROLE: ...", don't prepend basePrompt to avoid duplication if user desires complete control
+        if (str_contains($levelSpecificPrompt, 'ROLE:')) {
+            $basePrompt = ""; // New template handles the role
+        }
 
         $outputFormat = $this->getOutputFormatInstructions($level);
 
-        return $basePrompt . "\n\n" . $levelSpecificPrompt . "\n\n" . $outputFormat;
+        return $basePrompt . ($basePrompt ? "\n\n" : "") . $levelSpecificPrompt . "\n\n" . $outputFormat;
+    }
+
+    /**
+     * Replace placeholders in prompt template.
+     */
+    protected function replacePlaceholders(string $content, string $level, array $context): string
+    {
+        $challenges = isset($context['challenges']) && is_array($context['challenges'])
+            ? implode(', ', $context['challenges'])
+            : ($context['challenges'] ?? 'None specified');
+
+        $replacements = [
+            '{product_type}' => $context['product_type'] ?? 'Software',
+            '{product_stage}' => $context['product_stage'] ?? 'Growth',
+            '{team_size}' => $context['team_size'] ?? 'Unknown',
+            '{market}' => 'Target Market', // Default as we don't have explicit input yet
+            '{user_experience_level}' => match ($level) {
+                'junior' => 'Junior Product Manager (0-2 years)',
+                'mid' => 'Mid-Level Product Manager (2-5 years)',
+                'senior' => 'Senior Product Manager / CPO (5+ years)',
+                default => 'Product Manager'
+            },
+            '{challenges_list}' => $challenges,
+            '{user_goal}' => $context['user_intent'] ?? 'Not specified',
+            '{roadmap_type}' => match ($level) {
+                'junior' => 'Operational / Action-Oriented',
+                'mid' => 'Strategic & Tactical',
+                'senior' => 'High-Level Strategic Vision',
+                default => 'Strategic'
+            },
+            '{framework_type}' => match ($level) {
+                'junior' => 'AARRR / Basic',
+                'mid' => 'HEART / OKR',
+                'senior' => 'North Star / Financial',
+                default => 'Standard'
+            },
+            '{timeline}' => match ($level) {
+                'junior' => '90-Day',
+                'mid' => 'Quarterly (Q1-Q4)',
+                'senior' => 'Multi-Year / Annual',
+                default => 'Quarterly'
+            },
+            '{complexity_level}' => match ($level) {
+                'junior' => 'Basic (Low Complexity)',
+                'mid' => 'Intermediate (Medium Complexity)',
+                'senior' => 'Advanced (High Complexity)',
+                default => 'Medium'
+            },
+            '{communication_style}' => match ($level) {
+                'junior' => 'Instructive, Encouraging, Educational',
+                'mid' => 'Professional, Structured, Collaborative',
+                'senior' => 'Executive, Concise, Strategic',
+                default => 'Professional'
+            },
+            '{ui_component}' => 'Interactive Roadmap Visualization',
+        ];
+
+        return str_replace(array_keys($replacements), array_values($replacements), $content);
     }
 
     /**
@@ -52,12 +144,18 @@ class RoadmapPromptBuilder
         if (!empty($additionalContext)) {
             $prompt .= "\n**Additional Context:**\n";
             foreach ($additionalContext as $key => $value) {
+                if ($key === 'user_intent')
+                    continue;
                 if (is_array($value)) {
                     $prompt .= "- " . ucfirst(str_replace('_', ' ', $key)) . ": " . json_encode($value) . "\n";
                 } else {
                     $prompt .= "- " . ucfirst(str_replace('_', ' ', $key)) . ": {$value}\n";
                 }
             }
+        }
+
+        if (isset($session->input_context['user_intent'])) {
+            $prompt .= "\n**Specific Goal:**\n" . $session->input_context['user_intent'] . "\n";
         }
 
         $prompt .= "\nGenerate a comprehensive, actionable roadmap based on this context.";
@@ -157,28 +255,51 @@ PROMPT;
      */
     protected function getJuniorOutputFormat(): string
     {
-        return <<<FORMAT
+        return <<<'FORMAT'
 Return a JSON object with this structure:
 {
     "title": "Your 90-Day Action Plan",
-    "summary": "Brief overview of what this plan will help achieve",
     "phases": [
         {
             "id": "month-1",
-            "title": "Month 1: Foundation",
-            "description": "What this phase focuses on",
+            "title": "MONTH 1: Foundation",
             "checkpoints": [
-                {"id": "1-1", "text": "Set up basic analytics (Google Analytics)", "category": "analytics"},
-                {"id": "1-2", "text": "Define 3 key user personas", "category": "research"}
+                {"text": "Set up basic analytics (Google Analytics)", "completed": false},
+                {"text": "Define 3 key user personas", "completed": false},
+                {"text": "Create basic AARRR funnel", "completed": false}
             ],
             "metrics": ["DAU", "Activation Rate", "Support Tickets"]
+        },
+        {
+            "id": "month-2",
+            "title": "MONTH 2: Optimization",
+            "checkpoints": [
+                {"text": "Run 2 A/B tests on onboarding", "completed": false},
+                {"text": "Interview 5 users for feedback", "completed": false},
+                {"text": "Set up weekly metrics review", "completed": false}
+            ],
+            "metrics": ["Retention (D7, D30)", "NPS", "Feature Usage"]
         }
     ],
-    "key_metrics": {
-        "primary": ["Daily Active Users", "Activation Rate"],
-        "secondary": ["Support Tickets", "Feature Usage"]
+    "metric_matrix": {
+        "primary_framework": "AARRR",
+        "alternative_framework": "HEART",
+        "acquisition": ["CAC", "Sign-ups", "Traffic Sources"],
+        "activation": ["Time-to-Value", "Setup Success", "Core Action Completion"],
+        "retention": ["D30 Retention", "MAU/DAU Ratio", "NPS/CSAT"],
+        "revenue": ["MRR/ARR", "LTV", "Gross Margin"],
+        "referral": ["Viral Coefficient", "Invites Sent", "Share Rate"],
+        "operational": ["Team Velocity", "Bug Rate", "Release Frequency"]
+    }
+    "benchmarks": {
+        "monthly_churn": {"good": "< 5%", "average": "5-10%", "poor": "> 10%"},
+        "nps": {"good": "> 50", "average": "30-50", "poor": "< 30"},
+        "activation_rate": {"good": "> 40%", "average": "20-40%", "poor": "< 20%"}
     },
-    "next_steps": ["First action to take", "Second action"]
+    "best_practices": [
+        "Focus on 1-2 key metrics per week",
+        "Talk to at least 5 users before shipping"
+    ]
 }
 FORMAT;
     }
@@ -188,41 +309,54 @@ FORMAT;
      */
     protected function getMidOutputFormat(): string
     {
-        return <<<FORMAT
+        return <<<'FORMAT'
 Return a JSON object with this structure:
 {
     "title": "Quarterly Strategic Roadmap",
-    "vision": "90-day vision statement",
     "phases": [
         {
             "id": "q1",
-            "title": "Q1: Growth Initiation",
-            "objective": "Primary objective for this quarter",
-            "key_results": [
-                {"id": "kr-1", "text": "Increase activation by 25%", "baseline": "20%", "target": "25%"},
-                {"id": "kr-2", "text": "Reduce churn to 5%", "baseline": "8%", "target": "5%"}
-            ],
+            "title": "Q1: GROWTH INITIATION",
+            "objectives": ["Increase activation by 25%"],
+            "metrics": {
+                "nsm": "Weekly Learning Users",
+                "input": ["Onboarding Completion", "Feature Adoption"]
+            },
             "initiatives": [
                 {
-                    "id": "init-1",
                     "title": "Redesign onboarding flow",
-                    "impact": "high",
-                    "effort": "medium",
-                    "owner": "Product + Design"
+                    "impact": "High",
+                    "effort": "Medium"
+                },
+                {
+                    "title": "Implement product tours",
+                    "impact": "Medium",
+                    "effort": "Low"
                 }
             ],
-            "risks": ["Technical debt may delay release"],
-            "dependencies": ["Engineering capacity"]
+            "stakeholders": {"Eng": 5, "Design": 2, "Marketing": 1},
+            "risks": ["Technical debt may delay release"]
         }
     ],
-    "nsm": {
-        "metric": "Weekly Active Learners",
-        "rationale": "Why this is the North Star"
-    },
-    "stakeholder_map": {
-        "engineering": {"involvement": "high", "concerns": ["Technical feasibility"]},
-        "marketing": {"involvement": "medium", "concerns": ["Launch timing"]}
+    "metric_matrix": {
+        "primary_framework": "OKR",
+        "alternative_framework": "RICE",
+        "acquisition": ["CAC", "Sign-ups", "Traffic Sources"],
+        "activation": ["Time-to-Value", "Setup Success", "Core Action Completion"],
+        "retention": ["D30 Retention", "MAU/DAU Ratio", "NPS/CSAT"],
+        "revenue": ["MRR/ARR", "LTV", "Gross Margin"],
+        "referral": ["Viral Coefficient", "Invites Sent", "Share Rate"],
+        "operational": ["Team Velocity", "Bug Rate", "Release Frequency"]
     }
+    "benchmarks": {
+        "monthly_churn": {"good": "< 5%", "average": "5-10%", "poor": "> 10%"},
+        "nps": {"good": "> 50", "average": "30-50", "poor": "< 30"},
+        "activation_rate": {"good": "> 40%", "average": "20-40%", "poor": "< 20%"}
+    },
+    "best_practices": [
+        "Use RICE score to defend roadmap",
+        "Ensure initiatives link to OKRs"
+    ]
 }
 FORMAT;
     }
@@ -232,44 +366,57 @@ FORMAT;
      */
     protected function getSeniorOutputFormat(): string
     {
-        return <<<FORMAT
+        return <<<'FORMAT'
 Return a JSON object with this structure:
 {
     "title": "Annual Strategic Framework",
-    "vision": "3-year vision statement",
-    "annual_theme": "Theme for the year",
+    "vision": "Become #1 {solution} in {market} by {year}",
+    "metrics_portfolio": {
+        "north_star": "Market Share (%)",
+        "growth": ["YoY Revenue Growth", "Customer Count"],
+        "health": ["NPS", "Employee Satisfaction", "Churn Rate"],
+        "efficiency": ["CAC", "LTV", "R&D ROI"]
+    },
     "phases": [
         {
             "id": "h1",
-            "title": "H1: Market Leadership",
-            "strategic_goal": "Acquire 30% market share",
-            "quarters": [
-                {
-                    "id": "q1",
-                    "focus": "Customer acquisition",
-                    "key_initiatives": ["Launch enterprise tier", "Expand to EU market"]
-                }
-            ]
+            "title": "Q1-Q2: Market Leadership",
+            "goal": "Acquire > 30% market share"
+        },
+        {
+            "id": "h2",
+            "title": "Q3-Q4: Platform Expansion",
+            "goal": "Launch 3 new verticals"
         }
     ],
-    "metrics_portfolio": {
-        "north_star": {"metric": "Market Share", "current": "15%", "target": "30%"},
-        "growth": ["YoY Revenue Growth", "Customer Count", "NRR"],
-        "health": ["NPS", "Employee Satisfaction", "Churn Rate"],
-        "efficiency": ["CAC", "LTV", "LTV:CAC Ratio"]
+    "org_design": [
+        "Team structure evolution (current → target)",
+        "Hiring plan by quarter",
+        "Leadership development roadmap"
+    ],
+    "financial_projections": [
+        "Revenue forecast by product line",
+        "Investment requirements timeline",
+        "Profitability milestones"
+    ],
+    "metric_matrix": {
+        "primary_framework": "North Star",
+        "alternative_framework": "Balanced Scorecard",
+        "acquisition": ["CAC", "Sign-ups", "Traffic Sources"],
+        "activation": ["Time-to-Value", "Setup Success", "Core Action Completion"],
+        "retention": ["D30 Retention", "MAU/DAU Ratio", "NPS/CSAT"],
+        "revenue": ["MRR/ARR", "LTV", "Gross Margin"],
+        "referral": ["Viral Coefficient", "Invites Sent", "Share Rate"],
+        "operational": ["Team Velocity", "Bug Rate", "Release Frequency"]
+    }
+    "benchmarks": {
+        "monthly_churn": {"good": "< 5%", "average": "5-10%", "poor": "> 10%"},
+        "nps": {"good": "> 50", "average": "30-50", "poor": "< 30"},
+        "activation_rate": {"good": "> 40%", "average": "20-40%", "poor": "< 20%"}
     },
-    "org_evolution": {
-        "current_structure": "Description of current org",
-        "target_structure": "Where org needs to be",
-        "key_hires": ["VP Engineering", "Head of Growth"]
-    },
-    "financial_outlook": {
-        "revenue_target": "$X ARR",
-        "investment_areas": ["Product", "GTM", "Infrastructure"],
-        "profitability_milestone": "Q4 breakeven"
-    },
-    "risks_and_mitigations": [
-        {"risk": "Market downturn", "mitigation": "Diversify customer base", "likelihood": "medium"}
+    "best_practices": [
+        "Delegate execution details",
+        "Align roadmap with financial goals"
     ]
 }
 FORMAT;
@@ -353,5 +500,17 @@ FORMAT;
         }
 
         return $frameworks[$selectedFramework];
+    }
+
+    /**
+     * Get empty/default benchmarks structure for fallback.
+     */
+    public function getDefaultBenchmarks(): array
+    {
+        return [
+            'monthly_churn' => ['good' => '< 5%', 'average' => '5-10%', 'poor' => '> 10%'],
+            'nps' => ['good' => '> 50', 'average' => '30-50', 'poor' => '< 30%'],
+            'activation_rate' => ['good' => '> 40%', 'average' => '20-40%', 'poor' => '< 20%']
+        ];
     }
 }

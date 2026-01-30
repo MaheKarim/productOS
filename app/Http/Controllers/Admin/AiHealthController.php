@@ -11,6 +11,22 @@ use Illuminate\Support\Facades\DB;
 class AiHealthController extends Controller
 {
     /**
+     * Get database-specific date format for grouping by hour.
+     */
+    protected function getHourDateFormat(): string
+    {
+        $driver = DB::connection()->getDriverName();
+
+        return match ($driver) {
+            'sqlite' => "strftime('%Y-%m-%d %H:00:00', created_at)",
+            'mysql', 'mariadb' => "DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00')",
+            'pgsql' => "TO_CHAR(created_at, 'YYYY-MM-DD HH24:00:00')",
+            'sqlsrv' => "FORMAT(created_at, 'yyyy-MM-dd HH:00:00')",
+            default => "DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00')",
+        };
+    }
+
+    /**
      * Display the AI provider health dashboard.
      */
     public function index()
@@ -160,7 +176,7 @@ class AiHealthController extends Controller
         }
 
         $data = $query->select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00") as hour'),
+            DB::raw($this->getHourDateFormat() . ' as hour'),
             'ai_provider_id',
             DB::raw('AVG(response_time_ms) as avg_time')
         )
@@ -200,7 +216,7 @@ class AiHealthController extends Controller
         }
 
         $data = $query->select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00") as hour'),
+            DB::raw($this->getHourDateFormat() . ' as hour'),
             'ai_provider_id',
             DB::raw('COUNT(*) as count')
         )
@@ -265,7 +281,7 @@ class AiHealthController extends Controller
         }
 
         $data = $query->select(
-            DB::raw('DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00") as hour'),
+            DB::raw($this->getHourDateFormat() . ' as hour'),
             'ai_provider_id',
             DB::raw('SUM(cost) as total_cost')
         )

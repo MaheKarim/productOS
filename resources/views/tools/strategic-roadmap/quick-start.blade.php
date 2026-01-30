@@ -59,6 +59,17 @@
                 </div>
             </div>
 
+            <!-- Specific Goal / Context -->
+            <div class="bg-white rounded-xl border border-slate-200 p-5">
+                <label class="block text-base font-medium text-slate-900 mb-2">What is your main goal for this
+                    roadmap?</label>
+                <p class="text-sm text-slate-500 mb-3">Describe any specific focus, problems, or context you want the AI to
+                    consider.</p>
+                <textarea name="user_intent" rows="3"
+                    class="w-full px-4 py-3 rounded-lg border-2 border-slate-200 focus:border-blue-500 focus:ring-0 resize-none transition-colors"
+                    placeholder="e.g. We need to improve retention for our mobile app users..."></textarea>
+            </div>
+
             <!-- Time Working -->
             <div class="bg-white rounded-xl border border-slate-200 p-5">
                 <label class="block text-base font-medium text-slate-900 mb-4">How long have you been working on it?</label>
