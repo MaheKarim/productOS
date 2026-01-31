@@ -48,6 +48,7 @@
             { id: 'dashboard', label: 'Dashboard', route: '{{ route('dashboard') }}', icon: 'dashboard', section: 'Main' },
             { id: 'career-compass', label: 'Career Compass', route: '{{ route('career-compass.history') }}', icon: 'map', section: 'Main' },
             { id: 'strategic-roadmap', label: 'Strategic Roadmap', route: '{{ route('user.strategic-roadmap.index') }}', icon: 'roadmap', section: 'Main' },
+            { id: 'resume-builder', label: 'Resume Builder', route: '{{ route('resume-builder.index') }}', icon: 'file-text', section: 'Main' },
             { id: 'yt-summarizer', label: 'YT Summarizer', route: '{{ route('user.yt-summarize.index') }}', icon: 'video', section: 'Main' },
             { id: 'profile', label: 'Profile', route: '{{ route('profile.edit') }}', icon: 'user', section: 'Account' },
             { id: 'settings', label: 'Settings', route: '#', icon: 'settings', section: 'Support' },
@@ -132,6 +133,17 @@
                         </path>
                     </svg>
                     <span x-html="highlight('Strategic Roadmap')">Strategic Roadmap</span>
+                </a>
+
+                <a href="{{ route('resume-builder.index') }}" x-show="isVisible({label: 'Resume Builder'})"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('resume-builder.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('resume-builder.*') ? 'text-blue-600' : 'text-slate-400' }}"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    <span x-html="highlight('Resume Builder')">Resume Builder</span>
                 </a>
 
                 <a href="{{ route('user.yt-summarize.index') }}" x-show="isVisible({label: 'YT Summarizer'})"
@@ -305,6 +317,15 @@
                         </path>
                     </svg>
                     Career Compass
+                </a>
+                <a href="{{ route('resume-builder.index') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                    Resume Builder
                 </a>
                 <a href="{{ route('user.yt-summarize.index') }}"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50">

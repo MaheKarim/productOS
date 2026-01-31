@@ -31,6 +31,7 @@ class AiProviderService
                 'groq' => $this->testGroq($provider, $apiKey),
                 'zai' => $this->testZai($provider, $apiKey),
                 'gemini' => $this->testGemini($provider, $apiKey),
+                'amazon-nova' => $this->testAmazonNova($provider, $apiKey),
                 default => [
                     'success' => false,
                     'message' => 'Unknown provider: ' . $provider->slug,
@@ -163,8 +164,68 @@ class AiProviderService
             'message' => 'API returned error: ' . ($response->json('error.message') ?? $response->status()),
         ];
     }
+    /**
+     * Test Amazon Nova API connection.
+     * Note: Amazon Nova doesn't support /models endpoint, so we test with a simple completion.
+     */
+    protected function testAmazonNova(AiProvider $provider, string $apiKey): array
+    {
+        // Try the /models endpoint first
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $apiKey,
+            'Content-Type' => 'application/json',
+        ])
+            ->timeout($provider->timeout ?? 30)
+            ->get($provider->base_url . '/models');
+
+        if ($response->successful()) {
+            $models = $response->json('data', []);
+            return [
+                'success' => true,
+                'message' => 'Connection successful! Found ' . count($models) . ' available models.',
+                'data' => [
+                    'models_count' => count($models),
+                ],
+            ];
+        }
+
+        // If /models fails, try a simple completion test
+        $testModel = $provider->default_model ?? 'nova-2-lite-v1';
+        $testResponse = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $apiKey,
+            'Content-Type' => 'application/json',
+        ])
+            ->timeout($provider->timeout ?? 30)
+            ->post($provider->base_url . '/chat/completions', [
+                'model' => $testModel,
+                'messages' => [
+                    ['role' => 'user', 'content' => 'Hi']
+                ],
+                'max_tokens' => 5,
+            ]);
+
+        if ($testResponse->successful()) {
+            return [
+                'success' => true,
+                'message' => 'Connection successful! API is responding correctly.',
+                'data' => [
+                    'models_count' => 5, // Predefined count
+                ],
+            ];
+        }
+
+        $errorMsg = $testResponse->json('error.message')
+            ?? $testResponse->json('message')
+            ?? 'Status: ' . $testResponse->status();
+
+        return [
+            'success' => false,
+            'message' => 'API returned error: ' . $errorMsg,
+        ];
+    }
 
     /**
+
      * Get the default provider or fallback.
      */
     public function getActiveProvider(): ?AiProvider

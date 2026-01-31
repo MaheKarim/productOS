@@ -44,13 +44,16 @@
                                             {{ $slug === 'openrouter' ? 'bg-gradient-to-br from-violet-500 to-purple-600' : '' }}
                                             {{ $slug === 'groq' ? 'bg-gradient-to-br from-orange-500 to-amber-500' : '' }}
                                             {{ $slug === 'zai' ? 'bg-gradient-to-br from-cyan-500 to-blue-600' : '' }}
-                                            {{ $slug === 'gemini' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' : '' }}">
+                                            {{ $slug === 'gemini' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' : '' }}
+                                            {{ $slug === 'amazon-nova' ? 'bg-gradient-to-br from-amber-500 to-orange-600' : '' }}">
                                             @if ($slug === 'openrouter')
                                                 <i data-lucide="route" class="w-6 h-6 text-white"></i>
                                             @elseif ($slug === 'groq')
                                                 <i data-lucide="zap" class="w-6 h-6 text-white"></i>
                                             @elseif ($slug === 'gemini')
                                                 <i data-lucide="gem" class="w-6 h-6 text-white"></i>
+                                            @elseif ($slug === 'amazon-nova')
+                                                <i data-lucide="cloud" class="w-6 h-6 text-white"></i>
                                             @else
                                                 <i data-lucide="sparkles" class="w-6 h-6 text-white"></i>
                                             @endif
@@ -64,6 +67,8 @@
                                                     Ultra-fast inference
                                                 @elseif ($slug === 'gemini')
                                                     Google's flagship AI
+                                                @elseif ($slug === 'amazon-nova')
+                                                    AWS multimodal AI
                                                 @else
                                                     GLM flagship models
                                                 @endif

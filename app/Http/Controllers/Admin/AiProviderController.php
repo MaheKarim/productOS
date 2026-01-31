@@ -41,6 +41,7 @@ class AiProviderController extends Controller
             'groq' => 'Groq',
             'zai' => 'Z.AI',
             'gemini' => 'Gemini / Google AI Studio',
+            'amazon-nova' => 'Amazon Nova',
         ];
 
         return view('admin.ai-providers.create', [
@@ -50,12 +51,14 @@ class AiProviderController extends Controller
                 'groq' => AiProvider::getDefaultBaseUrl('groq'),
                 'zai' => AiProvider::getDefaultBaseUrl('zai'),
                 'gemini' => AiProvider::getDefaultBaseUrl('gemini'),
+                'amazon-nova' => AiProvider::getDefaultBaseUrl('amazon-nova'),
             ],
             'predefinedModels' => [
                 'openrouter' => AiProvider::getPredefinedModels('openrouter'),
                 'groq' => AiProvider::getPredefinedModels('groq'),
                 'zai' => AiProvider::getPredefinedModels('zai'),
                 'gemini' => AiProvider::getPredefinedModels('gemini'),
+                'amazon-nova' => AiProvider::getPredefinedModels('amazon-nova'),
             ],
         ]);
     }
@@ -66,7 +69,7 @@ class AiProviderController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'slug' => ['required', 'string', 'in:openrouter,groq,zai,gemini', Rule::unique('ai_providers', 'slug')],
+            'slug' => ['required', 'string', 'in:openrouter,groq,zai,gemini,amazon-nova', Rule::unique('ai_providers', 'slug')],
             'api_key' => ['required', 'string', 'min:10'],
             'base_url' => ['required', 'url'],
             'default_model' => ['nullable', 'string'],
@@ -83,6 +86,7 @@ class AiProviderController extends Controller
             'groq' => 'Groq',
             'zai' => 'Z.AI',
             'gemini' => 'Gemini / Google AI Studio',
+            'amazon-nova' => 'Amazon Nova',
         ];
 
         $provider = AiProvider::create([
@@ -119,6 +123,7 @@ class AiProviderController extends Controller
             'groq' => 'Groq',
             'zai' => 'Z.AI',
             'gemini' => 'Gemini / Google AI Studio',
+            'amazon-nova' => 'Amazon Nova',
         ];
 
         // Get discovered models from database

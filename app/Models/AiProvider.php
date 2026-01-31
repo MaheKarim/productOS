@@ -139,6 +139,7 @@ class AiProvider extends Model
             'groq' => 'https://api.groq.com/openai/v1',
             'zai' => 'https://api.z.ai/api/paas/v4',
             'gemini' => 'https://generativelanguage.googleapis.com/v1beta',
+            'amazon-nova' => 'https://api.nova.amazon.com/v1',
             default => '',
         };
     }
@@ -181,7 +182,80 @@ class AiProvider extends Model
                 'gemini-1.5-flash' => 'Gemini 1.5 Flash',
                 'gemini-1.0-pro' => 'Gemini 1.0 Pro',
             ],
+            'amazon-nova' => [
+                'nova-2-lite-v1' => 'Nova 2 Lite (Recommended)',
+                'nova-pro-v1' => 'Nova Pro',
+                'nova-lite-v1' => 'Nova Lite',
+                'nova-micro-v1' => 'Nova Micro',
+                'nova-premier-v1' => 'Nova Premier',
+            ],
             default => [],
         };
+    }
+
+    /**
+     * Get rate limits for models (RPM = Requests Per Minute, RPD = Requests Per Day).
+     */
+    public static function getModelRateLimits(string $slug): array
+    {
+        return match ($slug) {
+            'amazon-nova' => [
+                'nova-2-lite-v1' => ['rpm' => 20, 'rpd' => 500],
+                'nova-pro-v1' => ['rpm' => 5, 'rpd' => 250],
+                'nova-lite-v1' => ['rpm' => 5, 'rpd' => 250],
+                'nova-micro-v1' => ['rpm' => 5, 'rpd' => 250],
+                'nova-premier-v1' => ['rpm' => 2, 'rpd' => 50],
+            ],
+            'groq' => [
+                'default' => ['rpm' => 30, 'rpd' => 14400], // 30 RPM, 14400 RPD for free tier
+            ],
+            'openrouter' => [
+                'default' => ['rpm' => 200, 'rpd' => 50000], // Varies by plan
+            ],
+            default => [
+                'default' => ['rpm' => 60, 'rpd' => 10000], // Default fallback
+            ],
+        };
+    }
+
+    /**
+     * Get current usage stats for this provider.
+     */
+    public function getUsageStats(): array
+    {
+        $now = now();
+        $startOfMinute = $now->copy()->startOfMinute();
+        $startOfDay = $now->copy()->startOfDay();
+
+        // Get current model
+        $model = $this->default_model;
+
+        // Count requests in last minute (RPM used)
+        $rpmUsed = AiRequestLog::where('ai_provider_id', $this->id)
+            ->where('created_at', '>=', $startOfMinute)
+            ->count();
+
+        // Count requests today (RPD used)
+        $rpdUsed = AiRequestLog::where('ai_provider_id', $this->id)
+            ->where('created_at', '>=', $startOfDay)
+            ->count();
+
+        // Get rate limits for this provider's model
+        $rateLimits = self::getModelRateLimits($this->slug);
+        $modelLimits = $rateLimits[$model] ?? $rateLimits['default'] ?? ['rpm' => 60, 'rpd' => 10000];
+
+        $rpmLimit = $modelLimits['rpm'];
+        $rpdLimit = $modelLimits['rpd'];
+
+        return [
+            'rpm_used' => $rpmUsed,
+            'rpm_limit' => $rpmLimit,
+            'rpm_percent' => $rpmLimit > 0 ? min(100, round(($rpmUsed / $rpmLimit) * 100)) : 0,
+            'rpd_used' => $rpdUsed,
+            'rpd_limit' => $rpdLimit,
+            'rpd_percent' => $rpdLimit > 0 ? min(100, round(($rpdUsed / $rpdLimit) * 100)) : 0,
+            'rpm_remaining' => max(0, $rpmLimit - $rpmUsed),
+            'rpd_remaining' => max(0, $rpdLimit - $rpdUsed),
+        ];
     }
 }

@@ -119,6 +119,14 @@ Route::middleware(['auth', 'onboarding'])->group(function () {
         Route::post('/progress', [\App\Http\Controllers\StrategicRoadmapController::class, 'updateProgress'])->name('progress');
         Route::post('/metric', [\App\Http\Controllers\StrategicRoadmapController::class, 'updateMetric'])->name('metric');
     });
+
+    // Resume Builder
+    Route::prefix('my/resume-builder')->name('resume-builder.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\ResumeBuilderController::class, 'index'])->name('index');
+        Route::post('/upload', [\App\Http\Controllers\ResumeBuilderController::class, 'upload'])->name('upload');
+        Route::post('/generate', [\App\Http\Controllers\ResumeBuilderController::class, 'generate'])->name('generate');
+        Route::get('/download/{format}', [\App\Http\Controllers\ResumeBuilderController::class, 'download'])->name('download');
+    });
 });
 
 // Public Roadmap

@@ -83,11 +83,17 @@
                                         class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg
                                         {{ $provider->slug === 'openrouter' ? 'bg-gradient-to-br from-violet-500 to-purple-600' : '' }}
                                         {{ $provider->slug === 'groq' ? 'bg-gradient-to-br from-orange-500 to-amber-500' : '' }}
-                                        {{ $provider->slug === 'zai' ? 'bg-gradient-to-br from-cyan-500 to-blue-600' : '' }}">
+                                        {{ $provider->slug === 'zai' ? 'bg-gradient-to-br from-cyan-500 to-blue-600' : '' }}
+                                        {{ $provider->slug === 'gemini' ? 'bg-gradient-to-br from-blue-500 to-indigo-600' : '' }}
+                                        {{ $provider->slug === 'amazon-nova' ? 'bg-gradient-to-br from-amber-500 to-orange-600' : '' }}">
                                         @if ($provider->slug === 'openrouter')
                                             <i data-lucide="route" class="w-7 h-7 text-white"></i>
                                         @elseif ($provider->slug === 'groq')
                                             <i data-lucide="zap" class="w-7 h-7 text-white"></i>
+                                        @elseif ($provider->slug === 'gemini')
+                                            <i data-lucide="gem" class="w-7 h-7 text-white"></i>
+                                        @elseif ($provider->slug === 'amazon-nova')
+                                            <i data-lucide="cloud" class="w-7 h-7 text-white"></i>
                                         @else
                                             <i data-lucide="sparkles" class="w-7 h-7 text-white"></i>
                                         @endif
@@ -161,6 +167,53 @@
                                     <p class="text-sm font-medium text-slate-700">
                                         {{ $provider->rate_limit_per_minute ? $provider->rate_limit_per_minute . '/min' : 'Unlimited' }}
                                     </p>
+                                </div>
+                            </div>
+
+                            {{-- RPM/RPD Usage Stats --}}
+                            @php
+                                $usage = $provider->getUsageStats();
+                            @endphp
+                            <div
+                                class="p-4 bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-xl border border-slate-100">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <i data-lucide="activity" class="w-4 h-4 text-indigo-500"></i>
+                                    <p class="text-xs font-semibold text-slate-700 uppercase tracking-wider">Usage Stats</p>
+                                </div>
+                                <div class="space-y-3">
+                                    {{-- RPM - Requests Per Minute --}}
+                                    <div>
+                                        <div class="flex items-center justify-between mb-1">
+                                            <span class="text-xs text-slate-500">RPM (This Minute)</span>
+                                            <span
+                                                class="text-xs font-semibold {{ $usage['rpm_percent'] >= 90 ? 'text-red-600' : ($usage['rpm_percent'] >= 75 ? 'text-amber-600' : 'text-slate-700') }}">
+                                                {{ $usage['rpm_used'] }} / {{ $usage['rpm_limit'] }}
+                                            </span>
+                                        </div>
+                                        <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                                            <div class="h-full rounded-full transition-all duration-300 {{ $usage['rpm_percent'] >= 90 ? 'bg-red-500' : ($usage['rpm_percent'] >= 75 ? 'bg-amber-500' : 'bg-teal-500') }}"
+                                                style="width: {{ $usage['rpm_percent'] }}%"></div>
+                                        </div>
+                                        <p class="text-[10px] text-slate-400 mt-0.5">{{ $usage['rpm_remaining'] }}
+                                            requests remaining</p>
+                                    </div>
+
+                                    {{-- RPD - Requests Per Day --}}
+                                    <div>
+                                        <div class="flex items-center justify-between mb-1">
+                                            <span class="text-xs text-slate-500">RPD (Today)</span>
+                                            <span
+                                                class="text-xs font-semibold {{ $usage['rpd_percent'] >= 90 ? 'text-red-600' : ($usage['rpd_percent'] >= 75 ? 'text-amber-600' : 'text-slate-700') }}">
+                                                {{ $usage['rpd_used'] }} / {{ $usage['rpd_limit'] }}
+                                            </span>
+                                        </div>
+                                        <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                                            <div class="h-full rounded-full transition-all duration-300 {{ $usage['rpd_percent'] >= 90 ? 'bg-red-500' : ($usage['rpd_percent'] >= 75 ? 'bg-amber-500' : 'bg-teal-500') }}"
+                                                style="width: {{ $usage['rpd_percent'] }}%"></div>
+                                        </div>
+                                        <p class="text-[10px] text-slate-400 mt-0.5">{{ $usage['rpd_remaining'] }}
+                                            requests remaining today</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -246,8 +299,10 @@
                     <p class="text-sm text-slate-600 leading-relaxed">
                         Currently supports <strong>OpenRouter</strong> (access to 100+ models including GPT-4, Claude,
                         Llama),
-                        <strong>Groq</strong> (ultra-fast inference with Llama and Mixtral models), and
-                        <strong>Z.AI</strong> (GLM flagship models with state-of-the-art performance).
+                        <strong>Groq</strong> (ultra-fast inference with Llama and Mixtral models),
+                        <strong>Z.AI</strong> (GLM flagship models),
+                        <strong>Gemini / Google AI Studio</strong> (Google's multimodal AI), and
+                        <strong>Amazon Nova</strong> (AWS multimodal AI with Pro, Lite, and Micro variants).
                         API keys are securely encrypted before storage.
                     </p>
                 </div>

@@ -57,21 +57,5 @@
                 <livewire:roadmap.analytics />
             </div>
         </div>
-
-        <!-- Recent Activity Placeholder -->
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-            <div class="p-6 border-b border-slate-100 flex items-center justify-between">
-                <h3 class="font-bold text-slate-900">Recent Login Activity</h3>
-                <span class="text-xs text-slate-400">Security Log</span>
-            </div>
-            <div class="bg-slate-50/50 p-8 text-center">
-                <div
-                    class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300 shadow-sm">
-                    <i class="fa-solid fa-shield-cat text-2xl"></i>
-                </div>
-                <p class="text-slate-600 font-medium">Activity Logging Enabled</p>
-                <p class="text-sm text-slate-400 mt-1">Your account security is being monitored.</p>
-            </div>
-        </div>
     </div>
 @endsection
