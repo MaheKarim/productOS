@@ -259,5 +259,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('support-section', [\App\Http\Controllers\Admin\SupportSectionController::class, 'store'])->name('admin.support-section.store');
     Route::post('support-section/{support}/toggle', [\App\Http\Controllers\Admin\SupportSectionController::class, 'toggle'])->name('admin.support-section.toggle');
     Route::delete('support-section/remove-image', [\App\Http\Controllers\Admin\SupportSectionController::class, 'removeImage'])->name('admin.support-section.remove-image');
+
+    // Question Bank Management
+    Route::resource('question-categories', \App\Http\Controllers\Admin\QuestionCategoryController::class)->names('admin.question-categories');
+    Route::resource('questions', \App\Http\Controllers\Admin\QuestionController::class)->names('admin.questions');
+    Route::patch('questions/{question}/toggle', [\App\Http\Controllers\Admin\QuestionController::class, 'toggleActive'])->name('admin.questions.toggle');
 });
 

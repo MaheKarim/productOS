@@ -227,6 +227,36 @@
                             class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-teal-500/20 text-teal-400 font-bold">{{ \App\Models\RoadmapTopic::count() }}</span>
                     </a>
 
+                    {{-- Question Bank Management --}}
+                    <div class="cms-settings-group mb-2">
+                        <button onclick="toggleQuestionBankMenu()"
+                            class="w-full group flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl hover:bg-slate-800/50 hover:text-white transition-soft {{ request()->routeIs('admin.questions.*') || request()->routeIs('admin.question-categories.*') ? 'bg-slate-800/50 text-white' : '' }}">
+                            <div class="flex items-center">
+                                <i data-lucide="help-circle"
+                                    class="mr-3 w-5 h-5 {{ request()->routeIs('admin.questions.*') || request()->routeIs('admin.question-categories.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                                Question Bank
+                            </div>
+                            <i data-lucide="chevron-down" id="question-bank-chevron"
+                                class="w-4 h-4 transition-transform duration-300"></i>
+                        </button>
+
+                        <div id="question-bank-menu"
+                            class="hidden mt-1 px-6 space-y-1 overflow-hidden transition-all duration-300">
+                            <a href="{{ route('admin.questions.index') }}"
+                                class="menu-item group flex items-center px-4 py-2.5 text-xs font-medium rounded-lg transition-soft {{ request()->routeIs('admin.questions.*') ? 'text-white bg-white/5' : 'text-slate-500 hover:text-white' }}"
+                                data-menu-name="questions">
+                                <i data-lucide="list" class="mr-3 w-4 h-4"></i>
+                                All Questions
+                            </a>
+                            <a href="{{ route('admin.question-categories.index') }}"
+                                class="menu-item group flex items-center px-4 py-2.5 text-xs font-medium rounded-lg transition-soft {{ request()->routeIs('admin.question-categories.*') ? 'text-white bg-white/5' : 'text-slate-500 hover:text-white' }}"
+                                data-menu-name="question-categories">
+                                <i data-lucide="tags" class="mr-3 w-4 h-4"></i>
+                                Categories
+                            </a>
+                        </div>
+                    </div>
+
                     {{-- Directory Management --}}
                     <div class="cms-settings-group mb-2">
                         <button onclick="toggleDirectoryMenu()"
@@ -581,7 +611,38 @@
                 dirMenu.style.maxHeight = '500px';
                 dirChevron.classList.add('rotate-180');
             }
+
+            // Question Bank Auto-Open
+            if (path.startsWith('/admin/questions') || path.startsWith('/admin/question-categories')) {
+                const qbMenu = document.getElementById('question-bank-menu');
+                const qbChevron = document.getElementById('question-bank-chevron');
+                if (qbMenu && qbChevron) {
+                    qbMenu.classList.remove('hidden');
+                    qbMenu.style.maxHeight = '500px';
+                    qbChevron.classList.add('rotate-180');
+                }
+            }
         });
+
+        // Toggle Question Bank menu
+        function toggleQuestionBankMenu() {
+            const menu = document.getElementById('question-bank-menu');
+            const chevron = document.getElementById('question-bank-chevron');
+
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                setTimeout(() => {
+                    menu.style.maxHeight = '500px';
+                }, 10);
+                chevron.classList.add('rotate-180');
+            } else {
+                menu.style.maxHeight = '0px';
+                setTimeout(() => {
+                    menu.classList.add('hidden');
+                }, 300);
+                chevron.classList.remove('rotate-180');
+            }
+        }
     </script>
     @stack('scripts')
 </body>
