@@ -17,6 +17,9 @@ class Question extends Model
         'explanation',
         'difficulty',
         'is_active',
+        'source',
+        'marks',
+        'question_for',
     ];
 
     /**

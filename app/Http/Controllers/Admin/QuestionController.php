@@ -62,14 +62,17 @@ class QuestionController extends Controller
         $validated = $request->validate([
             'question' => 'required|string|min:10',
             'answers' => 'nullable|array',
-            'answers.*' => 'nullable|string|max:500',
+            'answers.*' => 'nullable|string|max:1000',
             'correct_answer' => 'nullable|array',
-            'correct_answer.*' => 'nullable|string|max:500',
+            'correct_answer.*' => 'nullable|string|max:1000',
             'explanation' => 'nullable|string|max:2000',
             'difficulty' => 'required|in:easy,medium,hard',
             'categories' => 'required|array|min:1',
             'categories.*' => 'exists:question_categories,id',
             'is_active' => 'boolean',
+            'source' => 'nullable|string|max:255',
+            'marks' => 'nullable|integer|min:0|max:10',
+            'question_for' => 'nullable|string|in:New to PM (Less than 2 years experience),Experienced PM (2-5 years experience),Senior PM / Founder (5+ years or leading a startup)',
         ]);
 
         $question = Question::create([
@@ -79,6 +82,7 @@ class QuestionController extends Controller
             'explanation' => $validated['explanation'] ?? null,
             'difficulty' => $validated['difficulty'],
             'is_active' => $request->boolean('is_active', true),
+            'source' => $validated['source'] ?? null,
         ]);
 
         $question->categories()->sync($validated['categories']);
@@ -116,14 +120,17 @@ class QuestionController extends Controller
         $validated = $request->validate([
             'question' => 'required|string|min:10',
             'answers' => 'nullable|array',
-            'answers.*' => 'nullable|string|max:500',
+            'answers.*' => 'nullable|string|max:1000',
             'correct_answer' => 'nullable|array',
-            'correct_answer.*' => 'nullable|string|max:500',
+            'correct_answer.*' => 'nullable|string|max:1000',
             'explanation' => 'nullable|string|max:2000',
             'difficulty' => 'required|in:easy,medium,hard',
             'categories' => 'required|array|min:1',
             'categories.*' => 'exists:question_categories,id',
             'is_active' => 'boolean',
+            'source' => 'nullable|string|max:255',
+            'marks' => 'nullable|integer|min:0|max:10',
+            'question_for' => 'nullable|string|in:New to PM (Less than 2 years experience),Experienced PM (2-5 years experience),Senior PM / Founder (5+ years or leading a startup)',
         ]);
 
         $question->update([
@@ -133,6 +140,7 @@ class QuestionController extends Controller
             'explanation' => $validated['explanation'] ?? null,
             'difficulty' => $validated['difficulty'],
             'is_active' => $request->boolean('is_active', true),
+            'source' => $validated['source'] ?? null,
         ]);
 
         $question->categories()->sync($validated['categories']);

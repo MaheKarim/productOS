@@ -34,6 +34,57 @@
                     @enderror
                 </div>
 
+
+                {{-- Source --}}
+                <div>
+                    <label for="source" class="block text-sm font-medium text-slate-700 mb-2">
+                        Source <span class="text-slate-400 font-normal">(optional)</span>
+                    </label>
+                    <input type="text" name="source" id="source"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                        placeholder="e.g. Interview Bit, LeetCode, Company Name" value="{{ old('source') }}">
+                    @error('source')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Marks & Question For --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="marks" class="block text-sm font-medium text-slate-700 mb-2">
+                            Marks <span class="text-slate-400 font-normal">(0-10)</span>
+                        </label>
+                        <input type="number" name="marks" id="marks" min="0" max="10"
+                            class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                            placeholder="e.g. 5" value="{{ old('marks') }}">
+                        @error('marks')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="question_for" class="block text-sm font-medium text-slate-700 mb-2">
+                            Question For <span class="text-slate-400 font-normal">(Target Audience)</span>
+                        </label>
+                        <select name="question_for" id="question_for"
+                            class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer bg-white">
+                            <option value="">Select Target Audience</option>
+                            <option value="New to PM (Less than 2 years experience)"
+                                {{ old('question_for') == 'New to PM (Less than 2 years experience)' ? 'selected' : '' }}>
+                                New to PM (Less than 2 years experience)</option>
+                            <option value="Experienced PM (2-5 years experience)"
+                                {{ old('question_for') == 'Experienced PM (2-5 years experience)' ? 'selected' : '' }}>
+                                Experienced PM (2-5 years experience)</option>
+                            <option value="Senior PM / Founder (5+ years or leading a startup)"
+                                {{ old('question_for') == 'Senior PM / Founder (5+ years or leading a startup)' ? 'selected' : '' }}>
+                                Senior PM / Founder (5+ years or leading a startup)</option>
+                        </select>
+                        @error('question_for')
+                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
                 {{-- Answers (Dynamic JSON Array) --}}
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-2">

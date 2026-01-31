@@ -128,6 +128,24 @@
                         <i data-lucide="clock" class="w-4 h-4"></i>
                         <span>Updated: {{ $question->updated_at->diffForHumans() }}</span>
                     </div>
+                    @if ($question->source)
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="link" class="w-4 h-4"></i>
+                            <span>Source: {{ $question->source }}</span>
+                        </div>
+                    @endif
+                    @if ($question->marks !== null)
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="award" class="w-4 h-4"></i>
+                            <span>Marks: {{ $question->marks }}</span>
+                        </div>
+                    @endif
+                    @if ($question->question_for)
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="users" class="w-4 h-4"></i>
+                            <span>Target: {{ $question->question_for }}</span>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

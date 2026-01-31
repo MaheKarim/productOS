@@ -4,242 +4,229 @@
 @section('page-title', 'Questions')
 
 @section('content')
-    <div class="max-w-7xl mx-auto">
+    <div class="max-w-7xl mx-auto space-y-8 relative">
+        {{-- Background Decoration --}}
+        <div
+            class="absolute top-0 left-0 w-full h-96 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10 blur-3xl -z-10 rounded-b-3xl">
+        </div>
+
         {{-- Header --}}
-        <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-                <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Question Bank</h1>
-                <p class="mt-1 text-slate-500">Manage all your questions with categories and difficulty levels.</p>
+                <h1 class="text-3xl font-bold text-slate-900 tracking-tight font-sans">Question Bank</h1>
+                <p class="mt-2 text-slate-600 text-lg">Manage and curate your assessment questions.</p>
             </div>
             <a href="{{ route('admin.questions.create') }}"
-                class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl shadow-lg shadow-indigo-500/20 transition-all transform hover:-translate-y-0.5 cursor-pointer">
+                class="inline-flex items-center px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-2xl shadow-lg shadow-orange-500/30 transition-all transform hover:-translate-y-1 hover:shadow-orange-500/40 backdrop-blur-sm">
                 <i data-lucide="plus" class="w-5 h-5 mr-2"></i>
                 Add Question
             </a>
         </div>
 
-        {{-- Filters --}}
-        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 mb-6">
+        {{-- Stats Grid (Glassmorphism) --}}
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            @foreach ([['label' => 'Total Questions', 'value' => $questions->total(), 'icon' => 'database', 'color' => 'blue'], ['label' => 'Easy', 'value' => $questions->where('difficulty', 'easy')->count(), 'icon' => 'smile', 'color' => 'teal'], ['label' => 'Medium', 'value' => $questions->where('difficulty', 'medium')->count(), 'icon' => 'meh', 'color' => 'amber'], ['label' => 'Hard', 'value' => $questions->where('difficulty', 'hard')->count(), 'icon' => 'frown', 'color' => 'red']] as $stat)
+                <div
+                    class="relative overflow-hidden bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl p-6 shadow-xl shadow-slate-200/50 group hover:bg-white/90 transition-all duration-300">
+                    <div
+                        class="absolute top-0 right-0 w-24 h-24 bg-{{ $stat['color'] }}-500/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110">
+                    </div>
+                    <div class="relative z-10">
+                        <div
+                            class="w-12 h-12 bg-white/80 rounded-2xl flex items-center justify-center shadow-sm mb-4 text-{{ $stat['color'] }}-600">
+                            <i data-lucide="{{ $stat['icon'] }}" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-slate-500 font-medium text-sm">{{ $stat['label'] }}</p>
+                        <p class="text-3xl font-bold text-slate-800 mt-1 font-sans">{{ $stat['value'] }}</p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        {{-- Filters & Search (Glass Card) --}}
+        <div class="bg-white/60 backdrop-blur-lg border border-white/50 rounded-3xl p-5 shadow-lg shadow-slate-200/40">
             <form action="{{ route('admin.questions.index') }}" method="GET" class="flex flex-wrap items-center gap-4">
                 {{-- Search --}}
-                <div class="flex-1 min-w-[200px]">
-                    <div class="relative">
-                        <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                <div class="flex-1 min-w-[240px]">
+                    <div class="relative group">
+                        <i data-lucide="search"
+                            class="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-indigo-500 transition-colors"></i>
                         <input type="text" name="search" value="{{ request('search') }}"
-                            class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
+                            class="w-full pl-12 pr-4 py-3 bg-white/50 border border-slate-200/60 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all font-medium placeholder:text-slate-400"
                             placeholder="Search questions...">
                     </div>
                 </div>
 
-                {{-- Category Filter --}}
-                <select name="category"
-                    class="px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer">
-                    <option value="">All Categories</option>
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </select>
-
-                {{-- Difficulty Filter --}}
-                <select name="difficulty"
-                    class="px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer">
-                    <option value="">All Difficulties</option>
-                    <option value="easy" {{ request('difficulty') == 'easy' ? 'selected' : '' }}>Easy</option>
-                    <option value="medium" {{ request('difficulty') == 'medium' ? 'selected' : '' }}>Medium</option>
-                    <option value="hard" {{ request('difficulty') == 'hard' ? 'selected' : '' }}>Hard</option>
-                </select>
-
-                {{-- Status Filter --}}
-                <select name="status"
-                    class="px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer">
-                    <option value="">All Status</option>
-                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
-                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                </select>
+                {{-- Select Filters --}}
+                @foreach (['category' => ['options' => $categories, 'label' => 'name', 'placeholder' => 'All Categories'], 'difficulty' => ['options' => ['easy' => 'Easy', 'medium' => 'Medium', 'hard' => 'Hard'], 'placeholder' => 'All Difficulties'], 'status' => ['options' => ['active' => 'Active', 'inactive' => 'Inactive'], 'placeholder' => 'All Status']] as $name => $config)
+                    <div class="relative min-w-[160px]">
+                        <select name="{{ $name }}"
+                            class="w-full px-4 py-3 bg-white/50 border border-slate-200/60 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all cursor-pointer font-medium text-slate-700 appearance-none">
+                            <option value="">{{ $config['placeholder'] }}</option>
+                            @if ($name === 'category')
+                                @foreach ($config['options'] as $option)
+                                    <option value="{{ $option->id }}"
+                                        {{ request($name) == $option->id ? 'selected' : '' }}>
+                                        {{ $option->name }}
+                                    </option>
+                                @endforeach
+                            @else
+                                @foreach ($config['options'] as $value => $label)
+                                    <option value="{{ $value }}" {{ request($name) == $value ? 'selected' : '' }}>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            @endif
+                        </select>
+                        <i data-lucide="chevron-down"
+                            class="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                    </div>
+                @endforeach
 
                 <button type="submit"
-                    class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition-colors cursor-pointer">
-                    <i data-lucide="filter" class="w-4 h-4"></i>
+                    class="p-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg shadow-indigo-500/20 transition-all transform hover:scale-105 active:scale-95 cursor-pointer">
+                    <i data-lucide="filter" class="w-5 h-5"></i>
                 </button>
 
                 @if (request()->hasAny(['search', 'category', 'difficulty', 'status']))
                     <a href="{{ route('admin.questions.index') }}"
-                        class="px-4 py-2.5 text-slate-500 hover:text-slate-700 font-medium transition-colors cursor-pointer">
-                        Clear
+                        class="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
+                        title="Clear Filters">
+                        <i data-lucide="x" class="w-5 h-5"></i>
                     </a>
                 @endif
             </form>
         </div>
 
-        {{-- Stats Bar --}}
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center">
-                        <i data-lucide="help-circle" class="w-5 h-5 text-indigo-600"></i>
+        {{-- Content Table --}}
+        <div
+            class="bg-white/70 backdrop-blur-xl border border-white/40 rounded-3xl shadow-2xl shadow-slate-200/50 overflow-hidden">
+            @if ($questions->isEmpty())
+                <div class="p-16 text-center flex flex-col items-center justify-center">
+                    <div class="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mb-6 animate-pulse">
+                        <i data-lucide="search-x" class="w-10 h-10 text-indigo-400"></i>
                     </div>
-                    <div>
-                        <p class="text-sm text-slate-500">Total</p>
-                        <p class="text-xl font-bold text-slate-900">{{ $questions->total() }}</p>
-                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">No questions found</h3>
+                    <p class="text-slate-500 max-w-sm mb-8">Try adjusting your filters or create a new question to get
+                        started.</p>
+                    <a href="{{ route('admin.questions.create') }}"
+                        class="inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-2xl transition-colors cursor-pointer">
+                        <i data-lucide="plus" class="w-5 h-5 mr-2"></i>
+                        Add New Question
+                    </a>
                 </div>
-            </div>
-            <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center">
-                        <i data-lucide="smile" class="w-5 h-5 text-teal-600"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-slate-500">Easy</p>
-                        <p class="text-xl font-bold text-teal-600">{{ $questions->where('difficulty', 'easy')->count() }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center">
-                        <i data-lucide="meh" class="w-5 h-5 text-amber-600"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-slate-500">Medium</p>
-                        <p class="text-xl font-bold text-amber-600">
-                            {{ $questions->where('difficulty', 'medium')->count() }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
-                        <i data-lucide="frown" class="w-5 h-5 text-red-600"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-slate-500">Hard</p>
-                        <p class="text-xl font-bold text-red-600">{{ $questions->where('difficulty', 'hard')->count() }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Questions Table --}}
-        @if ($questions->isEmpty())
-            <div class="bg-white rounded-2xl border border-slate-100 p-12 text-center">
-                <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="message-circle-question" class="w-8 h-8 text-slate-400"></i>
-                </div>
-                <h3 class="text-lg font-semibold text-slate-900 mb-2">No questions found</h3>
-                <p class="text-slate-500 mb-6">Create your first question to get started.</p>
-                <a href="{{ route('admin.questions.create') }}"
-                    class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors cursor-pointer">
-                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
-                    Create Question
-                </a>
-            </div>
-        @else
-            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            @else
                 <div class="overflow-x-auto">
                     <table class="w-full">
-                        <thead class="bg-slate-50 border-b border-slate-100">
+                        <thead class="bg-indigo-50/50 border-b border-indigo-100">
                             <tr>
-                                <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider w-1/2">
-                                    Question</th>
-                                <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    Categories</th>
-                                <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    Answers</th>
-                                <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    Difficulty</th>
-                                <th
-                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    Status</th>
-                                <th
-                                    class="px-6 py-4 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                                    Actions</th>
+                                @foreach (['Question', 'Source', 'Target', 'Categories', 'Info', 'Status', 'Actions'] as $header)
+                                    <th
+                                        class="px-6 py-5 text-left text-xs font-bold text-indigo-900/60 uppercase tracking-wider">
+                                        {{ $header }}
+                                    </th>
+                                @endforeach
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100">
+                        <tbody class="divide-y divide-indigo-50">
                             @foreach ($questions as $question)
-                                <tr class="hover:bg-slate-50/50 transition-colors">
-                                    <td class="px-6 py-4">
-                                        <p class="text-slate-900 font-medium line-clamp-2">
-                                            {{ $question->truncated_question }}</p>
+                                @php
+                                    $diffColors = ['easy' => 'teal', 'medium' => 'amber', 'hard' => 'red'];
+                                    $diffColor = $diffColors[$question->difficulty] ?? 'slate';
+                                @endphp
+                                <tr class="group hover:bg-indigo-50/30 transition-colors duration-200">
+                                    <td class="px-6 py-5 w-[35%]">
+                                        <div class="flex items-start gap-3">
+                                            <div
+                                                class="w-2 h-2 rounded-full bg-{{ $diffColor }}-500 mt-2 flex-shrink-0">
+                                            </div>
+                                            <p
+                                                class="text-slate-900 font-medium line-clamp-2 leading-relaxed group-hover:text-indigo-700 transition-colors">
+                                                {{ $question->truncated_question }}
+                                            </p>
+                                        </div>
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex flex-wrap gap-1">
+                                    <td class="px-6 py-5 align-top">
+                                        @if ($question->source)
+                                            <div
+                                                class="flex items-center gap-1.5 text-sm text-slate-600 bg-white/50 px-2 py-1 rounded-md border border-slate-100 inline-flex">
+                                                <i data-lucide="link" class="w-3 h-3 text-slate-400"></i>
+                                                {{ $question->source }}
+                                            </div>
+                                        @else
+                                            <span class="text-slate-400">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-5 align-top">
+                                        <span
+                                            class="px-2 py-1 text-xs font-medium text-slate-600 bg-slate-100/80 rounded-lg whitespace-nowrap"
+                                            title="{{ $question->question_for }}">
+                                            {{ \Illuminate\Support\Str::limit($question->question_for ?? 'General', 20) }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-5 align-top">
+                                        <div class="flex flex-wrap gap-1.5">
                                             @forelse ($question->categories as $category)
-                                                <span class="inline-flex px-2 py-0.5 text-xs font-medium rounded-full"
-                                                    style="background-color: {{ $category->color }}20; color: {{ $category->color }};">
+                                                <span
+                                                    class="inline-flex px-2.5 py-1 text-xs font-semibold rounded-full border border-transparent transition-colors cursor-default hover:opacity-80"
+                                                    style="background-color: {{ $category->color }}15; color: {{ $category->color }}; border-color: {{ $category->color }}30;">
                                                     {{ $category->name }}
                                                 </span>
                                             @empty
-                                                <span class="text-slate-400 text-sm">No categories</span>
+                                                <span class="text-slate-400 text-xs italic">Uncategorized</span>
                                             @endforelse
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <span
-                                            class="inline-flex items-center px-2.5 py-1 bg-slate-100 text-slate-700 text-sm font-medium rounded-lg">
-                                            {{ $question->answers_count }} options
-                                        </span>
+                                    <td class="px-6 py-5 align-top">
+                                        <div class="flex flex-col gap-1.5">
+                                            <span class="inline-flex items-center gap-1.5 text-xs text-slate-500">
+                                                <i data-lucide="list" class="w-3 h-3"></i>
+                                                {{ $question->answers_count }} Opts
+                                            </span>
+                                            @if ($question->marks !== null)
+                                                <span
+                                                    class="inline-flex items-center gap-1.5 text-xs text-amber-600 font-medium">
+                                                    <i data-lucide="award" class="w-3 h-3"></i>
+                                                    {{ $question->marks }}
+                                                </span>
+                                            @endif
+                                        </div>
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <span
-                                            class="inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full {{ $question->difficulty_color }}">
-                                            {{ ucfirst($question->difficulty) }}
-                                        </span>
-                                    </td>
-                                    <td class="px-6 py-4">
+                                    <td class="px-6 py-5 align-top">
                                         @if ($question->is_active)
                                             <span
-                                                class="inline-flex items-center px-2.5 py-1 text-xs font-medium bg-teal-50 text-teal-700 rounded-full">
-                                                <span class="w-1.5 h-1.5 bg-teal-500 rounded-full mr-1.5"></span>
+                                                class="inline-flex items-center px-2.5 py-1 text-xs font-bold bg-teal-50 text-teal-700 rounded-full border border-teal-100">
+                                                <span class="relative flex h-2 w-2 mr-1.5">
+                                                    <span
+                                                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                                                    <span
+                                                        class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                                                </span>
                                                 Active
                                             </span>
                                         @else
                                             <span
-                                                class="inline-flex items-center px-2.5 py-1 text-xs font-medium bg-slate-100 text-slate-600 rounded-full">
-                                                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full mr-1.5"></span>
+                                                class="inline-flex items-center px-2.5 py-1 text-xs font-bold bg-slate-100 text-slate-500 rounded-full border border-slate-200">
+                                                <span class="w-2 h-2 bg-slate-400 rounded-full mr-1.5"></span>
                                                 Inactive
                                             </span>
                                         @endif
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center justify-end gap-1">
-                                            <a href="{{ route('admin.questions.show', $question) }}"
-                                                class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer"
-                                                title="View">
-                                                <i data-lucide="eye" class="w-4 h-4"></i>
-                                            </a>
+                                    <td class="px-6 py-5 align-top text-right">
+                                        <div
+                                            class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
                                             <a href="{{ route('admin.questions.edit', $question) }}"
-                                                class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors cursor-pointer"
+                                                class="p-2 bg-white border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 rounded-lg transition-all shadow-sm hover:shadow cursor-pointer"
                                                 title="Edit">
                                                 <i data-lucide="pencil" class="w-4 h-4"></i>
                                             </a>
-                                            <form action="{{ route('admin.questions.toggle', $question) }}"
-                                                method="POST" class="inline">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit"
-                                                    class="p-2 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors cursor-pointer"
-                                                    title="{{ $question->is_active ? 'Deactivate' : 'Activate' }}">
-                                                    <i data-lucide="{{ $question->is_active ? 'eye-off' : 'eye' }}"
-                                                        class="w-4 h-4"></i>
-                                                </button>
-                                            </form>
                                             <form action="{{ route('admin.questions.destroy', $question) }}"
                                                 method="POST" class="inline"
                                                 onsubmit="return confirm('Are you sure you want to delete this question?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                    class="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                                                    class="p-2 bg-white border border-slate-200 text-slate-500 hover:text-red-600 hover:border-red-200 hover:bg-red-50 rounded-lg transition-all shadow-sm hover:shadow cursor-pointer"
                                                     title="Delete">
                                                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                                                 </button>
@@ -251,15 +238,14 @@
                         </tbody>
                     </table>
                 </div>
-
                 {{-- Pagination --}}
                 @if ($questions->hasPages())
-                    <div class="px-6 py-4 border-t border-slate-100">
+                    <div class="px-6 py-6 border-t border-slate-100/50 bg-slate-50/30">
                         {{ $questions->withQueryString()->links() }}
                     </div>
                 @endif
-            </div>
-        @endif
+            @endif
+        </div>
     </div>
 @endsection
 

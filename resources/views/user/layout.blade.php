@@ -51,6 +51,7 @@
             { id: 'resume-builder', label: 'Resume Builder', route: '{{ route('resume-builder.index') }}', icon: 'file-text', section: 'Main' },
             { id: 'yt-summarizer', label: 'YT Summarizer', route: '{{ route('user.yt-summarize.index') }}', icon: 'video', section: 'Main' },
             { id: 'profile', label: 'Profile', route: '{{ route('profile.edit') }}', icon: 'user', section: 'Account' },
+            { id: 'interview-prep', label: 'Interview Prep', route: '#', icon: 'clipboard-list', section: 'Account' },
             { id: 'settings', label: 'Settings', route: '#', icon: 'settings', section: 'Support' },
             { id: 'help', label: 'Help', route: '#', icon: 'help', section: 'Support' }
         ],
@@ -343,6 +344,17 @@
                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
                     Profile
+                </a>
+                <a href="#"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 cursor-not-allowed opacity-60">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3-3v8a3 3 0 003 3z">
+                        </path>
+                    </svg>
+                    Interview Prep
+                    <span
+                        class="ml-auto text-xs px-1.5 py-0.5 bg-slate-100 text-slate-400 rounded font-medium">Soon</span>
                 </a>
                 <div class="pt-4 mt-4 border-t border-slate-100">
                     <form method="POST" action="{{ route('logout') }}">
