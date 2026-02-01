@@ -81,6 +81,7 @@
                         <tr>
                             <th class="px-6 py-4 font-semibold">User</th>
                             <th class="px-6 py-4 font-semibold">Role</th>
+                            <th class="px-6 py-4 font-semibold">Credits</th>
                             <th class="px-6 py-4 font-semibold">Status</th>
                             <th class="px-6 py-4 font-semibold">Joined</th>
                             <th class="px-6 py-4 font-semibold text-right">Actions</th>
@@ -116,6 +117,12 @@
                                         @endif
                                         {{ ucfirst($user->role) }}
                                     </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-1 font-medium text-slate-700">
+                                        <i class="fa-solid fa-coins text-amber-500"></i>
+                                        {{ number_format($user->credits) }}
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <form action="{{ route('admin.users.toggle', $user) }}" method="POST"

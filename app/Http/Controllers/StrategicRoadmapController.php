@@ -37,6 +37,11 @@ class StrategicRoadmapController extends Controller
         // Record page view
         AdminRoadmapInsight::recordUsage('page_view', 1, null, 'landing');
 
+        $access = app(\App\Services\FeatureAccessService::class)->checkAccess(auth()->user(), 'strategic_roadmap');
+        if ($access['status'] !== 'allowed') {
+            return redirect()->route('dashboard')->with('error', $access['message']);
+        }
+
         return view('tools.strategic-roadmap.index');
     }
 
@@ -109,6 +114,12 @@ class StrategicRoadmapController extends Controller
 
         $this->roadmapService->saveQuickInput($session, $validated);
 
+        // Deduct credits
+        $deducted = app(\App\Services\FeatureAccessService::class)->deductCredits(auth()->user(), 'strategic_roadmap');
+        if (!$deducted) {
+            return back()->withErrors(['credits' => 'Insufficient credits to generate roadmap.']);
+        }
+
         // Generate roadmap
         try {
             $output = $this->roadmapService->generateRoadmap($session);
@@ -147,6 +158,12 @@ class StrategicRoadmapController extends Controller
         }
 
         $this->roadmapService->saveAdvancedInput($session, $validated);
+
+        // Deduct credits
+        $deducted = app(\App\Services\FeatureAccessService::class)->deductCredits(auth()->user(), 'strategic_roadmap');
+        if (!$deducted) {
+            return back()->withErrors(['credits' => 'Insufficient credits to generate roadmap.']);
+        }
 
         // Generate roadmap
         try {

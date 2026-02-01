@@ -15,6 +15,11 @@
         rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js">
+    </script>
 
     <script>
         tailwind.config = {
@@ -142,6 +147,18 @@
                         <i data-lucide="layout-dashboard"
                             class="mr-3 w-5 h-5 {{ request()->routeIs('admin.dashboard') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
                         Dashboard
+                    </a>
+                    <!-- Reports Section -->
+                    <div class="px-4 mt-8 mb-2">
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Reports & Logs</p>
+                    </div>
+
+                    <a href="{{ route('admin.activity-logs.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.activity-logs.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="activity-logs">
+                        <i data-lucide="list-checks"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.activity-logs.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        Activity Logs
                     </a>
 
                     <div class="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">AI System
@@ -290,6 +307,14 @@
                     <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System
                     </div>
 
+                    <a href="{{ route('admin.features.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.features.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="features">
+                        <i data-lucide="toggle-left"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.features.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        Feature Management
+                    </a>
+
                     <a href="{{ route('admin.onboarding.index') }}"
                         class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.onboarding.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
                         data-menu-name="onboarding">
@@ -396,11 +421,9 @@
                             <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
                                 class="w-10 h-10 rounded-full object-cover mr-3 border border-indigo-500/30">
                         @else
-                            <div
-                                class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center mr-3">
-                                <span
-                                    class="text-indigo-400 font-bold">{{ substr(Auth::user()->name ?? 'A', 0, 1) }}</span>
-                            </div>
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'Admin') }}&background=6366f1&color=ffffff"
+                                alt="{{ Auth::user()->name ?? 'Admin' }}"
+                                class="w-10 h-10 rounded-full object-cover mr-3 border border-indigo-500/30">
                         @endif
                         <div class="mr-2">
                             <p class="text-xs font-bold text-white truncate w-24">

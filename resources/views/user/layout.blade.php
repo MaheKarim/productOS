@@ -42,6 +42,7 @@
 <body class="bg-slate-50 text-slate-900 h-full flex overflow-hidden">
 
     <!-- Sidebar -->
+    @inject('featureService', 'App\Services\FeatureAccessService')
     <aside class="w-64 bg-white hidden md:flex flex-col shadow-sm" x-data="{
         search: '',
         items: [
@@ -125,26 +126,42 @@
                     <span x-html="highlight('Career Compass')">Career Compass</span>
                 </a>
 
-                <a href="{{ route('user.strategic-roadmap.index') }}" x-show="isVisible({label: 'Strategic Roadmap'})"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('user.strategic-roadmap.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                @php $roadmapStatus = $featureService->checkAccess(Auth::user(), 'strategic_roadmap'); @endphp
+                <a href="{{ $roadmapStatus['status'] === 'inactive' ? '#' : route('user.strategic-roadmap.index') }}"
+                    x-show="isVisible({label: 'Strategic Roadmap'})"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('user.strategic-roadmap.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }} {{ $roadmapStatus['status'] === 'inactive' ? 'opacity-60 cursor-not-allowed' : '' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('user.strategic-roadmap.*') ? 'text-blue-600' : 'text-slate-400' }}"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
                         </path>
                     </svg>
-                    <span x-html="highlight('Strategic Roadmap')">Strategic Roadmap</span>
+                    <div class="flex-1 flex items-center justify-between">
+                        <span x-html="highlight('Strategic Roadmap')">Strategic Roadmap</span>
+                        @if ($roadmapStatus['status'] === 'inactive')
+                            <span
+                                class="text-[10px] bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded font-medium">Soon</span>
+                        @endif
+                    </div>
                 </a>
 
-                <a href="{{ route('resume-builder.index') }}" x-show="isVisible({label: 'Resume Builder'})"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('resume-builder.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                @php $resumeStatus = $featureService->checkAccess(Auth::user(), 'resume_builder'); @endphp
+                <a href="{{ $resumeStatus['status'] === 'inactive' ? '#' : route('resume-builder.index') }}"
+                    x-show="isVisible({label: 'Resume Builder'})"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('resume-builder.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }} {{ $resumeStatus['status'] === 'inactive' ? 'opacity-60 cursor-not-allowed' : '' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('resume-builder.*') ? 'text-blue-600' : 'text-slate-400' }}"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                         </path>
                     </svg>
-                    <span x-html="highlight('Resume Builder')">Resume Builder</span>
+                    <div class="flex-1 flex items-center justify-between">
+                        <span x-html="highlight('Resume Builder')">Resume Builder</span>
+                        @if ($resumeStatus['status'] === 'inactive')
+                            <span
+                                class="text-[10px] bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded font-medium">Soon</span>
+                        @endif
+                    </div>
                 </a>
 
                 <a href="{{ route('user.yt-summarize.index') }}" x-show="isVisible({label: 'YT Summarizer'})"
@@ -157,15 +174,23 @@
                     </svg>
                     <span x-html="highlight('YT Summarizer')">YT Summarizer</span>
                 </a>
-                <a href="{{ route('user.interview-prep.index') }}" x-show="isVisible({label: 'Interview Prep'})"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('user.interview-prep.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                @php $interviewStatus = $featureService->checkAccess(Auth::user(), 'interview_prep'); @endphp
+                <a href="{{ $interviewStatus['status'] === 'inactive' ? '#' : route('user.interview-prep.index') }}"
+                    x-show="isVisible({label: 'Interview Prep'})"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('user.interview-prep.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }} {{ $interviewStatus['status'] === 'inactive' ? 'opacity-60 cursor-not-allowed' : '' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('user.interview-prep.*') ? 'text-blue-600' : 'text-slate-400' }}"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
                         </path>
                     </svg>
-                    <span x-html="highlight('Interview Prep')">Interview Prep</span>
+                    <div class="flex-1 flex items-center justify-between">
+                        <span x-html="highlight('Interview Prep')">Interview Prep</span>
+                        @if ($interviewStatus['status'] === 'inactive')
+                            <span
+                                class="text-[10px] bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded font-medium">Soon</span>
+                        @endif
+                    </div>
                 </a>
             </div>
 
@@ -403,6 +428,13 @@
             <h1 class="text-lg font-semibold text-slate-900 hidden md:block">@yield('header', 'Dashboard')</h1>
 
             <div class="flex items-center gap-4 ml-auto">
+                {{-- Credits Display --}}
+                <div
+                    class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-amber-50 rounded-lg border border-amber-100/50">
+                    <i class="fa-solid fa-coins text-amber-500 text-sm"></i>
+                    <span class="text-xs font-bold text-amber-700">{{ Auth::user()->credits }} Credits</span>
+                </div>
+
                 <a href="{{ route('home') }}"
                     class="flex items-center justify-center w-9 h-9 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all border border-slate-200 hover:border-blue-200 group"
                     title="Go to Site">

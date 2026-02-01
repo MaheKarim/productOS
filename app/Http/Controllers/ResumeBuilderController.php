@@ -21,6 +21,10 @@ class ResumeBuilderController extends Controller
 
     public function index()
     {
+        $access = app(\App\Services\FeatureAccessService::class)->checkAccess(Auth::user(), 'resume_builder');
+        if ($access['status'] !== 'allowed') {
+            return redirect()->route('dashboard')->with('error', $access['message']);
+        }
         $user = Auth::user();
         return view('tools.resume-builder.index', compact('user'));
     }
@@ -55,6 +59,13 @@ class ResumeBuilderController extends Controller
 
         try {
             $user = Auth::user();
+
+            // Deduct credits
+            $deducted = app(\App\Services\FeatureAccessService::class)->deductCredits($user, 'resume_builder');
+            if (!$deducted) {
+                return response()->json(['success' => false, 'message' => 'Insufficient credits to generate resume.'], 403);
+            }
+
             $optimizedData = $this->builderService->generateOptimizedResume($user, $request->input('job_description'));
 
             // Store optimized data in session for download

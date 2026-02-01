@@ -36,7 +36,18 @@ class RegisterController extends Controller
             'is_active' => true,
         ]);
 
+        if ($request->wantsJson()) {
+            return response()->json(['message' => 'Registration successful', 'user' => $user], 201);
+        }
+
         Auth::login($user);
+
+        // Send Welcome Email
+        try {
+            \Illuminate\Support\Facades\Mail::to($user)->send(new \App\Mail\WelcomeEmail($user));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send welcome email: ' . $e->getMessage());
+        }
 
         return redirect(route('dashboard'));
     }

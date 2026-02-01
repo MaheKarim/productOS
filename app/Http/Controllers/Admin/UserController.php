@@ -45,11 +45,12 @@ class UserController extends Controller
             'password' => 'required|string|min:8',
             'role' => 'required|in:admin,user',
             'is_active' => 'nullable',
+            'credits' => 'nullable|integer|min:0',
             'bio' => 'nullable|string',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
-        $validated['is_active'] = $request->has('is_active');
+        $validated['is_active'] = $request->boolean('is_active');
 
         \Log::info('User store request data:', [
             'request_all' => $request->all(),
@@ -82,6 +83,7 @@ class UserController extends Controller
             'password' => 'nullable|string|min:8',
             'role' => 'required|in:admin,user',
             'is_active' => 'nullable',
+            'credits' => 'nullable|integer|min:0',
             'bio' => 'nullable|string',
         ]);
 
@@ -91,7 +93,7 @@ class UserController extends Controller
             unset($validated['password']);
         }
 
-        $validated['is_active'] = $request->has('is_active');
+        $validated['is_active'] = $request->boolean('is_active');
 
         \Log::info('User update request data:', [
             'request_all' => $request->all(),

@@ -159,6 +159,11 @@ use App\Http\Controllers\Admin\DashboardController;
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
+    // Analytics & Charts API
+    Route::get('/analytics/user-registrations', [DashboardController::class, 'getUserRegistrationData'])->name('admin.analytics.user-registrations');
+    Route::get('/analytics/credit-consumption', [DashboardController::class, 'getCreditConsumptionData'])->name('admin.analytics.credit-consumption');
+    Route::get('/analytics/metrics', [DashboardController::class, 'getDashboardMetrics'])->name('admin.analytics.metrics');
+
     // Hero
     Route::resource('hero', HeroController::class)->names('admin.hero');
     Route::post('hero/{hero}/toggle', [HeroController::class, 'toggle'])->name('admin.hero.toggle');
@@ -274,5 +279,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::resource('question-categories', \App\Http\Controllers\Admin\QuestionCategoryController::class)->names('admin.question-categories');
     Route::resource('questions', \App\Http\Controllers\Admin\QuestionController::class)->names('admin.questions');
     Route::patch('questions/{question}/toggle', [\App\Http\Controllers\Admin\QuestionController::class, 'toggleActive'])->name('admin.questions.toggle');
+    // Features Management
+    // Features Management
+    Route::get('features', [\App\Http\Controllers\Admin\FeatureController::class, 'index'])->name('admin.features.index');
+    Route::put('features/{feature}', [\App\Http\Controllers\Admin\FeatureController::class, 'update'])->name('admin.features.update');
+
+    // Activity Logs
+    Route::get('activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('admin.activity-logs.index');
 });
 

@@ -16,6 +16,9 @@ use App\Models\DirectoryItem;
 use App\Models\DirectoryClick;
 use App\Models\AiRequestLog;
 use App\Models\AiProvider;
+use App\Models\User;
+use App\Models\FeatureUsage;
+use App\Models\Feature;
 
 class DashboardController extends Controller
 {
@@ -50,7 +53,22 @@ class DashboardController extends Controller
         $selectedModel = $request->get('model', 'all');
         $groqRateLimits = $this->getGroqRateLimits($selectedModel);
 
-        return view('admin.dashboard', compact('stats', 'aiStats', 'providerStats', 'groqRateLimits', 'heroStats'));
+        // Dashboard Analytics Data
+        $analyticsData = $this->getInitialAnalyticsData();
+
+        return view('admin.dashboard', compact('stats', 'aiStats', 'providerStats', 'groqRateLimits', 'heroStats', 'analyticsData'));
+    }
+
+    /**
+     * Get initial analytics data for dashboard
+     */
+    protected function getInitialAnalyticsData(): array
+    {
+        return [
+            'current_year' => now()->year,
+            'previous_year' => now()->year - 1,
+            'available_years' => [now()->year, now()->year - 1, now()->year - 2],
+        ];
     }
 
     /**
@@ -302,5 +320,222 @@ class DashboardController extends Controller
                 return $item;
             })
             ->toArray();
+    }
+
+    /**
+     * Get monthly user registration trend data for charts
+     */
+    public function getUserRegistrationData(Request $request)
+    {
+        $year = $request->get('year', now()->year);
+        $previousYear = $year - 1;
+
+        // Get current year data
+        $currentYearData = User::selectRaw('strftime("%m", created_at) as month, COUNT(*) as count')
+            ->whereYear('created_at', $year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('count', 'month')
+            ->toArray();
+
+        // Get previous year data for comparison
+        $previousYearData = User::selectRaw('strftime("%m", created_at) as month, COUNT(*) as count')
+            ->whereYear('created_at', $previousYear)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('count', 'month')
+            ->toArray();
+
+        // Fill missing months with 0
+        $months = [];
+        $currentYearCounts = [];
+        $previousYearCounts = [];
+        $cumulativeCounts = [];
+        $cumulative = 0;
+
+        for ($i = 1; $i <= 12; $i++) {
+            $monthLabel = date('M', mktime(0, 0, 0, $i, 1));
+            $months[] = $monthLabel;
+            $currentYearCounts[] = $currentYearData[$i] ?? 0;
+            $previousYearCounts[] = $previousYearData[$i] ?? 0;
+            $cumulative += $currentYearData[$i] ?? 0;
+            $cumulativeCounts[] = $cumulative;
+        }
+
+        // Find peak registration months
+        $maxCurrent = max($currentYearCounts);
+        $peakMonths = [];
+        foreach ($currentYearCounts as $index => $count) {
+            if ($count === $maxCurrent && $count > 0) {
+                $peakMonths[] = $months[$index];
+            }
+        }
+
+        return response()->json([
+            'labels' => $months,
+            'current_year' => [
+                'data' => $currentYearCounts,
+                'total' => array_sum($currentYearCounts),
+                'peak_months' => $peakMonths,
+                'peak_count' => $maxCurrent
+            ],
+            'previous_year' => [
+                'data' => $previousYearCounts,
+                'total' => array_sum($previousYearCounts)
+            ],
+            'cumulative' => $cumulativeCounts,
+            'year' => $year,
+            'previous_year' => $previousYear
+        ]);
+    }
+
+    /**
+     * Get feature-wise credit consumption data
+     */
+    public function getCreditConsumptionData(Request $request)
+    {
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        $period = $request->get('period', 'all'); // today, week, month, all
+
+        // Determine date range based on period
+        if ($period === 'today') {
+            $startDate = now()->startOfDay();
+            $endDate = now()->endOfDay();
+        } elseif ($period === 'week') {
+            $startDate = now()->startOfWeek();
+            $endDate = now()->endOfWeek();
+        } elseif ($period === 'month') {
+            $startDate = now()->startOfMonth();
+            $endDate = now()->endOfMonth();
+        }
+
+        // Build query
+        $query = FeatureUsage::where('status', 'success');
+
+        if ($startDate) {
+            $query->where('created_at', '>=', $startDate);
+        }
+        if ($endDate) {
+            $query->where('created_at', '<=', $endDate);
+        }
+
+        // Get feature consumption data
+        $featureData = $query->selectRaw('
+            feature_key,
+            SUM(credits_deducted) as total_credits,
+            COUNT(DISTINCT user_id) as user_count,
+            COUNT(*) as usage_count
+        ')
+            ->groupBy('feature_key')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                return [
+                    $item->feature_key => [
+                        'total_credits' => (int) $item->total_credits,
+                        'user_count' => (int) $item->user_count,
+                        'usage_count' => (int) $item->usage_count,
+                    ]
+                ];
+            })->toArray();
+
+        // Get all active features
+        $features = Feature::where('is_active', true)->get()->keyBy('key');
+
+        // Prepare data for each feature
+        $labels = [];
+        $creditsData = [];
+        $usersData = [];
+        $percentages = [];
+        $totalCredits = 0;
+
+        foreach ($features as $feature) {
+            $labels[] = $feature->name;
+            $credits = $featureData[$feature->key]['total_credits'] ?? 0;
+            $users = $featureData[$feature->key]['user_count'] ?? 0;
+            $creditsData[] = $credits;
+            $usersData[] = $users;
+            $totalCredits += $credits;
+        }
+
+        // Calculate percentages
+        foreach ($creditsData as $credits) {
+            $percentages[] = $totalCredits > 0 ? round(($credits / $totalCredits) * 100, 1) : 0;
+        }
+
+        // Calculate average credits per user per feature
+        $avgCreditsPerUser = [];
+        foreach ($creditsData as $index => $credits) {
+            $avgCreditsPerUser[] = $usersData[$index] > 0 ? round($credits / $usersData[$index], 2) : 0;
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'credits' => $creditsData,
+            'users' => $usersData,
+            'percentages' => $percentages,
+            'avg_credits_per_user' => $avgCreditsPerUser,
+            'total_credits' => $totalCredits,
+            'total_users' => array_sum($usersData),
+            'period' => $period
+        ]);
+    }
+
+    /**
+     * Get dashboard summary metrics
+     */
+    public function getDashboardMetrics()
+    {
+        $activeUsers = User::where('is_active', true)->count();
+        $inactiveUsers = User::where('is_active', false)->count();
+        $totalCredits = User::sum('credits');
+        $totalCreditsInCirculation = $totalCredits * count(User::all()); // Rough estimate
+
+        // Get credit consumption by feature for summary
+        $featureConsumption = FeatureUsage::where('status', 'success')
+            ->selectRaw('feature_key, SUM(credits_deducted) as total')
+            ->groupBy('feature_key')
+            ->pluck('total', 'feature_key')
+            ->toArray();
+
+        // Get recent credit refill/purchase trends (last 7 days)
+        $creditRefills = User::where('created_at', '>=', now()->subDays(7))
+            ->selectRaw('DATE(created_at) as date, SUM(credits) as credits')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'date' => $item->date,
+                    'credits' => (int) $item->credits
+                ];
+            })->toArray();
+
+        // Get feature activation status
+        $featureStatus = Feature::select('name', 'is_active', 'credit_cost')
+            ->get()
+            ->map(function ($feature) use ($featureConsumption) {
+                return [
+                    'name' => $feature->name,
+                    'is_active' => $feature->is_active,
+                    'credit_cost' => $feature->credit_cost,
+                    'credits_consumed' => $featureConsumption[$feature->key] ?? 0
+                ];
+            })->toArray();
+
+        return response()->json([
+            'users' => [
+                'active' => $activeUsers,
+                'inactive' => $inactiveUsers,
+                'total' => $activeUsers + $inactiveUsers
+            ],
+            'credits' => [
+                'total_in_circulation' => $totalCreditsInCirculation,
+                'average_per_user' => $totalCredits
+            ],
+            'feature_consumption' => $featureConsumption,
+            'credit_refills' => $creditRefills,
+            'feature_status' => $featureStatus
+        ]);
     }
 }

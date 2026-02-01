@@ -30,6 +30,14 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
+            // Check if user is active
+            if (!Auth::user()->is_active) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Your account is inactive. Please contact support.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
 
             if (Auth::user()->role === 'admin') {

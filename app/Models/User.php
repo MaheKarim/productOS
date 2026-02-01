@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'credits',
         'avatar',
         'role',
         'is_active',
@@ -83,6 +84,19 @@ class User extends Authenticatable
     public function roadmapSessions()
     {
         return $this->hasMany(RoadmapSession::class);
+    }
+
+    public function getAvatarAttribute($value)
+    {
+        if (!$value) {
+            return null;
+        }
+
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+            return $value;
+        }
+
+        return asset('storage/' . $value);
     }
 
     public function roadmapProgress()

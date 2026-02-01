@@ -15,6 +15,10 @@ class InterviewPrepController extends Controller
      */
     public function index()
     {
+        $access = app(\App\Services\FeatureAccessService::class)->checkAccess(auth()->user(), 'interview_prep');
+        if ($access['status'] !== 'allowed') {
+            return redirect()->route('dashboard')->with('error', $access['message']);
+        }
         $categories = QuestionCategory::active()
             ->withCount([
                 'questions' => function ($query) {
@@ -40,6 +44,11 @@ class InterviewPrepController extends Controller
      */
     public function startPractice(Request $request)
     {
+        // Deduct credits
+        $deducted = app(\App\Services\FeatureAccessService::class)->deductCredits(auth()->user(), 'interview_prep');
+        if (!$deducted) {
+            return back()->with('error', 'Insufficient credits to start practice session.');
+        }
         $request->validate([
             'filter_type' => 'required|in:category,audience,random',
             'categories' => 'nullable|array',

@@ -104,6 +104,12 @@
                                                         </div>
                                                     @break
 
+                                                    @case('password')
+                                                        <input type="password" id="{{ $setting->key }}" name="{{ $setting->key }}"
+                                                            value="{{ $setting->value }}"
+                                                            class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none font-medium text-slate-700">
+                                                    @break
+
                                                     @case('text')
                                                         <textarea id="{{ $setting->key }}" name="{{ $setting->key }}" rows="4"
                                                             class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none font-medium text-slate-700">{{ $setting->value }}</textarea>

@@ -69,6 +69,31 @@
                             @enderror
                         </div>
 
+                        <!-- Credits -->
+                        <div class="space-y-2">
+                            <label for="credits" class="block text-sm font-medium text-slate-700">Credits</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+                                    <i class="fa-solid fa-coins"></i>
+                                </span>
+                                <input type="number" name="credits" id="credits"
+                                    value="{{ old('credits', $user->credits ?? '') }}"
+                                    class="w-full pl-10 pr-4 py-2.5 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white focus:bg-white transition-all shadow-sm placeholder:text-slate-400">
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <p class="text-xs text-slate-500">Available balance.</p>
+                                @if (isset($user))
+                                    <a href="{{ route('admin.activity-logs.index', ['user_id' => $user->id]) }}"
+                                        class="text-xs text-indigo-600 hover:text-indigo-700 font-medium hover:underline">
+                                        View History
+                                    </a>
+                                @endif
+                            </div>
+                            @error('credits')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Username -->
                         <div class="space-y-2">
                             <label for="username" class="block text-sm font-medium text-slate-700">Username</label>
