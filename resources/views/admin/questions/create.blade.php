@@ -85,8 +85,33 @@
                     </div>
                 </div>
 
-                {{-- Answers (Dynamic JSON Array) --}}
-                <div>
+                {{-- Question Type --}}
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Question Type <span class="text-red-500">*</span>
+                    </label>
+                    <div class="flex gap-4">
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="type" value="mcq" class="peer sr-only" x-model="type">
+                            <div
+                                class="p-4 border border-slate-200 rounded-xl text-center peer-checked:border-indigo-500 peer-checked:bg-indigo-50 transition-all hover:border-indigo-300">
+                                <i data-lucide="list" class="w-6 h-6 mx-auto mb-2 text-indigo-600"></i>
+                                <p class="font-medium text-slate-700">Multiple Choice (MCQ)</p>
+                            </div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="type" value="cq" class="peer sr-only" x-model="type">
+                            <div
+                                class="p-4 border border-slate-200 rounded-xl text-center peer-checked:border-purple-500 peer-checked:bg-purple-50 transition-all hover:border-purple-300">
+                                <i data-lucide="edit-3" class="w-6 h-6 mx-auto mb-2 text-purple-600"></i>
+                                <p class="font-medium text-slate-700">Written / Creative (CQ)</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                {{-- MCQ: Answers (Dynamic JSON Array) --}}
+                <div x-show="type === 'mcq'" x-transition>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
                         Answer Options
                         <span class="text-slate-400 font-normal">(optional)</span>
@@ -126,8 +151,8 @@
                     @enderror
                 </div>
 
-                {{-- Correct Answer (Multiple Select) --}}
-                <div>
+                {{-- MCQ: Correct Answer (Multiple Select) --}}
+                <div x-show="type === 'mcq'" x-transition>
                     <label class="block text-sm font-medium text-slate-700 mb-2">
                         Correct Answer(s)
                         <span class="text-slate-400 font-normal">(select one or more)</span>
@@ -153,6 +178,23 @@
                     @error('correct_answer')
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
+                </div>
+
+                {{-- CQ: Model Answer --}}
+                <div x-show="type === 'cq'" x-transition>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">
+                        Model Answer / Key Points
+                        <span class="text-slate-400 font-normal">(AI uses this to grade)</span>
+                    </label>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3">
+                            <textarea name="correct_answer[]" rows="4"
+                                class="flex-1 px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all resize-none"
+                                placeholder="Enter the ideal answer or key points..."></textarea>
+                        </div>
+                        <p class="text-sm text-slate-500">Provide a comprehensive model answer or a list of key points the
+                            AI should look for.</p>
+                    </div>
                 </div>
 
                 {{-- Categories --}}
@@ -261,6 +303,7 @@
     <script>
         function questionForm() {
             return {
+                type: 'mcq', // Default to MCQ
                 answers: ['', ''],
                 correctAnswer: '',
 

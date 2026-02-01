@@ -61,4 +61,9 @@ class Book extends Model
     {
         return $this->hasOne(BookSummary::class)->where('type', 'full');
     }
+
+    public function questions(): HasMany
+    {
+        return $this->hasMany(Question::class);
+    }
 }

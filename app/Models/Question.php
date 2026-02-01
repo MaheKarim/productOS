@@ -12,6 +12,7 @@ class Question extends Model
      */
     protected $fillable = [
         'question',
+        'type', // mcq or cq
         'answers',
         'correct_answer',
         'explanation',
@@ -20,7 +21,13 @@ class Question extends Model
         'source',
         'marks',
         'question_for',
+        'book_id',
     ];
+
+    public function book()
+    {
+        return $this->belongsTo(Book::class);
+    }
 
     /**
      * The attributes that should be cast.
@@ -30,6 +37,16 @@ class Question extends Model
         'correct_answer' => 'array',
         'is_active' => 'boolean',
     ];
+
+    public function isMcq(): bool
+    {
+        return $this->type === 'mcq';
+    }
+
+    public function isCq(): bool
+    {
+        return $this->type === 'cq';
+    }
 
     /**
      * Get the categories this question belongs to.

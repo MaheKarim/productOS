@@ -127,6 +127,16 @@ Route::middleware(['auth', 'onboarding'])->group(function () {
         Route::post('/generate', [\App\Http\Controllers\ResumeBuilderController::class, 'generate'])->name('generate');
         Route::get('/download/{format}', [\App\Http\Controllers\ResumeBuilderController::class, 'download'])->name('download');
     });
+
+    // Interview Preparation
+    Route::prefix('my/interview-prep')->name('user.interview-prep.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\User\InterviewPrepController::class, 'index'])->name('index');
+        Route::post('/start', [\App\Http\Controllers\User\InterviewPrepController::class, 'startPractice'])->name('start');
+        Route::get('/practice/{session}', [\App\Http\Controllers\User\InterviewPrepController::class, 'practice'])->name('practice');
+        Route::post('/grade/{question}', [\App\Http\Controllers\User\InterviewPrepController::class, 'gradeAnswer'])->name('grade'); // Added grading route
+        Route::post('/submit/{session}', [\App\Http\Controllers\User\InterviewPrepController::class, 'submitAnswer'])->name('submit'); // Added submit route
+        Route::get('/end/{session}', [\App\Http\Controllers\User\InterviewPrepController::class, 'endSession'])->name('end');
+    });
 });
 
 // Public Roadmap

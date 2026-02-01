@@ -157,7 +157,18 @@
                     </svg>
                     <span x-html="highlight('YT Summarizer')">YT Summarizer</span>
                 </a>
+                <a href="{{ route('user.interview-prep.index') }}" x-show="isVisible({label: 'Interview Prep'})"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('user.interview-prep.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('user.interview-prep.*') ? 'text-blue-600' : 'text-slate-400' }}"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                        </path>
+                    </svg>
+                    <span x-html="highlight('Interview Prep')">Interview Prep</span>
+                </a>
             </div>
+
 
             <!-- Account Section -->
             <div class="mb-6" x-show="isSectionVisible('Account')">
@@ -173,17 +184,7 @@
                     <span x-html="highlight('Profile')">Profile</span>
                 </a>
 
-                <a href="#" x-show="isVisible({label: 'Interview Prep'})"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 cursor-not-allowed opacity-60">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3-3v8a3 3 0 003 3z">
-                        </path>
-                    </svg>
-                    <span x-html="highlight('Interview Prep')">Interview Prep</span>
-                    <span
-                        class="ml-auto text-xs px-1.5 py-0.5 bg-slate-100 text-slate-400 rounded font-medium">Soon</span>
-                </a>
+
 
                 <a href="#" x-show="isVisible({label: 'Notifications'})"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 cursor-not-allowed opacity-60">
@@ -345,16 +346,15 @@
                     </svg>
                     Profile
                 </a>
-                <a href="#"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 cursor-not-allowed opacity-60">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('user.interview-prep.index') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('user.interview-prep.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('user.interview-prep.*') ? 'text-blue-600' : 'text-slate-400' }}"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3-3v8a3 3 0 003 3z">
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
                         </path>
                     </svg>
                     Interview Prep
-                    <span
-                        class="ml-auto text-xs px-1.5 py-0.5 bg-slate-100 text-slate-400 rounded font-medium">Soon</span>
                 </a>
                 <div class="pt-4 mt-4 border-t border-slate-100">
                     <form method="POST" action="{{ route('logout') }}">

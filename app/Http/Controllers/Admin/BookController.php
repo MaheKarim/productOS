@@ -139,12 +139,20 @@ class BookController extends Controller
     {
         $request->validate([
             'provider_id' => 'required|exists:ai_providers,id',
-            'process_type' => 'required|in:full,chapter,both',
+            'process_type' => 'required|in:full,chapter,both,questions',
             'translate' => 'nullable|boolean',
         ]);
 
         // Set status to extracting/processing
         $book->update(['status' => 'extracting']);
+
+        if ($request->process_type === 'questions') {
+            dispatch(new \App\Jobs\GenerateBookQuestionsJob(
+                $book,
+                $request->provider_id
+            ));
+            return back()->with('success', 'Question generation started in background.');
+        }
 
         // Dispatch Job (Will implement next)
         dispatch(new \App\Jobs\ProcessBookJob(

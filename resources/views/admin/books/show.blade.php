@@ -138,9 +138,17 @@
                                 <input type="radio" name="process_type" value="both"
                                     class="text-indigo-600 focus:ring-indigo-500">
                                 <div>
-                                    <span class="block font-bold text-slate-700 text-sm">Full + Chapters</span>
                                     <span class="block text-xs text-slate-400">Comprehensive processing (Time
                                         intensive)</span>
+                                </div>
+                            </label>
+                            <label
+                                class="flex items-center gap-2 p-3 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer">
+                                <input type="radio" name="process_type" value="questions"
+                                    class="text-indigo-600 focus:ring-indigo-500">
+                                <div>
+                                    <span class="block font-bold text-slate-700 text-sm">Generate Questions</span>
+                                    <span class="block text-xs text-slate-400">Create quiz questions from content</span>
                                 </div>
                             </label>
                         </div>
@@ -270,6 +278,40 @@
                     </div>
                 @endforelse
             </div>
+
+            {{-- Generated Questions Preview (Compact) --}}
+            @if ($book->questions->count() > 0)
+                <div class="bg-white rounded-[2rem] border border-slate-200 shadow-lg overflow-hidden mt-8">
+                    <div class="p-6 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                        <h3 class="font-black text-slate-900 text-lg flex items-center gap-2">
+                            <i data-lucide="help-circle" class="w-5 h-5 text-indigo-600"></i> Generated Questions
+                            ({{ $book->questions->count() }})
+                        </h3>
+                        <a href="{{ route('admin.questions.index', ['search' => $book->title]) }}"
+                            class="text-sm text-indigo-600 hover:text-indigo-700 font-bold">View All</a>
+                    </div>
+                    <div class="p-4">
+                        <div class="space-y-3">
+                            @foreach ($book->questions->take(5) as $q)
+                                <div class="p-3 border border-slate-100 rounded-xl hover:bg-slate-50 transition-colors">
+                                    <p class="font-bold text-slate-800 text-sm">{{ $q->question }}</p>
+                                    <div class="flex items-center gap-2 mt-2 text-xs text-slate-500">
+                                        <span class="bg-slate-100 px-2 py-1 rounded">{{ ucfirst($q->difficulty) }}</span>
+                                        <span>{{ $q->marks }} Marks</span>
+                                        <span class="text-indigo-600">{{ $q->question_for }}</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        @if ($book->questions->count() > 5)
+                            <div class="mt-4 text-center">
+                                <span class="text-xs text-slate-400">... and {{ $book->questions->count() - 5 }}
+                                    more</span>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endif
 
         </div>
     </div>

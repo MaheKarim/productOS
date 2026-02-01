@@ -44,6 +44,68 @@
 
 
         <!-- PM Roadmap Progress -->
+        @if (isset($interviewSessions) && $interviewSessions->count() > 0)
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden mb-8">
+                <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-900">Recent Interview Sessions</h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Your latest practice performance</p>
+                    </div>
+                    <a href="{{ route('user.interview-prep.index') }}"
+                        class="text-indigo-600 text-sm font-semibold hover:underline">
+                        Start New Session →
+                    </a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-600">
+                        <thead class="bg-slate-50 text-slate-500 uppercase font-semibold text-xs border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-3">Date</th>
+                                <th class="px-6 py-3 text-center">Questions</th>
+                                <th class="px-6 py-3 text-center">Score</th>
+                                <th class="px-6 py-3 text-center">Duration</th>
+                                <th class="px-6 py-3 text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @foreach ($interviewSessions as $session)
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4 font-medium text-slate-900">
+                                        {{ $session->completed_at->format('M d, Y') }}
+                                        <div class="text-xs text-slate-400 font-normal">
+                                            {{ $session->completed_at->format('h:i A') }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="text-slate-700 font-bold">{{ $session->correct_answers }}</span>
+                                        <span class="text-slate-400">/ {{ $session->attempted_questions }}</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold
+                                            {{ $session->score >= 80
+                                                ? 'bg-green-100 text-green-700'
+                                                : ($session->score >= 50
+                                                    ? 'bg-amber-100 text-amber-700'
+                                                    : 'bg-red-100 text-red-700') }}">
+                                            {{ number_format($session->score, 0) }}%
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-center text-slate-500">
+                                        {{ gmdate('i:s', $session->duration_seconds) }}m
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <span class="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded">
+                                            Completed
+                                        </span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        @endif
+
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
             <div class="p-6 border-b border-slate-100 flex items-center justify-between">
                 <div>

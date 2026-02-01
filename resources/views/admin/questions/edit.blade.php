@@ -172,8 +172,29 @@
                 </div>
 
 
-                {{-- Answers (Dynamic JSON Array) --}}
-                <div class="space-y-4 pt-4 border-t border-slate-200/50">
+                {{-- Question Type (ReadOnly for Edit to avoid data loss issues, or editable if careful) --}}
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-800">
+                        Question Type
+                    </label>
+                    <input type="hidden" name="type" x-model="type">
+                    <div class="flex gap-4">
+                        <div class="flex-1 p-4 border rounded-xl text-center transition-all bg-white/40 border-slate-200/60"
+                            :class="type === 'mcq' ?
+                                'border-indigo-500 bg-indigo-50 shadow-md ring-1 ring-indigo-500/20' : 'opacity-50'">
+                            <p class="font-medium text-slate-700">Multiple Choice (MCQ)</p>
+                        </div>
+                        <div class="flex-1 p-4 border rounded-xl text-center transition-all bg-white/40 border-slate-200/60"
+                            :class="type === 'cq' ?
+                                'border-purple-500 bg-purple-50 shadow-md ring-1 ring-purple-500/20' : 'opacity-50'">
+                            <p class="font-medium text-slate-700">Written / Creative (CQ)</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-1">Question type cannot be changed after creation.</p>
+                </div>
+
+                {{-- MCQ: Answers (Dynamic JSON Array) --}}
+                <div x-show="type === 'mcq'" x-transition class="space-y-4 pt-4 border-t border-slate-200/50">
                     <div class="flex items-center justify-between">
                         <label class="block text-sm font-semibold text-slate-800">
                             Answer Options <span class="text-slate-400 font-normal ml-1">(Optional)</span>
@@ -219,8 +240,8 @@
                     @enderror
                 </div>
 
-                {{-- Correct Answer (Multiple Select) --}}
-                <div class="space-y-3 pt-4 border-t border-slate-200/50">
+                {{-- MCQ: Correct Answer (Multiple Select) --}}
+                <div x-show="type === 'mcq'" class="space-y-3 pt-4 border-t border-slate-200/50">
                     <label class="block text-sm font-semibold text-slate-800">
                         Correct Answer(s) <span class="text-slate-400 font-normal ml-1">(Select one or more)</span>
                     </label>
@@ -249,6 +270,23 @@
                     @error('correct_answer')
                         <p class="text-sm text-red-600 pl-1">{{ $message }}</p>
                     @enderror
+                </div>
+
+                {{-- CQ: Model Answer --}}
+                <div x-show="type === 'cq'" x-transition class="space-y-4 pt-4 border-t border-slate-200/50">
+                    <label class="block text-sm font-semibold text-slate-800">
+                        Model Answer / Key Points
+                        <span class="text-slate-400 font-normal">(AI uses this to grade)</span>
+                    </label>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3">
+                            <textarea name="correct_answer[]" rows="4"
+                                class="flex-1 px-4 py-3 bg-white border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all resize-none shadow-sm"
+                                placeholder="Enter the ideal answer or key points...">{{ $question->correct_answer[0] ?? '' }}</textarea>
+                        </div>
+                        <p class="text-sm text-slate-500">Provide a comprehensive model answer or a list of key points the
+                            AI should look for.</p>
+                    </div>
                 </div>
 
                 {{-- Explanation --}}
@@ -301,6 +339,7 @@
     <script>
         function questionForm() {
             return {
+                type: @json($question->type ?? 'mcq'),
                 answers: @json(old('answers', $question->answers ?? ['', ''])),
                 correctAnswers: @json(old('correct_answer', $question->correct_answer ?? [])),
 
