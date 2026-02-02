@@ -188,7 +188,11 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 text-right text-slate-500">
-                                        {{ gmdate('i:s', $session->duration_seconds) }}m
+                                        @php
+                                            $minutes = floor($session->duration_seconds / 60);
+                                            $seconds = $session->duration_seconds % 60;
+                                        @endphp
+                                        {{ $minutes }}m {{ $seconds }}s
                                     </td>
                                 </tr>
                             @endforeach

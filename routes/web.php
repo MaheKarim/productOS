@@ -81,6 +81,12 @@ Route::prefix('directory')->name('directory.')->group(function () {
 // Search
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 
+// Interview Prep Landing Page
+Route::get('/interview-prep', function () {
+    return view('frontend.interview-prep');
+})->name('interview-prep.landing');
+
+
 // Auth Routes
 Route::get('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'register']);

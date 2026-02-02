@@ -9,7 +9,13 @@
             </div>
 
             <!-- Desktop Nav -->
+
             <div class="hidden md:flex items-center space-x-6">
+                <a href="{{ route('interview-prep.landing') }}"
+                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('interview-prep.*') ? 'text-blue-600 font-bold' : '' }}">🔥
+                    Interview
+                    Prep
+                </a>
                 <a href="{{ route('prompts.index') }}"
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('prompts.*') ? 'text-blue-600 font-bold' : '' }}">Prompts</a>
                 <a href="{{ route('books.index') }}"
@@ -18,7 +24,6 @@
                 </a>
                 <a href="{{ route('tools.index') }}"
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('tools.*') ? 'text-blue-600 font-bold' : '' }}">Tools</a>
-
                 <a href="{{ route('roadmap.index') }}"
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('roadmap.*') ? 'text-blue-600 font-bold' : '' }}">Roadmap</a>
 
@@ -111,6 +116,9 @@
                 class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('books.index') ? 'text-blue-600 font-bold bg-slate-50' : '' }}">Library</a>
             <a href="{{ route('tools.index') }}"
                 class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('tools.*') ? 'text-blue-600 font-bold bg-slate-50' : '' }}">Toolkit</a>
+            <a href="{{ route('interview-prep.landing') }}"
+                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('interview-prep.*') ? 'text-blue-600 font-bold bg-slate-50' : '' }}">Interview
+                Prep</a>
             <a href="{{ route('roadmap.index') }}"
                 class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('roadmap.*') ? 'text-blue-600 font-bold bg-slate-50' : '' }}">Roadmap</a>
 
