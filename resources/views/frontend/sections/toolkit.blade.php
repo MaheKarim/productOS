@@ -140,29 +140,6 @@
         </div>
 
         <!-- Connection to PM Work -->
-        <div
-            class="mt-16 bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 rounded-3xl p-8 md:p-12 relative overflow-hidden">
-            <!-- Decorative Elements -->
-            <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-0 left-0 w-64 h-64 bg-cyan-500/20 rounded-full blur-3xl"></div>
 
-            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-                <div class="text-center md:text-left">
-                    <h3 class="text-2xl md:text-3xl font-bold text-white mb-3">Built from Real PM Challenges</h3>
-                    <p class="text-blue-100/80 max-w-xl">
-                        Every tool here was born from actual product problems I faced. They're battle-tested, not
-                        theoretical.
-                    </p>
-                </div>
-                <a href="#portfolio"
-                    class="shrink-0 px-6 py-3 bg-white text-slate-900 font-bold rounded-xl hover:bg-blue-50 transition-colors flex items-center gap-2">
-                    See the Case Studies
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                </a>
-            </div>
-        </div>
     </div>
 </section>

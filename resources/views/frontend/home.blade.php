@@ -3,8 +3,8 @@
 @section('title', 'Home')
 
 @section('content')
-    {{-- New Value Proposition Section (replaces Hero) --}}
-    @include('frontend.sections.value-proposition')
+    {{-- Modern Hero Section with All 9 Features --}}
+    @include('frontend.sections.hero-modern')
 
     {{-- Social Proof / Testimonials Section --}}
     @include('frontend.sections.social-proof')
