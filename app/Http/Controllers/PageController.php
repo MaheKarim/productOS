@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SupportSection;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -18,6 +19,7 @@ class PageController extends Controller
 
     public function contact()
     {
-        return view('contact');
+        $supportSection = SupportSection::firstActive();
+        return view('contact', compact('supportSection'));
     }
 }

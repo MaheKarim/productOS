@@ -1,4 +1,4 @@
-<nav x-data="{ mobileMenuOpen: false }"
+<nav x-data="{ mobileMenuOpen: false, extraDropdownOpen: false }"
     class="fixed top-8 w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -10,12 +10,6 @@
 
             <!-- Desktop Nav -->
             <div class="hidden md:flex items-center space-x-6">
-                <a href="{{ route('portfolio.index') }}"
-                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('portfolio.*') ? 'text-blue-600' : '' }}">Case
-                    Studies</a>
-
-                <a href="{{ route('about') }}"
-                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('about') ? 'text-blue-600' : '' }}">About</a>
                 <a href="{{ route('prompts.index') }}"
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('prompts.*') ? 'text-blue-600 font-bold' : '' }}">Prompts</a>
                 <a href="{{ route('books.index') }}"
@@ -24,13 +18,38 @@
                 </a>
                 <a href="{{ route('tools.index') }}"
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('tools.*') ? 'text-blue-600 font-bold' : '' }}">Tools</a>
-                <a href="{{ route('directory.index') }}"
-                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('directory.*') ? 'text-blue-600 font-bold' : '' }}">Directory</a>
+
                 <a href="{{ route('roadmap.index') }}"
                     class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('roadmap.*') ? 'text-blue-600 font-bold' : '' }}">Roadmap</a>
-                <a href="{{ route('yt-summarize.index') }}"
-                    class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('yt-summarize.*') ? 'text-blue-600 font-bold' : '' }}">YT
-                    Summarize</a>
+
+                <!-- Extra Dropdown -->
+                <div class="relative" @click.away="extraDropdownOpen = false">
+                    <button @click="extraDropdownOpen = !extraDropdownOpen"
+                        class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer flex items-center gap-1 focus:outline-none {{ request()->routeIs('about') || request()->routeIs('directory.*') || request()->routeIs('yt-summarize.*') ? 'text-blue-600 font-bold' : '' }}">
+                        Extra 🚀
+                        <svg class="w-4 h-4 transition-transform duration-200"
+                            :class="extraDropdownOpen ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div x-show="extraDropdownOpen" x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 translate-y-2"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="opacity-100 translate-y-0"
+                        x-transition:leave-end="opacity-0 translate-y-2"
+                        class="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-xl z-50 overflow-hidden"
+                        style="display: none;">
+                        <a href="{{ route('about') }}"
+                            class="block px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors {{ request()->routeIs('about') ? 'text-blue-600 font-bold' : '' }}">About</a>
+                        <a href="{{ route('directory.index') }}"
+                            class="block px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors {{ request()->routeIs('directory.*') ? 'text-blue-600 font-bold' : '' }}">Directory</a>
+                        <a href="{{ route('yt-summarize.index') }}"
+                            class="block px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-colors {{ request()->routeIs('yt-summarize.*') ? 'text-blue-600 font-bold' : '' }}">YT
+                            Summarize</a>
+                    </div>
+                </div>
 
                 <a href="#support-section"
                     class="text-sm font-medium text-slate-600 hover:text-amber-600 transition-colors cursor-pointer flex items-center gap-1">
@@ -41,9 +60,13 @@
                     Support
                 </a>
 
-                <a href="{{ route('contact') }}"
-                    class="ml-4 px-5 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-lg hover:bg-blue-700 transition-all shadow-md hover:shadow-lg cursor-pointer">
-                    Let's Talk
+                <!-- Search Trigger -->
+                <a href="{{ route('search') }}"
+                    class="p-2 text-slate-400 hover:text-blue-600 transition-colors cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
                 </a>
 
                 <!-- Auth Buttons -->
@@ -62,15 +85,6 @@
                         Dashboard
                     </a>
                 @endguest
-
-                <!-- Search Trigger -->
-                <a href="{{ route('search') }}"
-                    class="p-2 text-slate-400 hover:text-blue-600 transition-colors cursor-pointer">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </a>
             </div>
 
             <!-- Mobile menu button -->
@@ -91,31 +105,30 @@
     <!-- Mobile Menu -->
     <div x-show="mobileMenuOpen" x-transition x-cloak class="md:hidden bg-white border-t border-slate-100">
         <div class="px-4 pt-4 pb-6 space-y-2">
-            <a href="{{ route('portfolio.index') }}"
-                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">Case
-                Studies</a>
-
-            <a href="{{ route('about') }}"
-                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">About</a>
             <a href="{{ route('prompts.index') }}"
-                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">Prompts</a>
+                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('prompts.*') ? 'text-blue-600 font-bold bg-slate-50' : '' }}">Prompts</a>
             <a href="{{ route('books.index') }}"
-                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">Library</a>
+                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('books.index') ? 'text-blue-600 font-bold bg-slate-50' : '' }}">Library</a>
             <a href="{{ route('tools.index') }}"
-                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">Toolkit</a>
-            <a href="{{ route('directory.index') }}"
-                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer">Directory</a>
+                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('tools.*') ? 'text-blue-600 font-bold bg-slate-50' : '' }}">Toolkit</a>
             <a href="{{ route('roadmap.index') }}"
-                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('roadmap.*') ? 'text-blue-600 font-bold' : '' }}">Roadmap</a>
-            <a href="{{ route('yt-summarize.index') }}"
-                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('yt-summarize.*') ? 'text-blue-600 font-bold' : '' }}">YT
-                Summarize</a>
+                class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('roadmap.*') ? 'text-blue-600 font-bold bg-slate-50' : '' }}">Roadmap</a>
+
+            <!-- Mobile Extra Section -->
+            <div class="pt-4 pb-2 border-t border-slate-50">
+                <p class="px-4 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Extra 🚀</p>
+                <a href="{{ route('about') }}"
+                    class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('about') ? 'text-blue-600 font-bold bg-slate-50' : '' }}">About</a>
+                <a href="{{ route('directory.index') }}"
+                    class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('directory.*') ? 'text-blue-600 font-bold bg-slate-50' : '' }}">Directory</a>
+                <a href="{{ route('yt-summarize.index') }}"
+                    class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('yt-summarize.*') ? 'text-blue-600 font-bold bg-slate-50' : '' }}">YT
+                    Summarize</a>
+            </div>
+
             <a href="#support-section"
                 class="block px-4 py-3 text-base font-medium text-amber-600 hover:bg-amber-50 rounded-lg cursor-pointer">☕
                 Support</a>
-            <a href="{{ route('contact') }}"
-                class="block px-4 py-3 text-base font-bold text-blue-600 hover:bg-blue-50 rounded-lg cursor-pointer">Book
-                a Call</a>
 
             <!-- Mobile Auth Buttons -->
             <div class="border-t border-slate-200 mt-2 pt-2 space-y-2">

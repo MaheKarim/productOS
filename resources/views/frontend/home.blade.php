@@ -14,113 +14,6 @@
 
     @php
         // UI/UX Pro Max: Populate mock data if DB is empty to showcase the design
-        if (!$about) {
-            $about = (object) [
-                'heading' => 'Bridging the Gap Between User Needs & Business Goals',
-                'description' =>
-                    "I'm a Product Manager with a background in engineering and design. This hybrid perspective allows me to communicate effectively with cross-functional teams and build products that are technically feasible, visually stunning, and commercially viable.\n\nMy approach is rooted in data but driven by empathy. I believe that the best products are born from a deep understanding of the user's pain points and a relentless pursuit of solving them.",
-                'philosophy1_title' => 'User-Obsessed',
-                'philosophy1_description' =>
-                    'Every decision starts and ends with the user. I advocate for them in every meeting.',
-                'philosophy2_title' => 'Data-Informed',
-                'philosophy2_description' => 'I use data to guide decisions, but intuition to innovate.',
-                'philosophy3_title' => 'Iterative Excellence',
-                'philosophy3_description' => 'Shipping fast and learning faster. Perfect is the enemy of done.',
-                'philosophy4_title' => 'Outcome over Output',
-                'philosophy4_description' => 'I measure success by impact on metrics, not just features shipped.',
-                'work_item1' => 'Deep User Research & Discovery',
-                'work_item2' => 'Strategic Roadmapping & Prioritization',
-                'work_item3' => 'Agile Execution & Sprint Planning',
-                'work_item4' => 'Go-to-Market & Growth Experimentation',
-                'core_value1' => 'Transparency',
-                'core_value2' => 'Empathy',
-                'core_value3' => 'Curiosity',
-                'core_value4' => 'Resilience',
-            ];
-        }
-
-        if ($services->isEmpty()) {
-            $services = collect([
-                (object) [
-                    'title' => 'Product Strategy',
-                    'full_icon' => 'fa-solid fa-chess',
-                    'problem_solves' => 'Lack of clear direction or market fit.',
-                    'tangible_outcome' => 'A clear, actionable roadmap aligned with business goals.',
-                    'features' => ['Market Analysis', 'Value Proposition Design', 'Competitor Research'],
-                    'cta_text' => 'Define Strategy',
-                    'cta_url' => '#contact',
-                    'cta_style' => 'primary',
-                ],
-                (object) [
-                    'title' => 'Product Discovery',
-                    'full_icon' => 'fa-solid fa-magnifying-glass',
-                    'problem_solves' => 'Building features nobody wants.',
-                    'tangible_outcome' => 'Validated ideas and reduced development risk.',
-                    'features' => ['User Interviews', 'Prototyping', 'Usability Testing'],
-                    'cta_text' => 'Start Discovery',
-                    'cta_url' => '#contact',
-                    'cta_style' => 'secondary',
-                ],
-                (object) [
-                    'title' => 'Growth & Optimization',
-                    'full_icon' => 'fa-solid fa-chart-line',
-                    'problem_solves' => 'Stagnant user base or high churn.',
-                    'tangible_outcome' => 'Increased retention and revenue growth.',
-                    'features' => ['Funnel Analysis', 'A/B Testing', 'Retention Strategies'],
-                    'cta_text' => 'Boost Growth',
-                    'cta_url' => '#contact',
-                    'cta_style' => 'secondary',
-                ],
-            ]);
-        }
-
-        if ($projects->isEmpty()) {
-            $projects = collect([
-                (object) [
-                    'title' => 'FinTech Mobile App Redesign',
-                    'image_url' =>
-                        'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1000&q=80',
-                    'image' => true,
-                    'category' => 'Mobile App',
-                    'metric_value' => '45%',
-                    'metric_label' => 'Increase in Daily Active Users',
-                    'description' =>
-                        'Redesigned the core transaction flow to reduce friction and improve accessibility.',
-                    'duration' => '3 Months',
-                    'users' => '50k+',
-                    'external_link' => '#',
-                ],
-                (object) [
-                    'title' => 'SaaS Analytics Dashboard',
-                    'image_url' =>
-                        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80',
-                    'image' => true,
-                    'category' => 'B2B SaaS',
-                    'metric_value' => '2x',
-                    'metric_label' => 'Faster Data Reporting',
-                    'description' =>
-                        'Built a real-time analytics engine to help customers visualize their ROI instanly.',
-                    'duration' => '6 Months',
-                    'users' => '200+ Enterprises',
-                    'external_link' => '#',
-                ],
-                (object) [
-                    'title' => 'E-commerce Checkout Optimization',
-                    'image_url' =>
-                        'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=1000&q=80',
-                    'image' => true,
-                    'category' => 'E-commerce',
-                    'metric_value' => '$1.2M',
-                    'metric_label' => 'Additional Annual Revenue',
-                    'description' =>
-                        'Optimized the checkout funnel by implementing one-click payments and guest checkout.',
-                    'duration' => '2 Months',
-                    'users' => '1M+ Visits',
-                    'external_link' => '#',
-                ],
-            ]);
-        }
-
         if ($testimonials->isEmpty()) {
             $testimonials = collect([
                 (object) [
@@ -159,11 +52,6 @@
 
     {{-- About section removed - replaced by Social Proof section above --}}
     @include('frontend.sections.toolkit')
-
-    @include('frontend.sections.services')
-
-    @include('frontend.sections.projects')
-
 
 
     <!-- Testimonials Section -->
@@ -248,9 +136,6 @@
             </div>
         </div>
     </section>
-
-    @include('frontend.sections.stats-dashboard')
-
 
     <!-- Contact Section (Upgraded with Dual CTA) -->
     <section id="contact" class="py-24 relative overflow-hidden">

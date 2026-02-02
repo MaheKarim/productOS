@@ -14,8 +14,9 @@
             <div class="text-center mb-16">
                 <div
                     class="inline-flex items-center px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm text-slate-600 text-xs font-bold uppercase tracking-widest mb-6 hover:scale-105 transition-transform cursor-default">
-                    <span class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
-                    Open to Opportunities
+                    <span
+                        class="w-2 h-2 rounded-full {{ settings('contact_status_active', true) ? 'bg-green-500' : 'bg-slate-400' }} mr-2 animate-pulse"></span>
+                    {{ settings('contact_status_text', 'Open to Opportunities') }}
                 </div>
                 <h1
                     class="text-5xl md:text-7xl font-display font-black text-slate-900 tracking-tight mb-6 leading-tight">
@@ -23,8 +24,7 @@
                         class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500">Connect.</span>
                 </h1>
                 <p class="text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed">
-                    Building the future of product management. Reach out for collaborations, consulting, or just to say
-                    hi.
+                    {{ settings('contact_page_description', 'Building the future of product management. Reach out for collaborations, consulting, or just to say hi.') }}
                 </p>
             </div>
 
@@ -32,7 +32,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-[240px]">
 
                 {{-- LinkedIn --}}
-                <a href="#" target="_blank"
+                <a href="{{ settings('social_linkedin', '#') }}" target="_blank"
                     class="group relative bg-white rounded-[2rem] p-8 border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-300 overflow-hidden flex flex-col justify-between hover:-translate-y-1">
                     <div
                         class="absolute inset-0 bg-gradient-to-br from-indigo-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -56,7 +56,7 @@
                 </a>
 
                 {{-- Twitter / X --}}
-                <a href="#" target="_blank"
+                <a href="{{ settings('social_twitter', '#') }}" target="_blank"
                     class="group relative bg-black rounded-[2rem] p-8 shadow-xl shadow-slate-900/20 hover:shadow-2xl hover:shadow-slate-900/30 transition-all duration-300 overflow-hidden flex flex-col justify-between hover:-translate-y-1 text-white">
                     <div
                         class="absolute right-0 top-0 w-32 h-32 bg-slate-800 rounded-full blur-3xl opacity-50 group-hover:opacity-75 transition-opacity">
@@ -74,12 +74,13 @@
                     </div>
                     <div class="relative z-10">
                         <h3 class="text-2xl font-bold">X (Twitter)</h3>
-                        <p class="text-slate-400 mt-2 text-sm font-medium">@ProductOS_BD</p>
+                        <p class="text-slate-400 mt-2 text-sm font-medium">
+                            {{ settings('social_twitter_handle', '@ProductOS_BD') }}</p>
                     </div>
                 </a>
 
                 {{-- Email --}}
-                <a href="mailto:hello@productOS.bd"
+                <a href="mailto:{{ settings('contact_email', 'hello@productOS.bd') }}"
                     class="group relative bg-white rounded-[2rem] p-8 border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-300 overflow-hidden flex flex-col justify-between hover:-translate-y-1">
                     <div
                         class="absolute inset-0 bg-gradient-to-br from-orange-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -98,12 +99,13 @@
                     <div class="relative z-10">
                         <h3 class="text-2xl font-bold text-slate-900 group-hover:text-orange-600 transition-colors">
                             Email</h3>
-                        <p class="text-slate-500 mt-2 text-sm font-medium truncate">hello@productOS.bd</p>
+                        <p class="text-slate-500 mt-2 text-sm font-medium truncate">
+                            {{ settings('contact_email', 'hello@productOS.bd') }}</p>
                     </div>
                 </a>
 
                 {{-- Buy Me a Coffee --}}
-                <a href="#" target="_blank"
+                <a href="{{ $supportSection->buymeacoffee_url ?? settings('support_coffee_url', '#') }}" target="_blank"
                     class="group relative bg-[#FFDD00] rounded-[2rem] p-8 shadow-xl shadow-amber-400/20 hover:shadow-2xl hover:shadow-amber-400/30 transition-all duration-300 overflow-hidden flex flex-col justify-between hover:-translate-y-1 text-slate-900">
                     <div
                         class="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -126,29 +128,34 @@
                 </a>
 
                 {{-- Location (Full Width) --}}
-                <a href="#"
+                <div
                     class="group relative md:col-span-2 bg-slate-900 rounded-[2rem] p-8 shadow-xl shadow-slate-900/20 overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 min-h-[200px] flex items-end">
-                    <div
-                        class="absolute inset-0 bg-[url('https://maps.googleapis.com/maps/api/staticmap?center=Dhaka&zoom=13&size=800x400&maptype=roadmap&style=feature:all|element:all|saturation:-100|lightness:10&key=YOUR_API_KEY_HERE')] bg-cover bg-center opacity-30 group-hover:opacity-40 transition-opacity duration-500">
+                    <div class="absolute inset-0 bg-cover bg-center opacity-30 group-hover:opacity-40 transition-opacity duration-500"
+                        style="background-image: url('https://maps.googleapis.com/maps/api/staticmap?center={{ urlencode(settings('contact_location_name', 'Dhaka')) }}&zoom=13&size=800x400&maptype=roadmap&style=feature:all|element:all|saturation:-100|lightness:10&key={{ settings('google_maps_api_key', '') }}')">
                     </div>
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
 
                     <div class="relative z-10 flex items-end justify-between w-full">
                         <div>
                             <div class="flex items-center gap-2 mb-3">
-                                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                                <div
+                                    class="w-2 h-2 rounded-full {{ settings('contact_status_active', true) ? 'bg-green-500' : 'bg-slate-500' }} animate-pulse">
+                                </div>
                                 <span
                                     class="text-xs font-bold uppercase tracking-widest text-green-400">Headquarters</span>
                             </div>
-                            <h3 class="text-2xl font-bold text-white">Dhaka, Bangladesh</h3>
-                            <p class="text-slate-400 text-sm mt-1">123 Innovation Dr, Tech City</p>
+                            <h3 class="text-2xl font-bold text-white">
+                                {{ settings('contact_location_name', 'Dhaka, Bangladesh') }}</h3>
+                            <p class="text-slate-400 text-sm mt-1">
+                                {{ settings('contact_address', '123 Innovation Dr') }}
+                            </p>
                         </div>
                         <div
                             class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white group-hover:bg-white group-hover:text-slate-900 transition-all duration-300 border border-white/10">
                             <i class="fa-solid fa-location-arrow text-lg"></i>
                         </div>
                     </div>
-                </a>
+                </div>
 
             </div>
         </div>
