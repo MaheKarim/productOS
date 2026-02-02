@@ -203,16 +203,19 @@
 
 
 
-                <a href="#" x-show="isVisible({label: 'Notifications'})"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 cursor-not-allowed opacity-60">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a href="{{ route('notifications.index') }}" x-show="isVisible({label: 'Notifications'})"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('notifications.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('notifications.*') ? 'text-blue-600' : 'text-slate-400' }}"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
                         </path>
                     </svg>
-                    <span x-html="highlight('Notifications')">Notifications</span>
-                    <span
-                        class="ml-auto text-xs px-1.5 py-0.5 bg-slate-100 text-slate-400 rounded font-medium">Soon</span>
+                    <div class="flex-1 flex items-center justify-between">
+                        <span x-html="highlight('Notifications')">Notifications</span>
+                        <span id="sidebar-notification-badge"
+                            class="hidden ml-auto text-xs px-1.5 py-0.5 bg-red-500 text-white rounded-full font-medium">0</span>
+                    </div>
                 </a>
 
                 <a href="#" x-show="isVisible({label: 'Billing'})"
@@ -415,6 +418,59 @@
                     <span class="text-xs font-bold text-amber-700">{{ Auth::user()->credits }} Credits</span>
                 </div>
 
+                {{-- Notification Bell --}}
+                <div class="relative" x-data="{ notifOpen: false }">
+                    <button @click="notifOpen = !notifOpen"
+                        class="flex items-center justify-center w-9 h-9 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all border border-slate-200 hover:border-blue-200 cursor-pointer relative"
+                        title="Notifications">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538.214 1.055.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                            </path>
+                        </svg>
+                        <span id="notification-badge"
+                            class="hidden absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                            0
+                        </span>
+                    </button>
+
+                    {{-- Notification Dropdown --}}
+                    <div x-show="notifOpen" x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                        x-transition:leave="transition ease-in duration-150"
+                        x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+                        @click.away="notifOpen = false"
+                        class="absolute right-0 mt-2 w-96 bg-white border border-slate-200 rounded-2xl shadow-2xl z-50 overflow-hidden"
+                        style="display: none;">
+
+                        {{-- Dropdown Header --}}
+                        <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-slate-900">Notifications</h3>
+                            <div class="flex items-center space-x-2">
+                                <span id="dropdown-unread-count" class="text-xs text-slate-500">0 unread</span>
+                                <button onclick="markAllAsRead()"
+                                    class="text-xs text-indigo-600 hover:text-indigo-700 font-medium cursor-pointer">Mark
+                                    all as read</button>
+                            </div>
+                        </div>
+
+                        {{-- Notifications List --}}
+                        <div id="notification-dropdown-list" class="max-h-96 overflow-y-auto">
+                            <div class="p-4 text-center text-sm text-slate-500">
+                                Loading notifications...
+                            </div>
+                        </div>
+
+                        {{-- Dropdown Footer --}}
+                        <div class="px-4 py-3 border-t border-slate-200">
+                            <a href="{{ route('notifications.index') }}"
+                                class="block text-center text-sm font-medium text-indigo-600 hover:text-indigo-700">
+                                View All Notifications
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
                 <a href="{{ route('home') }}"
                     class="flex items-center justify-center w-9 h-9 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all border border-slate-200 hover:border-blue-200 group cursor-pointer"
                     title="Go to Site">
@@ -531,6 +587,256 @@
     </main>
 
     @livewireScripts
+
+    {{-- Notification System JavaScript --}}
+    <script>
+        // Notification bell functionality
+        let notificationPollingInterval;
+
+        function updateUnreadCount() {
+            fetch('{{ route('notifications.unread-count') }}')
+                .then(response => response.json())
+                .then(data => {
+                    updateBadge(data.count, data.display);
+                })
+                .catch(err => console.log('Error fetching notifications:', err));
+        }
+
+        function updateBadge(count, display) {
+            const badge = document.getElementById('notification-badge');
+            if (badge) {
+                if (count > 0) {
+                    badge.textContent = display;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+
+            const sidebarBadge = document.getElementById('sidebar-notification-badge');
+            if (sidebarBadge) {
+                if (count > 0) {
+                    sidebarBadge.textContent = display;
+                    sidebarBadge.classList.remove('hidden');
+                } else {
+                    sidebarBadge.classList.add('hidden');
+                }
+            }
+
+            const dropdownCount = document.getElementById('dropdown-unread-count');
+            if (dropdownCount) {
+                dropdownCount.textContent = count + ' unread';
+            }
+        }
+
+        function loadDropdownNotifications() {
+            fetch('{{ route('notifications.dropdown') }}')
+                .then(response => response.json())
+                .then(data => {
+                    renderDropdownNotifications(data.notifications);
+                    updateBadge(data.unread_count, data.unread_count > 99 ? '99+' : data.unread_count);
+                })
+                .catch(err => console.log('Error loading notifications:', err));
+        }
+
+        function renderDropdownNotifications(notifications) {
+            const container = document.getElementById('notification-dropdown-list');
+            if (!container) return;
+
+            if (notifications.length === 0) {
+                container.innerHTML = `
+                    <div class="p-8 text-center">
+                        <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm text-slate-500">No notifications yet</p>
+                        <p class="text-xs text-slate-400 mt-1">You're all caught up!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group notifications by date
+            const grouped = groupNotificationsByDate(notifications);
+
+            let html = '';
+            for (const [date, items] of Object.entries(grouped)) {
+                html += `
+                    <div class="px-4 py-2 bg-slate-50">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">${date}</span>
+                    </div>
+                `;
+
+                items.forEach(item => {
+                    html += `
+                        <div class="notification-item px-4 py-3 hover:bg-slate-50 cursor-pointer transition-colors ${!item.is_read ? 'bg-indigo-50/50' : ''}"
+                             data-notification-id="${item.id}">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 flex-shrink-0" 
+                                     style="background-color: ${item.notification.color_code}20">
+                                    <i class="${item.notification.icon_class} text-sm" 
+                                       style="color: ${item.notification.color_code}"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-start justify-between">
+                                        <h4 class="text-sm font-medium ${!item.is_read ? 'text-slate-900' : 'text-slate-700'} truncate max-w-xs">
+                                            ${item.notification.title}
+                                        </h4>
+                                        ${!item.is_read ? '<span class="w-2 h-2 bg-indigo-600 rounded-full ml-2 flex-shrink-0"></span>' : ''}
+                                    </div>
+                                    <p class="text-xs text-slate-500 mt-1 truncate max-w-xs">
+                                        ${item.notification.message}
+                                    </p>
+                                    <div class="flex items-center justify-between mt-2">
+                                        <span class="text-xs text-slate-400">${item.time_since_created}</span>
+                                        ${item.notification.action_text && item.notification.action_url ? `
+                                                        <a href="${item.notification.action_url}" target="_blank"
+                                                           onclick="event.stopPropagation(); recordActionClick(${item.id}, '${item.notification.action_url}')"
+                                                           class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
+                                                            ${item.notification.action_text}
+                                                        </a>
+                                                    ` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            container.innerHTML = html;
+
+            // Add click handlers
+            container.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (!e.target.closest('a')) {
+                        const notificationId = this.dataset.notificationId;
+                        markAsRead(notificationId, this);
+                    }
+                });
+            });
+        }
+
+        function groupNotificationsByDate(notifications) {
+            const grouped = {};
+
+            notifications.forEach(item => {
+                const date = new Date(item.created_at);
+                let dateKey;
+
+                if (isToday(date)) {
+                    dateKey = 'Today';
+                } else if (isYesterday(date)) {
+                    dateKey = 'Yesterday';
+                } else if (diffInDays(date) <= 7) {
+                    dateKey = 'This Week';
+                } else {
+                    dateKey = date.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                }
+
+                if (!grouped[dateKey]) {
+                    grouped[dateKey] = [];
+                }
+                grouped[dateKey].push(item);
+            });
+
+            return grouped;
+        }
+
+        function isToday(date) {
+            const today = new Date();
+            return date.getDate() === today.getDate() &&
+                date.getMonth() === today.getMonth() &&
+                date.getFullYear() === today.getFullYear();
+        }
+
+        function isYesterday(date) {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            return date.getDate() === yesterday.getDate() &&
+                date.getMonth() === yesterday.getMonth() &&
+                date.getFullYear() === yesterday.getFullYear();
+        }
+
+        function diffInDays(date) {
+            const today = new Date();
+            const diffTime = Math.abs(today - date);
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        function markAsRead(id, element) {
+            fetch('{{ route('notifications.read', ':id') }}'.replace(':id', id), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        element.classList.remove('bg-indigo-50/50');
+                        const unreadDot = element.querySelector('.w-2.h-2.bg-indigo-600');
+                        if (unreadDot) unreadDot.remove();
+                        const title = element.querySelector('h4');
+                        if (title) title.classList.remove('text-slate-900', 'text-slate-700');
+                        updateBadge(data.unread_count, data.unread_count > 99 ? '99+' : data.unread_count);
+                    }
+                });
+        }
+
+        function recordActionClick(id, url) {
+            fetch('{{ route('notifications.action-click', ':id') }}'.replace(':id', id), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.open(url, '_blank');
+                    }
+                });
+        }
+
+        function markAllAsRead() {
+            fetch('{{ route('notifications.mark-all-read') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        loadDropdownNotifications();
+                    }
+                });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateUnreadCount();
+            loadDropdownNotifications();
+
+            // Poll for new notifications every 30 seconds
+            notificationPollingInterval = setInterval(() => {
+                updateUnreadCount();
+            }, 30000);
+        });
+    </script>
 </body>
 
 </html>

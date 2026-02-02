@@ -149,7 +149,7 @@
                         Dashboard
                     </a>
                     <!-- Reports Section -->
-                    <div class="px-4 mt-8 mb-2">
+                    <div class="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                         <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Reports & Logs</p>
                     </div>
 
@@ -417,6 +417,19 @@
 
                     <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">System
                     </div>
+
+                    <a href="{{ route('admin.notifications.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.notifications.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="notifications">
+                        <i data-lucide="bell"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.notifications.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        Notifications
+                        <span
+                            class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-indigo-500/20 text-indigo-400 font-bold">
+                            {{ \App\Models\Notification::count() }}
+                        </span>
+                    </a>
+
                     <a href="{{ route('admin.settings.index') }}"
                         class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.settings.index') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}">
                         <i data-lucide="settings"

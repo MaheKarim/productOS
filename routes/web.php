@@ -150,6 +150,27 @@ Route::middleware(['auth', 'onboarding'])->group(function () {
         Route::post('/submit/{session}', [\App\Http\Controllers\User\InterviewPrepController::class, 'submitAnswer'])->name('submit'); // Added submit route
         Route::get('/end/{session}', [\App\Http\Controllers\User\InterviewPrepController::class, 'endSession'])->name('end');
     });
+
+    // User Notifications
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\UserNotificationController::class, 'index'])->name('index');
+        Route::get('/preferences', [\App\Http\Controllers\UserNotificationController::class, 'preferences'])->name('preferences');
+        Route::put('/preferences', [\App\Http\Controllers\UserNotificationController::class, 'updatePreferences'])->name('update-preferences');
+        Route::get('/unread-count', [\App\Http\Controllers\UserNotificationController::class, 'unreadCount'])->name('unread-count');
+        Route::get('/recent', [\App\Http\Controllers\UserNotificationController::class, 'recent'])->name('recent');
+        Route::get('/dropdown', [\App\Http\Controllers\UserNotificationController::class, 'dropdown'])->name('dropdown');
+        Route::post('/{userNotification}/read', [\App\Http\Controllers\UserNotificationController::class, 'markAsRead'])->name('read');
+        Route::post('/{userNotification}/unread', [\App\Http\Controllers\UserNotificationController::class, 'markAsUnread'])->name('unread');
+        Route::post('/mark-all-read', [\App\Http\Controllers\UserNotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::post('/{userNotification}/dismiss', [\App\Http\Controllers\UserNotificationController::class, 'dismiss'])->name('dismiss');
+        Route::post('/{userNotification}/restore', [\App\Http\Controllers\UserNotificationController::class, 'restore'])->name('restore');
+        Route::delete('/{userNotification}', [\App\Http\Controllers\UserNotificationController::class, 'destroy'])->name('destroy');
+        Route::post('/bulk/mark-read', [\App\Http\Controllers\UserNotificationController::class, 'bulkMarkAsRead'])->name('bulk.mark-read');
+        Route::post('/bulk/dismiss', [\App\Http\Controllers\UserNotificationController::class, 'bulkDismiss'])->name('bulk.dismiss');
+        Route::post('/bulk/destroy', [\App\Http\Controllers\UserNotificationController::class, 'bulkDestroy'])->name('bulk.destroy');
+        Route::post('/{userNotification}/action-click', [\App\Http\Controllers\UserNotificationController::class, 'recordActionClick'])->name('action-click');
+        Route::get('/grouped', [\App\Http\Controllers\UserNotificationController::class, 'grouped'])->name('grouped');
+    });
 });
 
 // Public Roadmap
@@ -312,5 +333,19 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
     // Activity Logs
     Route::get('activity-logs', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('admin.activity-logs.index');
+
+    // Notification Management
+    Route::prefix('notifications')->name('admin.notifications.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\NotificationController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\NotificationController::class, 'store'])->name('store');
+        Route::get('/{notification}', [\App\Http\Controllers\Admin\NotificationController::class, 'show'])->name('show');
+        Route::get('/{notification}/edit', [\App\Http\Controllers\Admin\NotificationController::class, 'edit'])->name('edit');
+        Route::put('/{notification}', [\App\Http\Controllers\Admin\NotificationController::class, 'update'])->name('update');
+        Route::delete('/{notification}', [\App\Http\Controllers\Admin\NotificationController::class, 'destroy'])->name('destroy');
+        Route::get('/{notification}/analytics', [\App\Http\Controllers\Admin\NotificationController::class, 'analytics'])->name('analytics');
+        Route::post('/{notification}/duplicate', [\App\Http\Controllers\Admin\NotificationController::class, 'duplicate'])->name('duplicate');
+        Route::post('/{notification}/resend', [\App\Http\Controllers\Admin\NotificationController::class, 'resend'])->name('resend');
+    });
 });
 

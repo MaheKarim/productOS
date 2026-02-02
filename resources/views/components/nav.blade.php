@@ -136,6 +136,7 @@
                     </svg>
                 </a>
 
+
                 <!-- Auth Buttons -->
                 @guest
                     <a href="{{ route('login') }}"

@@ -113,4 +113,60 @@ class User extends Authenticatable implements CanResetPassword
     {
         $this->notify(new \App\Notifications\ResetPasswordNotification($token));
     }
+
+    /**
+     * Get the user's notifications.
+     */
+    public function userNotifications()
+    {
+        return $this->hasMany(UserNotification::class);
+    }
+
+    /**
+     * Get the user's unread notifications.
+     */
+    public function unreadNotifications()
+    {
+        return $this->userNotifications()->unread()->notExpired()->active();
+    }
+
+    /**
+     * Get the user's read notifications.
+     */
+    public function readNotifications()
+    {
+        return $this->userNotifications()->read()->notExpired()->active();
+    }
+
+    /**
+     * Get the user's dismissed notifications.
+     */
+    public function dismissedNotifications()
+    {
+        return $this->userNotifications()->dismissed();
+    }
+
+    /**
+     * Get the user's notification preferences.
+     */
+    public function notificationPreferences()
+    {
+        return $this->hasOne(NotificationPreference::class);
+    }
+
+    /**
+     * Get the user's unread notifications count.
+     */
+    public function getUnreadNotificationsCountAttribute(): int
+    {
+        return $this->unreadNotifications()->count();
+    }
+
+    /**
+     * Get the user's notification preferences or create default.
+     */
+    public function getNotificationPreferences(): NotificationPreference
+    {
+        return $this->notificationPreferences ?? NotificationPreference::getForUser($this->id);
+    }
 }
