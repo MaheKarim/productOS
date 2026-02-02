@@ -227,6 +227,79 @@
                                 </div>
                             @endif
                         </div>
+                        {{-- Navigation for CQ --}}
+                        <div class="mt-8 pt-6 border-t border-slate-100">
+                            {{-- Before Grading --}}
+                            <div x-show="!gradingResult"
+                                class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                                {{-- Previous (Ghost) --}}
+                                @if ($currentIndex > 0)
+                                    <a href="{{ route('user.interview-prep.practice', ['session' => $session, 'q' => $currentIndex - 1]) }}"
+                                        class="order-2 sm:order-1 px-5 py-3 text-slate-500 font-medium hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 19l-7-7 7-7"></path>
+                                        </svg>
+                                        Previous
+                                    </a>
+                                @else
+                                    <div class="order-2 sm:order-1"></div>
+                                @endif
+
+                                {{-- Skip Question (Secondary) --}}
+                                @if ($currentIndex < $totalQuestions - 1)
+                                    <a href="{{ route('user.interview-prep.practice', ['session' => $session, 'q' => $currentIndex + 1]) }}"
+                                        class="order-1 sm:order-2 px-6 py-3 border border-slate-200 text-slate-600 rounded-xl font-medium hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-center gap-2 cursor-pointer">
+                                        Skip Question
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </a>
+                                @endif
+                            </div>
+
+                            {{-- After Grading: Next/Finish --}}
+                            <div x-show="gradingResult" x-transition:enter="transition ease-out duration-300"
+                                x-transition:enter-start="opacity-0 translate-y-2"
+                                x-transition:enter-end="opacity-100 translate-y-0"
+                                class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                                {{-- Previous --}}
+                                @if ($currentIndex > 0)
+                                    <a href="{{ route('user.interview-prep.practice', ['session' => $session, 'q' => $currentIndex - 1]) }}"
+                                        class="order-2 sm:order-1 px-5 py-3 text-slate-500 font-medium hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 19l-7-7 7-7"></path>
+                                        </svg>
+                                        Previous
+                                    </a>
+                                @else
+                                    <div class="order-2 sm:order-1"></div>
+                                @endif
+
+                                {{-- Next/Finish --}}
+                                @if ($currentIndex < $totalQuestions - 1)
+                                    <a href="{{ route('user.interview-prep.practice', ['session' => $session, 'q' => $currentIndex + 1]) }}"
+                                        class="order-1 sm:order-2 w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-500/30 transition-all hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-3 cursor-pointer">
+                                        Next Question
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                        </svg>
+                                    </a>
+                                @else
+                                    <a href="{{ route('user.interview-prep.end', ['session' => $session]) }}"
+                                        class="order-1 sm:order-2 w-full sm:w-auto px-8 py-4 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 shadow-lg shadow-green-500/30 transition-all hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-3 cursor-pointer">
+                                        Finish Session
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 @else
                     {{-- MCQ UI (Interactive) --}}
@@ -309,41 +382,109 @@
                         </div>
                     @endif
 
-                    {{-- Check Answer Button (MCQ) --}}
-                    <div class="mt-6 mb-8">
-                        <button @click="checkAnswer()" :disabled="!selectedAnswer || showAnswer"
-                            class="w-full py-4 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 relative overflow-hidden"
-                            :class="{
-                                'bg-slate-100 text-slate-400 cursor-not-allowed': !selectedAnswer && !showAnswer,
-                                'bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-xl hover:shadow-indigo-500/30 hover:-translate-y-0.5': selectedAnswer &&
-                                    !showAnswer,
-                                'bg-slate-100 text-slate-500 cursor-default': showAnswer
-                            }">
+                    {{-- Action Buttons Area --}}
+                    <div class="mt-8 pt-6 border-t border-slate-100">
+                        {{-- Before Submission --}}
+                        <div x-show="!showAnswer"
+                            class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                            {{-- Previous Button (Ghost Style) --}}
+                            @if ($currentIndex > 0)
+                                <a href="{{ route('user.interview-prep.practice', ['session' => $session, 'q' => $currentIndex - 1]) }}"
+                                    class="order-2 sm:order-1 px-5 py-3 text-slate-500 font-medium hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 19l-7-7 7-7"></path>
+                                    </svg>
+                                    Previous
+                                </a>
+                            @else
+                                <div class="order-2 sm:order-1"></div>
+                            @endif
 
-                            <span x-show="!showAnswer">Check Answer</span>
-                            <span x-show="showAnswer" class="flex items-center gap-2">
-                                Answer Revealed
-                            </span>
-                        </button>
+                            {{-- Submit Answer Button (Primary) --}}
+                            <button @click="checkAnswer()" :disabled="!selectedAnswer || isSubmitting"
+                                class="order-1 sm:order-2 w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-white shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/30 hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-3 cursor-pointer">
+                                <span x-show="!isSubmitting">Submit Answer</span>
+                                <span x-show="isSubmitting" class="flex items-center gap-2">
+                                    <svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10"
+                                            stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                        </path>
+                                    </svg>
+                                    Submitting...
+                                </span>
+                                <i x-show="!isSubmitting" data-lucide="send" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+
+                        {{-- After Submission: Result Banner + Next --}}
+                        <div x-show="showAnswer" x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 translate-y-2"
+                            x-transition:enter-end="opacity-100 translate-y-0" class="space-y-4">
+
+                            {{-- Navigation Row --}}
+                            <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                                {{-- Previous --}}
+                                @if ($currentIndex > 0)
+                                    <a href="{{ route('user.interview-prep.practice', ['session' => $session, 'q' => $currentIndex - 1]) }}"
+                                        class="order-2 sm:order-1 px-5 py-3 text-slate-500 font-medium hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 19l-7-7 7-7"></path>
+                                        </svg>
+                                        Previous
+                                    </a>
+                                @else
+                                    <div class="order-2 sm:order-1"></div>
+                                @endif
+
+                                {{-- Next/Finish Button --}}
+                                @if ($currentIndex < $totalQuestions - 1)
+                                    <a href="{{ route('user.interview-prep.practice', ['session' => $session, 'q' => $currentIndex + 1]) }}"
+                                        class="order-1 sm:order-2 w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-500/30 transition-all hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-3 cursor-pointer">
+                                        Next Question
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                        </svg>
+                                    </a>
+                                @else
+                                    <a href="{{ route('user.interview-prep.end', ['session' => $session]) }}"
+                                        class="order-1 sm:order-2 w-full sm:w-auto px-8 py-4 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 shadow-lg shadow-green-500/30 transition-all hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-3 cursor-pointer">
+                                        Finish Session
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
                     </div>
 
-                    {{-- Explanation (MCQ) --}}
+                    {{-- Explanation (MCQ) - Moved below buttons for better flow --}}
                     <div x-show="showAnswer" x-collapse class="mt-6">
                         @if ($question->explanation)
-                            <div class="p-5 bg-teal-50 rounded-2xl border border-teal-100">
-                                <h4 class="text-sm font-bold text-teal-800 mb-2 flex items-center gap-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
+                            <div
+                                class="p-6 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-teal-500"></div>
+                                <h4
+                                    class="text-sm font-bold text-teal-700 mb-3 flex items-center gap-2 uppercase tracking-wide">
+                                    <i data-lucide="lightbulb" class="w-4 h-4"></i>
                                     Explanation
                                 </h4>
-                                <p class="text-slate-700 text-sm leading-relaxed">{{ $question->explanation }}</p>
+                                <div class="prose prose-sm max-w-none text-slate-700">
+                                    {{ $question->explanation }}
+                                </div>
                             </div>
                         @elseif($question->correct_answer)
-                            <div class="p-5 bg-green-50 rounded-2xl border border-green-100">
-                                <h4 class="text-sm font-bold text-green-800 mb-2">Correct Answer(s):</h4>
-                                <ul class="list-disc list-inside text-sm text-slate-700">
+                            <div class="p-6 bg-green-50 rounded-2xl border border-green-200 shadow-sm">
+                                <h4 class="text-sm font-bold text-green-800 mb-3 uppercase tracking-wide">Correct Answer
+                                </h4>
+                                <ul class="list-disc list-inside text-sm text-slate-700 font-medium space-y-1">
                                     @foreach ($question->correct_answer as $ans)
                                         <li>{{ $ans }}</li>
                                     @endforeach
@@ -355,37 +496,13 @@
             </div>
         </div>
 
-        {{-- Navigation --}}
-        <div class="flex items-center justify-between gap-4">
-            @if ($currentIndex > 0)
-                <a href="{{ route('user.interview-prep.practice', ['session' => $session, 'q' => $currentIndex - 1]) }}"
-                    class="flex items-center gap-2 px-6 py-3 bg-white border border-slate-200 rounded-xl font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    Previous
-                </a>
-            @else
-                <div></div>
-            @endif
-
-            @if ($currentIndex < $totalQuestions - 1)
-                <a href="{{ route('user.interview-prep.practice', ['session' => $session, 'q' => $currentIndex + 1]) }}"
-                    class="flex items-center gap-2 px-6 py-3 bg-teal-500 text-white rounded-xl font-bold hover:bg-teal-600 transition-colors cursor-pointer">
-                    Next
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </a>
-            @else
-                <a href="{{ route('user.interview-prep.end', ['session' => $session]) }}"
-                    class="flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-xl font-bold hover:bg-orange-600 transition-colors cursor-pointer">
-                    Finish
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                </a>
-            @endif
+        {{-- Progress Dots (Optional, visual indicator) --}}
+        <div class="flex justify-center gap-1.5 mb-8">
+            @for ($i = 0; $i < $totalQuestions; $i++)
+                <div
+                    class="w-2 h-2 rounded-full {{ $i === $currentIndex ? 'bg-indigo-600 w-6' : ($i < $currentIndex ? 'bg-indigo-300' : 'bg-slate-200') }} transition-all duration-300">
+                </div>
+            @endfor
         </div>
     </div>
 @endsection

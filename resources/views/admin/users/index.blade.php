@@ -82,7 +82,7 @@
                             <th class="px-6 py-4 font-semibold">User</th>
                             <th class="px-6 py-4 font-semibold">Role</th>
                             <th class="px-6 py-4 font-semibold">Credits</th>
-                            <th class="px-6 py-4 font-semibold">Status</th>
+                            <th class="px-6 py-4 font-semibold"></th>Status</th>
                             <th class="px-6 py-4 font-semibold">Joined</th>
                             <th class="px-6 py-4 font-semibold text-right">Actions</th>
                         </tr>

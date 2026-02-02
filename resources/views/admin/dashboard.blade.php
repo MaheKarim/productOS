@@ -466,22 +466,6 @@
                 <canvas id="creditBarChart"></canvas>
             </div>
         </div>
-
-        {{-- Feature Status Indicators --}}
-        <div class="bg-white rounded-2xl p-8 border border-slate-200/60 shadow-sm">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h3 class="text-xl font-bold text-slate-900 tracking-tight">Feature Status</h3>
-                    <p class="text-sm text-slate-500 mt-1">Activation status and usage metrics</p>
-                </div>
-            </div>
-
-            <div id="featureStatusContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div class="flex items-center justify-center p-8 bg-slate-50 rounded-xl">
-                    <i data-lucide="loader-2" class="w-6 h-6 text-slate-400 animate-spin"></i>
-                </div>
-            </div>
-        </div>
     </div>
 
     {{-- Groq Neural Link Analytics (Live Connection Style - Full Width) --}}
@@ -773,7 +757,7 @@
                                 pointHoverRadius: 7
                             },
                             {
-                                label: `Previous Year (${data.previous_year})`,
+                                label: `Previous Year (${data.prev_year})`,
                                 data: data.previous_year.data,
                                 borderColor: '#94A3B8',
                                 backgroundColor: 'rgba(148, 163, 184, 0.1)',
@@ -919,7 +903,10 @@
                         ],
                         borderWidth: 0,
                         hoverOffset: 10
-                    }]
+                    }],
+                    percentages: data.percentages,
+                    users: data.users,
+                    avg_credits_per_user: data.avg_credits_per_user
                 },
                 options: {
                     responsive: true,
@@ -1109,9 +1096,6 @@
             // Credit stats
             document.getElementById('totalCreditsInCirculation').textContent = data.credits.total_in_circulation;
             document.getElementById('averageCreditsPerUser').textContent = data.credits.average_per_user;
-
-            // Update feature status
-            updateFeatureStatus(data.feature_status);
         }
 
         function updateFeatureStatus(features) {

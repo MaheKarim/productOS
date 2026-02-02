@@ -356,9 +356,13 @@ class DashboardController extends Controller
         for ($i = 1; $i <= 12; $i++) {
             $monthLabel = date('M', mktime(0, 0, 0, $i, 1));
             $months[] = $monthLabel;
-            $currentYearCounts[] = $currentYearData[$i] ?? 0;
-            $previousYearCounts[] = $previousYearData[$i] ?? 0;
-            $cumulative += $currentYearData[$i] ?? 0;
+
+            // SQLite returns months as "01", "02", etc.
+            $key = sprintf('%02d', $i);
+
+            $currentYearCounts[] = $currentYearData[$key] ?? 0;
+            $previousYearCounts[] = $previousYearData[$key] ?? 0;
+            $cumulative += $currentYearData[$key] ?? 0;
             $cumulativeCounts[] = $cumulative;
         }
 
@@ -385,7 +389,7 @@ class DashboardController extends Controller
             ],
             'cumulative' => $cumulativeCounts,
             'year' => $year,
-            'previous_year' => $previousYear
+            'prev_year' => $previousYear
         ]);
     }
 
@@ -489,7 +493,9 @@ class DashboardController extends Controller
         $activeUsers = User::where('is_active', true)->count();
         $inactiveUsers = User::where('is_active', false)->count();
         $totalCredits = User::sum('credits');
-        $totalCreditsInCirculation = $totalCredits * count(User::all()); // Rough estimate
+        $totalUserCount = count(User::all());
+        $totalCreditsInCirculation = $totalCredits;
+        $avgCredits = $totalUserCount > 0 ? round($totalCredits / $totalUserCount, 2) : 0;
 
         // Get credit consumption by feature for summary
         $featureConsumption = FeatureUsage::where('status', 'success')
@@ -512,7 +518,7 @@ class DashboardController extends Controller
             })->toArray();
 
         // Get feature activation status
-        $featureStatus = Feature::select('name', 'is_active', 'credit_cost')
+        $featureStatus = Feature::select('key', 'name', 'is_active', 'credit_cost')
             ->get()
             ->map(function ($feature) use ($featureConsumption) {
                 return [
@@ -531,7 +537,7 @@ class DashboardController extends Controller
             ],
             'credits' => [
                 'total_in_circulation' => $totalCreditsInCirculation,
-                'average_per_user' => $totalCredits
+                'average_per_user' => $avgCredits
             ],
             'feature_consumption' => $featureConsumption,
             'credit_refills' => $creditRefills,

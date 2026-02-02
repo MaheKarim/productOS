@@ -41,10 +41,15 @@ class SettingsController extends Controller
             $validated['avatar'] = $request->file('avatar')->store('avatars', 'public');
         }
 
-        $user->update([
+        $updateData = [
             'name' => $validated['name'],
-            'avatar' => $validated['avatar'] ?? $user->avatar,
-        ]);
+        ];
+
+        if (isset($validated['avatar'])) {
+            $updateData['avatar'] = $validated['avatar'];
+        }
+
+        $user->update($updateData);
 
         return back()->with('success', 'Profile updated successfully.');
     }

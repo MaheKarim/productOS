@@ -418,7 +418,7 @@
                 <div class="p-4 mt-auto border-t border-slate-800/50">
                     <div class="bg-white/5 rounded-2xl p-4 flex items-center">
                         @if (Auth::user()->avatar)
-                            <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
+                            <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}"
                                 class="w-10 h-10 rounded-full object-cover mr-3 border border-indigo-500/30">
                         @else
                             <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'Admin') }}&background=6366f1&color=ffffff"

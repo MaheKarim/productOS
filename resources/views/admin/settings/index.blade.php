@@ -65,7 +65,7 @@
                                         <div
                                             class="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-md bg-slate-100">
                                             @if ($user->avatar)
-                                                <img src="{{ Storage::url($user->avatar) }}" alt="{{ $user->name }}"
+                                                <img src="{{ $user->avatar }}" alt="{{ $user->name }}"
                                                     class="w-full h-full object-cover">
                                             @else
                                                 <div

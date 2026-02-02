@@ -195,6 +195,20 @@
                                 <p class="text-zinc-600 mt-2 font-['Archivo']">Sign in to access your dashboard</p>
                             </div>
 
+                            <!-- Success Message (for password reset) -->
+                            @if (session('status'))
+                                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+                                    <p class="text-green-600 text-sm flex items-center gap-2">
+                                        <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        {{ session('status') }}
+                                    </p>
+                                </div>
+                            @endif
+
                             <!-- Error Messages -->
                             @if ($errors->any())
                                 <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
@@ -269,7 +283,7 @@
                                             class="text-sm text-zinc-600 group-hover:text-zinc-900 transition-colors font-['Archivo']">Remember
                                             me</span>
                                     </label>
-                                    <a href="#"
+                                    <a href="{{ route('password.request') }}"
                                         class="text-sm font-medium text-violet-600 hover:text-violet-700 transition-colors font-['Archivo']">
                                         Forgot password?
                                     </a>
