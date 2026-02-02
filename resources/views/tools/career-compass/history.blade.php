@@ -43,22 +43,22 @@
                         <div class="flex justify-between items-center text-sm">
                             <span class="text-blue-100">Environment</span>
                             <span
-                                class="font-bold">{{ number_format($latestAssessment->environment_score, 1) }}/{{ \App\Models\CareerAssessment::MAX_ENVIRONMENT_SCORE }}</span>
+                                class="font-bold">{{ number_format($latestAssessment->environment_total, 1) }}/{{ \App\Models\CareerAssessment::MAX_ENVIRONMENT_SCORE }}</span>
                         </div>
                         <div class="w-full bg-black/20 rounded-full h-1.5">
                             <div class="bg-white rounded-full h-1.5"
-                                style="width: {{ ($latestAssessment->environment_score / \App\Models\CareerAssessment::MAX_ENVIRONMENT_SCORE) * 100 }}%">
+                                style="width: {{ ($latestAssessment->environment_total / \App\Models\CareerAssessment::MAX_ENVIRONMENT_SCORE) * 100 }}%">
                             </div>
                         </div>
 
                         <div class="flex justify-between items-center text-sm pt-2">
                             <span class="text-blue-100">Skills</span>
                             <span
-                                class="font-bold">{{ number_format($latestAssessment->skills_score, 1) }}/{{ \App\Models\CareerAssessment::MAX_SKILLS_SCORE }}</span>
+                                class="font-bold">{{ number_format($latestAssessment->skills_total, 1) }}/{{ \App\Models\CareerAssessment::MAX_SKILLS_SCORE }}</span>
                         </div>
                         <div class="w-full bg-black/20 rounded-full h-1.5">
                             <div class="bg-white rounded-full h-1.5"
-                                style="width: {{ ($latestAssessment->skills_score / \App\Models\CareerAssessment::MAX_SKILLS_SCORE) * 100 }}%">
+                                style="width: {{ ($latestAssessment->skills_total / \App\Models\CareerAssessment::MAX_SKILLS_SCORE) * 100 }}%">
                             </div>
                         </div>
                     </div>
@@ -125,10 +125,10 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-slate-600">
-                                    {{ number_format($assessment->environment_score, 1) }}
+                                    {{ number_format($assessment->environment_total, 1) }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-slate-600">
-                                    {{ number_format($assessment->skills_score, 1) }}
+                                    {{ number_format($assessment->skills_total, 1) }}
                                 </td>
                                 <td class="px-6 py-4 text-right">
                                     <a href="{{ route('career-compass.results', $assessment->id) }}"
