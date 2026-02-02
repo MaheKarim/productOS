@@ -166,6 +166,7 @@ Route::prefix('yt-summarize')->name('yt-summarize.')->group(function () {
 
 // Admin Routes (Protected by auth and role:admin middleware)
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PageManagementController;
 
 // ...
 
@@ -210,6 +211,18 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     // System Settings (Global)
     Route::get('/settings', [SystemSettingsController::class, 'index'])->name('admin.settings.index');
     Route::post('/settings', [SystemSettingsController::class, 'update'])->name('admin.settings.update');
+
+    // Page Management & SEO
+    Route::prefix('pages')->name('admin.pages.')->group(function () {
+        Route::get('/', [PageManagementController::class, 'index'])->name('index');
+        Route::get('/{page}/edit', [PageManagementController::class, 'edit'])->name('edit');
+        Route::put('/{page}', [PageManagementController::class, 'update'])->name('update');
+        Route::post('/{page}/toggle', [PageManagementController::class, 'toggleStatus'])->name('toggle');
+        Route::post('/bulk-action', [PageManagementController::class, 'bulkAction'])->name('bulk-action');
+        Route::put('/{page}/seo', [PageManagementController::class, 'updateSeo'])->name('update-seo');
+        Route::get('/{page}/analytics', [PageManagementController::class, 'analytics'])->name('analytics');
+        Route::get('/{page}/versions', [PageManagementController::class, 'versions'])->name('versions');
+    });
 
     // Tools Management
     Route::resource('tools', \App\Http\Controllers\Admin\ToolsController::class)->names('admin.tools');

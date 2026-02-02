@@ -1,13 +1,14 @@
 @extends('admin.layout')
 
-@section('title', 'Feature Management')
+@section('title', 'Credit Cost Management')
+@section('page-title', 'Credit Cost Management')
 
 @section('content')
     <div class="px-6 py-6 font-dm-sans min-h-screen">
         <div class="flex justify-between items-center mb-6">
             <div>
                 <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">
-                    Feature Management</h1>
+                    Credit Cost Management</h1>
                 <p class="text-sm text-slate-500 mt-1">Manage feature availability and credit costs</p>
             </div>
         </div>

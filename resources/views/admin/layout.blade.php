@@ -211,6 +211,17 @@
                     <div class="pt-6 px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Content
                         Management</div>
 
+                    {{-- Page Management --}}
+                    <a href="{{ route('admin.pages.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.pages.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="pages">
+                        <i data-lucide="file-text"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.pages.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        Page Management
+                        <span
+                            class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-violet-500/20 text-violet-400 font-bold">{{ \App\Models\Page::count() }}</span>
+                    </a>
+
                     {{-- Tools Management --}}
                     <a href="{{ route('admin.tools.index') }}"
                         class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.tools.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
@@ -312,7 +323,7 @@
                         data-menu-name="features">
                         <i data-lucide="toggle-left"
                             class="mr-3 w-5 h-5 {{ request()->routeIs('admin.features.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
-                        Feature Management
+                        Credit Cost Management
                     </a>
 
                     <a href="{{ route('admin.onboarding.index') }}"

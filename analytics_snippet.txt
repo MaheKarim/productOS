@@ -1,0 +1,20 @@
+            [
+                'page_id' => $pageId,
+                'date' => $date,
+            ],
+            [
+                'views' => 0,
+                'unique_visitors' => 0,
+            ]
+        );
+
+        $analytics->increment('views');
+
+        // Track unique visitors using session
+        $sessionKey = "page_view_{$pageId}_{$date}";
+        if ($request && !session()->has($sessionKey)) {
+            $analytics->increment('unique_visitors');
+            session()->put($sessionKey, true);
+        }
+    }
+}
