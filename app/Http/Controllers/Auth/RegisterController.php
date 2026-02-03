@@ -17,11 +17,22 @@ class RegisterController extends Controller
         if (Auth::check()) {
             return redirect()->route('admin.dashboard');
         }
+
+        $settings = app(\App\Services\SettingsService::class);
+        if (!$settings->get('registration_enabled', true)) {
+            return redirect()->route('login')->with('error', 'Registration is currently disabled.');
+        }
+
         return view('auth.register');
     }
 
     public function register(Request $request)
     {
+        $settings = app(\App\Services\SettingsService::class);
+        if (!$settings->get('registration_enabled', true)) {
+            return redirect()->route('login')->with('error', 'Registration is currently disabled.');
+        }
+
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class, new NotDisposableEmail],

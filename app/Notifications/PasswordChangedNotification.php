@@ -32,12 +32,20 @@ class PasswordChangedNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $settings = app(\App\Services\SettingsService::class);
+        $subject = $settings->get('password_reset_success_subject', 'Password Changed Successfully - ProductOS');
+        $bodyTemplate = $settings->get('password_reset_success_body', "Hello {{name}}!\n\nYour password has been successfully changed.\n\nIf you did not make this change, please contact our support team immediately.");
+
+        $body = str_replace(
+            ['{{name}}', '{{time}}'],
+            [$notifiable->name, now()->format('F j, Y \a\t g:i A')],
+            $bodyTemplate
+        );
+
         return (new MailMessage)
-            ->subject('Password Changed Successfully - ProductOS')
+            ->subject($subject)
             ->greeting('Hello ' . $notifiable->name . '!')
-            ->line('Your password has been successfully changed.')
-            ->line('**Date:** ' . now()->format('F j, Y \a\t g:i A'))
-            ->line('If you did not make this change, please contact our support team immediately and secure your account.')
+            ->line($body)
             ->action('Go to Dashboard', url(route('dashboard')))
             ->salutation('Best regards, The ProductOS Team');
     }

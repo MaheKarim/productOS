@@ -31,6 +31,7 @@ class SystemSettingsController extends Controller
             'seo' => 'SEO',
             'social' => 'Social Media',
             'email' => 'Email / SMTP',
+            'email_templates' => 'Email Templates',
             'maintenance' => 'Maintenance',
             'auth' => 'User & Auth',
             'logs' => 'Activity Logs',

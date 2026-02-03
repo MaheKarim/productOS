@@ -209,6 +209,20 @@
                                 </div>
                             @endif
 
+                            <!-- General Error Message -->
+                            @if (session('error'))
+                                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+                                    <p class="text-red-600 text-sm flex items-center gap-2">
+                                        <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd"
+                                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                        {{ session('error') }}
+                                    </p>
+                                </div>
+                            @endif
+
                             <!-- Error Messages -->
                             @if ($errors->any())
                                 <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
@@ -349,20 +363,22 @@
                             </div>
 
                             <!-- Register Link -->
-                            <div class="text-center mt-6">
-                                <p class="text-zinc-600 text-sm font-['Archivo']">
-                                    Don't have an account?
-                                    <a href="{{ route('register') }}"
-                                        class="font-semibold text-violet-600 hover:text-blue-600 transition-colors duration-200 ml-1">
-                                        Create one
-                                        <svg class="inline-block w-4 h-4 ml-0.5" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                                        </svg>
-                                    </a>
-                                </p>
-                            </div>
+                            @if (app(\App\Services\SettingsService::class)->get('registration_enabled', true))
+                                <div class="text-center mt-6">
+                                    <p class="text-zinc-600 text-sm font-['Archivo']">
+                                        Don't have an account?
+                                        <a href="{{ route('register') }}"
+                                            class="font-semibold text-violet-600 hover:text-blue-600 transition-colors duration-200 ml-1">
+                                            Create one
+                                            <svg class="inline-block w-4 h-4 ml-0.5" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                                            </svg>
+                                        </a>
+                                    </p>
+                                </div>
+                            @endif
                         </div>
                     </div>
 

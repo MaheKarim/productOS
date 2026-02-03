@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         // Only if smtp_host is set to avoid breaking default config if DB is empty
         if ($settings->get('smtp_host')) {
             config([
+                'mail.default' => 'smtp',
                 'mail.mailers.smtp.host' => $settings->get('smtp_host'),
                 'mail.mailers.smtp.port' => $settings->get('smtp_port'),
                 'mail.mailers.smtp.username' => $settings->get('smtp_username'),

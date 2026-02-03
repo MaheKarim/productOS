@@ -40,8 +40,11 @@ class ForgotPasswordController extends Controller
         RateLimiter::hit($key, 60);
 
         // Log the attempt
+        // Log the attempt
+        $user = \App\Models\User::where('email', $request->email)->first();
+
         \App\Models\ActivityLog::create([
-            'user_id' => null,
+            'user_id' => $user ? $user->id : null,
             'action' => 'Password Reset Requested',
             'description' => "Password reset requested for: {$request->email}",
             'ip_address' => $request->ip(),

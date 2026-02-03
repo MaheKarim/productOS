@@ -37,18 +37,26 @@ class ResetPasswordNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $settings = app(\App\Services\SettingsService::class);
+        $subject = $settings->get('forgot_password_subject', 'Reset Your Password - ProductOS');
+        $bodyTemplate = $settings->get('forgot_password_body', "Hello,\n\nYou are receiving this email because we received a password reset request for your account.\n\nThis password reset link will expire in 60 minutes.\n\nIf you did not request a password reset, no further action is required.");
+
         $url = url(route('password.reset', [
             'token' => $this->token,
             'email' => $notifiable->getEmailForPasswordReset(),
         ], false));
 
+        $body = str_replace(
+            ['{{action_url}}', '{{user_name}}'],
+            [$url, $notifiable->name],
+            $bodyTemplate
+        );
+
         return (new MailMessage)
-            ->subject('Reset Your Password - ProductOS')
+            ->subject($subject)
             ->greeting('Hello!')
-            ->line('You are receiving this email because we received a password reset request for your account.')
+            ->line($body)
             ->action('Reset Password', $url)
-            ->line('This password reset link will expire in 60 minutes.')
-            ->line('If you did not request a password reset, no further action is required.')
             ->salutation('Best regards, The ProductOS Team');
     }
 

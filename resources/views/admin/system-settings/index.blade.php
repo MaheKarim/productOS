@@ -110,11 +110,12 @@
                                                             class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none font-medium text-slate-700">
                                                     @break
 
-                                                    @case('text')
-                                                        <textarea id="{{ $setting->key }}" name="{{ $setting->key }}" rows="4"
-                                                            class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none font-medium text-slate-700">{{ $setting->value }}</textarea>
+                                                    @case('textarea')
+                                                        <textarea id="{{ $setting->key }}" name="{{ $setting->key }}" rows="6"
+                                                            class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none font-medium text-slate-700 leading-relaxed font-mono text-sm">{{ $setting->value }}</textarea>
                                                     @break
 
+                                                    @case('text')
                                                     @case('image')
                                                         <div class="flex items-start gap-6">
                                                             @if ($setting->value)
