@@ -406,8 +406,7 @@
     <!-- Main Content -->
     <main class="flex-1 flex flex-col h-full overflow-hidden relative">
         <!-- Header -->
-        <header
-            class="h-14 bg-white border-b border-slate-100 flex items-center justify-between px-6 md:px-8 absolute top-0 left-0 right-0 z-20 md:static">
+        <header class="h-14 bg-white border-b border-slate-100 flex items-center justify-between px-6 md:px-8 z-20">
             <h1 class="text-lg font-semibold text-slate-900 hidden md:block">@yield('header', 'Dashboard')</h1>
 
             <div class="flex items-center gap-4 ml-auto">
@@ -566,8 +565,13 @@
             </div>
         </header>
 
+        <!-- Notice Bar -->
+        <div class="z-30">
+            <livewire:notice-bar />
+        </div>
+
         <!-- Scrollable Content -->
-        <div class="flex-1 overflow-y-auto bg-slate-50 p-6 md:p-8 pt-20 md:pt-6">
+        <div class="flex-1 overflow-y-auto bg-slate-50 p-6 md:p-8 pt-6">
             @if (session('success'))
                 <div
                     class="mb-6 p-4 bg-green-50 border border-green-100 text-green-700 rounded-xl flex items-center gap-3 shadow-sm">
@@ -692,12 +696,12 @@
                                     <div class="flex items-center justify-between mt-2">
                                         <span class="text-xs text-slate-400">${item.time_since_created}</span>
                                         ${item.notification.action_text && item.notification.action_url ? `
-                                                        <a href="${item.notification.action_url}" target="_blank"
-                                                           onclick="event.stopPropagation(); recordActionClick(${item.id}, '${item.notification.action_url}')"
-                                                           class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
-                                                            ${item.notification.action_text}
-                                                        </a>
-                                                    ` : ''}
+                                                                <a href="${item.notification.action_url}" target="_blank"
+                                                                   onclick="event.stopPropagation(); recordActionClick(${item.id}, '${item.notification.action_url}')"
+                                                                   class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
+                                                                    ${item.notification.action_text}
+                                                                </a>
+                                                            ` : ''}
                                     </div>
                                 </div>
                             </div>

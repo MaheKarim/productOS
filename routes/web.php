@@ -347,5 +347,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
         Route::post('/{notification}/duplicate', [\App\Http\Controllers\Admin\NotificationController::class, 'duplicate'])->name('duplicate');
         Route::post('/{notification}/resend', [\App\Http\Controllers\Admin\NotificationController::class, 'resend'])->name('resend');
     });
+
+    // Notice Bar Management
+    Route::resource('notice-bars', \App\Http\Controllers\Admin\NoticeBarController::class)->names('admin.notice-bars');
 });
 
