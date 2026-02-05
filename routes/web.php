@@ -179,6 +179,12 @@ Route::post('/roadmap/status', [\App\Http\Controllers\RoadmapController::class, 
     ->middleware('auth')
     ->name('roadmap.update-status');
 
+// Job Board (Public)
+Route::controller(\App\Http\Controllers\JobController::class)->prefix('jobs')->name('jobs.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/{slug}', 'show')->name('show');
+});
+
 // YT Summarize (Public)
 Route::prefix('yt-summarize')->name('yt-summarize.')->group(function () {
     Route::get('/', [\App\Http\Controllers\YTSummarizeController::class, 'index'])->name('index');
@@ -348,7 +354,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
         Route::post('/{notification}/resend', [\App\Http\Controllers\Admin\NotificationController::class, 'resend'])->name('resend');
     });
 
+
     // Notice Bar Management
     Route::resource('notice-bars', \App\Http\Controllers\Admin\NoticeBarController::class)->names('admin.notice-bars');
+
+    // Job Board Management
+    Route::post('jobs/parse', [\App\Http\Controllers\Admin\JobController::class, 'parse'])->name('admin.jobs.parse');
+    Route::resource('jobs', \App\Http\Controllers\Admin\JobController::class)->names('admin.jobs');
+    Route::resource('job-categories', \App\Http\Controllers\Admin\JobCategoryController::class)->names('admin.job-categories');
 });
 

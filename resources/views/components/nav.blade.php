@@ -80,6 +80,11 @@
                         class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('roadmap.*') ? 'text-blue-600 font-bold' : '' }}">Roadmap</a>
                 @endif
 
+                @if ($isVisible('jobs'))
+                    <a href="{{ route('jobs.index') }}"
+                        class="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors cursor-pointer {{ request()->routeIs('jobs.*') ? 'text-blue-600 font-bold' : '' }}">Jobs</a>
+                @endif
+
                 <!-- Extra Dropdown -->
                 @if ($hasExtra)
                     <div class="relative" @click.away="extraDropdownOpen = false">
@@ -193,6 +198,10 @@
             @if ($isVisible('roadmap'))
                 <a href="{{ route('roadmap.index') }}"
                     class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('roadmap.*') ? 'text-blue-600 font-bold bg-slate-50' : '' }}">Roadmap</a>
+            @endif
+            @if ($isVisible('jobs'))
+                <a href="{{ route('jobs.index') }}"
+                    class="block px-4 py-3 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg cursor-pointer {{ request()->routeIs('jobs.*') ? 'text-blue-600 font-bold bg-slate-50' : '' }}">Jobs</a>
             @endif
 
             <!-- Mobile Extra Section -->

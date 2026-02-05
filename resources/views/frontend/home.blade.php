@@ -18,6 +18,9 @@
     {{-- Toolkit Carousel --}}
     @include('frontend.sections.toolkit')
 
+    {{-- Jobs Preview Section --}}
+    @include('frontend.sections.jobs-preview')
+
     {{-- Testimonials Section (Preserved & Refined) --}}
     @php
         // Populate mock data if DB is empty to showcase the design

@@ -285,6 +285,36 @@
                         </div>
                     </div>
 
+                    {{-- Job Board Management --}}
+                    <div class="cms-settings-group mb-2">
+                        <button onclick="toggleJobBoardMenu()"
+                            class="w-full group flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl hover:bg-slate-800/50 hover:text-white transition-soft {{ request()->routeIs('admin.jobs.*') || request()->routeIs('admin.job-categories.*') ? 'bg-slate-800/50 text-white' : '' }}">
+                            <div class="flex items-center">
+                                <i data-lucide="briefcase"
+                                    class="mr-3 w-5 h-5 {{ request()->routeIs('admin.jobs.*') || request()->routeIs('admin.job-categories.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                                Job Board
+                            </div>
+                            <i data-lucide="chevron-down" id="job-board-chevron"
+                                class="w-4 h-4 transition-transform duration-300"></i>
+                        </button>
+
+                        <div id="job-board-menu"
+                            class="hidden mt-1 px-6 space-y-1 overflow-hidden transition-all duration-300">
+                            <a href="{{ route('admin.jobs.index') }}"
+                                class="menu-item group flex items-center px-4 py-2.5 text-xs font-medium rounded-lg transition-soft {{ request()->routeIs('admin.jobs.*') ? 'text-white bg-white/5' : 'text-slate-500 hover:text-white' }}"
+                                data-menu-name="jobs">
+                                <i data-lucide="list" class="mr-3 w-4 h-4"></i>
+                                All Jobs
+                            </a>
+                            <a href="{{ route('admin.job-categories.index') }}"
+                                class="menu-item group flex items-center px-4 py-2.5 text-xs font-medium rounded-lg transition-soft {{ request()->routeIs('admin.job-categories.*') ? 'text-white bg-white/5' : 'text-slate-500 hover:text-white' }}"
+                                data-menu-name="job-categories">
+                                <i data-lucide="tags" class="mr-3 w-4 h-4"></i>
+                                Categories
+                            </a>
+                        </div>
+                    </div>
+
                     {{-- Directory Management --}}
                     <div class="cms-settings-group mb-2">
                         <button onclick="toggleDirectoryMenu()"
@@ -699,6 +729,40 @@
                 chevron.classList.remove('rotate-180');
             }
         }
+
+        // Toggle Job Board menu
+        function toggleJobBoardMenu() {
+            const menu = document.getElementById('job-board-menu');
+            const chevron = document.getElementById('job-board-chevron');
+
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                setTimeout(() => {
+                    menu.style.maxHeight = '500px';
+                }, 10);
+                chevron.classList.add('rotate-180');
+            } else {
+                menu.style.maxHeight = '0px';
+                setTimeout(() => {
+                    menu.classList.add('hidden');
+                }, 300);
+                chevron.classList.remove('rotate-180');
+            }
+        }
+
+        // Auto-open logic (appended to existing listener in real usage, but here structurally cleaner to keep it separate or merged)
+        document.addEventListener('DOMContentLoaded', function() {
+            const path = window.location.pathname;
+            if (path.startsWith('/admin/jobs') || path.startsWith('/admin/job-categories')) {
+                const jbMenu = document.getElementById('job-board-menu');
+                const jbChevron = document.getElementById('job-board-chevron');
+                if (jbMenu && jbChevron) {
+                    jbMenu.classList.remove('hidden');
+                    jbMenu.style.maxHeight = '500px';
+                    jbChevron.classList.add('rotate-180');
+                }
+            }
+        });
     </script>
     @stack('scripts')
 </body>
