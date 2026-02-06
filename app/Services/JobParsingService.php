@@ -19,15 +19,16 @@ class JobParsingService
      * Parse a job description using AI to extract structured data.
      *
      * @param string $text The raw job description text
+     * @param int|null $providerId Optional specific AI provider to use
      * @return array Structured job data
      */
-    public function parse(string $text): array
+    public function parse(string $text, ?int $providerId = null): array
     {
         // Normalize text
         $text = trim($text);
 
         // Try AI-powered parsing first
-        $aiResult = $this->parseWithAI($text);
+        $aiResult = $this->parseWithAI($text, $providerId);
 
         if ($aiResult !== null) {
             return $aiResult;
@@ -41,10 +42,15 @@ class JobParsingService
     /**
      * Parse job description using AI provider.
      */
-    protected function parseWithAI(string $text): ?array
+    protected function parseWithAI(string $text, ?int $providerId = null): ?array
     {
         try {
-            $provider = $this->aiService->getActiveProvider();
+            // Use specific provider if provided, otherwise use active/default
+            if ($providerId) {
+                $provider = AiProvider::find($providerId);
+            } else {
+                $provider = $this->aiService->getActiveProvider();
+            }
 
             if (!$provider) {
                 Log::warning('No active AI provider available for job parsing');

@@ -105,10 +105,13 @@ class JobController extends Controller
 
     public function parse(Request $request)
     {
-        $request->validate(['description' => 'required|string|min:10']);
+        $request->validate([
+            'description' => 'required|string|min:10',
+            'provider_id' => 'nullable|integer|exists:ai_providers,id',
+        ]);
 
         try {
-            $data = $this->parser->parse($request->input('description'));
+            $data = $this->parser->parse($request->input('description'), $request->input('provider_id'));
             return response()->json(['success' => true, 'data' => $data]);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);

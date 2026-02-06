@@ -32,12 +32,27 @@
                             <p class="text-xs text-slate-500">Paste a job description to extract details automatically</p>
                         </div>
                     </div>
-                    <button type="button" @click="parseJobDescription" :disabled="parsing"
-                        class="inline-flex items-center gap-2 px-3 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-wait cursor-pointer">
-                        <span x-show="!parsing">Extract Details</span>
-                        <span x-show="parsing">Processing...</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4" x-show="!parsing"></i>
-                    </button>
+                    <div class="flex items-center gap-3">
+                        {{-- AI Provider Selector --}}
+                        <div class="flex items-center gap-2">
+                            <label for="ai_provider" class="text-xs font-medium text-slate-500">Provider:</label>
+                            <select id="ai_provider" x-model="selectedProvider"
+                                class="h-9 px-3 bg-slate-50 border border-slate-200 text-slate-900 rounded-lg text-sm focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-all cursor-pointer">
+                                <option value="">Default</option>
+                                @foreach (\App\Models\AiProvider::active()->get() as $provider)
+                                    <option value="{{ $provider->id }}" {{ $provider->is_default ? 'selected' : '' }}>
+                                        {{ $provider->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <button type="button" @click="parseJobDescription" :disabled="parsing"
+                            class="inline-flex items-center gap-2 px-3 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-wait cursor-pointer">
+                            <span x-show="!parsing">Extract Details</span>
+                            <span x-show="parsing">Processing...</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4" x-show="!parsing"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="p-6">
                     <textarea x-model="rawDescription"
@@ -123,10 +138,11 @@
                                 </div>
                                 {{-- Salary --}}
                                 <div>
-                                    <label for="salary_range" class="block text-sm font-medium text-slate-700 mb-1.5">Salary
+                                    <label for="salary_range"
+                                        class="block text-sm font-medium text-slate-700 mb-1.5">Salary
                                         Range</label>
-                                    <input type="text" id="salary_range" name="salary_range" x-model="form.salary_range"
-                                        placeholder="e.g. $100k - $150k"
+                                    <input type="text" id="salary_range" name="salary_range"
+                                        x-model="form.salary_range" placeholder="e.g. $100k - $150k"
                                         class="w-full h-10 px-3 bg-white border border-slate-200 text-slate-900 placeholder-slate-400 rounded-lg focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition-all text-sm">
                                 </div>
                             </div>
@@ -322,6 +338,7 @@ We are looking for a talented Product Manager to join our team...
                 rawDescription: '',
                 parsing: false,
                 skillsInput: '',
+                selectedProvider: '',
                 form: {
                     job_title: '',
                     company_name: '',
@@ -359,7 +376,8 @@ We are looking for a talented Product Manager to join our team...
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
                             body: JSON.stringify({
-                                description: this.rawDescription
+                                description: this.rawDescription,
+                                provider_id: this.selectedProvider || null
                             })
                         })
                         .then(response => {
