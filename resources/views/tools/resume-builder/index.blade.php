@@ -1,34 +1,31 @@
 @extends('user.layout')
 
-@section('title', 'AI Resume Builder')
+@section('title', 'ATS Resume Analyzer')
 
 @section('content')
     <script>
-        function resumeBuilder() {
+        function resumeAnalyzer() {
             return {
-                isUploading: false,
-                resumeUploaded: {{ $user->resume_data ? 'true' : 'false' }},
-                resumeName: '{{ $user->resume_data['name'] ?? 'Your Profile' }}',
-                parsedData: @json($user->resume_data),
-                jobDescription: '',
-                isGenerating: false,
-                generated: false,
+                // Analyzer state
+                isAnalyzing: false,
+                analysisComplete: false,
+                analysisResult: null,
+                analyzerFileName: '',
 
-                get isValidToGenerate() {
-                    return this.resumeUploaded && this.jobDescription.length >= 50 && !this.isGenerating;
-                },
-
-                async uploadResume(e) {
-                    console.log('uploadResume called');
+                async analyzeResume(e) {
                     const file = e.target.files[0];
                     if (!file) return;
 
-                    this.isUploading = true;
+                    this.isAnalyzing = true;
+                    this.analysisComplete = false;
+                    this.analysisResult = null;
+                    this.analyzerFileName = file.name;
+
                     const formData = new FormData();
                     formData.append('resume', file);
 
                     try {
-                        const response = await fetch('{{ route('resume-builder.upload') }}', {
+                        const response = await fetch('{{ route('resume-builder.analyze') }}', {
                             method: 'POST',
                             body: formData,
                             headers: {
@@ -36,471 +33,579 @@
                             }
                         });
 
-                        if (!response.ok) {
-                            const errorText = await response.text();
-                            console.error('Upload failed:', errorText);
-                            alert('Upload failed: ' + errorText);
-                            return;
-                        }
-
                         const result = await response.json();
 
                         if (result.success) {
-                            this.resumeUploaded = true;
-                            this.parsedData = result.data;
-                            this.resumeName = result.data.name || 'Uploaded Resume';
-                            alert('Resume uploaded and parsed successfully!');
-                        } else {
-                            alert('Upload failed: ' + (result.message || 'Unknown error'));
-                        }
-                    } catch (err) {
-                        console.error('Upload error:', err);
-                        alert('Upload error: ' + err.message);
-                    } finally {
-                        this.isUploading = false;
-                    }
-                },
-
-                async generateResume() {
-                    console.log('generateResume called');
-                    console.log('isValidToGenerate:', this.isValidToGenerate);
-                    console.log('resumeUploaded:', this.resumeUploaded);
-                    console.log('jobDescription length:', this.jobDescription.length);
-                    console.log('isGenerating:', this.isGenerating);
-
-                    if (!this.isValidToGenerate) {
-                        console.log('Cannot generate - validation failed');
-                        alert('Please upload a resume and enter a job description (min 50 characters)');
-                        return;
-                    }
-
-                    this.isGenerating = true;
-                    this.generated = false;
-
-                    try {
-                        const response = await fetch('{{ route('resume-builder.generate') }}', {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                job_description: this.jobDescription
-                            }),
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            }
-                        });
-
-                        console.log('Response status:', response.status);
-
-                        if (!response.ok) {
-                            const errorText = await response.text();
-                            console.error('Generation failed:', errorText);
-                            alert('Generation failed: ' + errorText);
-                            return;
-                        }
-
-                        const result = await response.json();
-                        console.log('Generation result:', result);
-
-                        if (result.success) {
-                            this.generated = true;
+                            this.analysisResult = result.analysis;
+                            this.analysisComplete = true;
                             setTimeout(() => {
-                                window.scrollTo({
-                                    top: document.body.scrollHeight,
+                                document.getElementById('analysis-results')?.scrollIntoView({
                                     behavior: 'smooth'
                                 });
                             }, 100);
                         } else {
-                            alert('Generation failed: ' + (result.message || 'Unknown error'));
+                            alert('Analysis failed: ' + (result.message || 'Unknown error'));
                         }
                     } catch (err) {
-                        console.error('Generate error:', err);
-                        alert('An unexpected error occurred: ' + err.message);
+                        alert('Analysis error: ' + err.message);
                     } finally {
-                        this.isGenerating = false;
+                        this.isAnalyzing = false;
                     }
+                },
+
+                getScoreColor(score) {
+                    if (score >= 80) return '#10b981';
+                    if (score >= 60) return '#f59e0b';
+                    if (score >= 40) return '#f97316';
+                    return '#ef4444';
+                },
+
+                getScoreLabel(score) {
+                    if (score >= 80) return 'Excellent';
+                    if (score >= 60) return 'Good';
+                    if (score >= 40) return 'Needs Work';
+                    return 'Poor';
+                },
+
+                getPriorityColor(priority) {
+                    if (priority === 'critical') return 'bg-red-100 text-red-700 border-red-200';
+                    if (priority === 'important') return 'bg-amber-100 text-amber-700 border-amber-200';
+                    return 'bg-blue-100 text-blue-700 border-blue-200';
+                },
+
+                getSeverityColor(severity) {
+                    if (severity === 'high') return 'text-red-600';
+                    if (severity === 'medium') return 'text-amber-600';
+                    return 'text-blue-600';
+                },
+
+                resetAnalysis() {
+                    this.analysisComplete = false;
+                    this.analysisResult = null;
+                    this.analyzerFileName = '';
                 }
             }
         }
     </script>
 
-    <div class="relative min-h-screen py-8" x-data="resumeBuilder()">
+    <div class="relative min-h-screen py-8" x-data="resumeAnalyzer()">
 
         <!-- Ambient Background Elements -->
         <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
             <div
-                class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-200/40 rounded-full blur-[100px] opacity-60 mix-blend-multiply animate-blob">
+                class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-200/40 rounded-full blur-[100px] opacity-60 mix-blend-multiply animate-blob">
             </div>
             <div
-                class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-200/40 rounded-full blur-[100px] opacity-60 mix-blend-multiply animate-blob animation-delay-2000">
+                class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-teal-200/40 rounded-full blur-[100px] opacity-60 mix-blend-multiply animate-blob animation-delay-2000">
             </div>
             <div
-                class="absolute -bottom-32 left-20 w-[600px] h-[600px] bg-indigo-200/40 rounded-full blur-[120px] opacity-50 mix-blend-multiply animate-blob animation-delay-4000">
+                class="absolute -bottom-32 left-20 w-[600px] h-[600px] bg-cyan-200/40 rounded-full blur-[120px] opacity-50 mix-blend-multiply animate-blob animation-delay-4000">
             </div>
         </div>
 
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
             <!-- Header -->
-            <div class="text-center max-w-2xl mx-auto mb-12">
+            <div class="text-center max-w-2xl mx-auto mb-10">
                 <div
-                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4 shadow-sm">
-                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-600 text-xs font-bold uppercase tracking-wider mb-4 shadow-sm">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     AI-Powered Career Tools
                 </div>
                 <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
-                    Tailor Your Resume <span
-                        class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">in
-                        Seconds</span>
+                    ATS Resume <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">Analyzer</span>
                 </h1>
                 <p class="text-lg text-slate-600 leading-relaxed">
-                    Upload your base resume, paste a job description, and let our AI engine rephrase your experience to beat
-                    ATS and impress recruiters.
+                    Get instant AI-powered feedback on your resume's ATS compatibility, missing sections, and actionable
+                    recommendations.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-                <!-- Left Column: Upload & Profile (Col-span-4) -->
-                <div class="lg:col-span-4 space-y-6">
-
-                    <!-- Step 1 Card -->
+            <!-- Upload Section -->
+            <div x-show="!analysisComplete" class="relative bg-white rounded-3xl p-8 border border-slate-200 shadow-xl">
+                <div class="text-center mb-8">
                     <div
-                        class="group relative bg-white/70 backdrop-blur-xl rounded-3xl p-1 border border-white/50 shadow-xl shadow-slate-200/50 overflow-hidden transition-all hover:shadow-2xl hover:shadow-indigo-100/50">
-                        <div
-                            class="absolute inset-0 bg-gradient-to-b from-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                        </div>
-
-                        <div class="relative bg-white/50 rounded-[1.4rem] p-6 h-full flex flex-col">
-                            <div class="flex items-center justify-between mb-6">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-lg shadow-indigo-500/30">
-                                        1</div>
-                                    <h2 class="text-lg font-bold text-slate-800">Base Resume</h2>
-                                </div>
-                                <!-- Verified Badge if uploaded -->
-                                <div x-show="resumeUploaded" x-transition
-                                    class="px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-lg flex items-center gap-1">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                            d="M5 13l4 4L19 7"></path>
-                                    </svg>
-                                    Ready
-                                </div>
-                            </div>
-
-                            <p class="text-sm text-slate-500 mb-6 leading-relaxed">
-                                Upload your existing resume (PDF/DOCX). We'll parse your skills and experience to use as a
-                                foundation.
-                            </p>
-
-                            <!-- Upload Zone -->
-                            <div class="relative group/upload">
-                                <label
-                                    class="relative flex flex-col items-center justify-center w-full h-40 rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-300 overflow-hidden"
-                                    :class="isUploading ? 'border-indigo-500 bg-indigo-50/50' :
-                                        'border-slate-300 hover:border-indigo-400 bg-slate-50/50 hover:bg-white'">
-
-                                    <!-- Decorative BG Pattern -->
-                                    <div class="absolute inset-0 opacity-[0.03] pointer-events-none"
-                                        style="background-image: radial-gradient(#6366f1 1px, transparent 1px); background-size: 16px 16px;">
-                                    </div>
-
-                                    <!-- Idle State -->
-                                    <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center z-10"
-                                        x-show="!isUploading">
-                                        <div
-                                            class="w-12 h-12 mb-3 rounded-full bg-white shadow-md flex items-center justify-center group-hover/upload:scale-110 transition-transform duration-300">
-                                            <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
-                                                </path>
-                                            </svg>
-                                        </div>
-                                        <p class="mb-1 text-sm font-semibold text-slate-700">Click to upload</p>
-                                        <p class="text-xs text-slate-400">PDF or DOCX (max 5MB)</p>
-                                    </div>
-
-                                    <!-- Loading State -->
-                                    <div class="flex flex-col items-center justify-center pt-5 pb-6 z-10"
-                                        x-show="isUploading" style="display: none;">
-                                        <div class="relative w-12 h-12 mb-3">
-                                            <div class="absolute inset-0 rounded-full border-4 border-indigo-100"></div>
-                                            <div
-                                                class="absolute inset-0 rounded-full border-4 border-indigo-500 border-t-transparent animate-spin">
-                                            </div>
-                                        </div>
-                                        <p class="text-sm text-indigo-600 font-bold animate-pulse">Analyzing...</p>
-                                    </div>
-
-                                    <input type="file" class="hidden" @change="uploadResume" accept=".pdf,.docx">
-                                </label>
-                            </div>
-
-                            <!-- File Uploaded Card (PDF Style) -->
-                            <div x-show="resumeUploaded" x-transition.zoom.duration.300ms style="display: none;"
-                                class="mt-2">
-                                <div
-                                    class="relative overflow-hidden bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow group/file">
-                                    <!-- Red accent for PDF feel -->
-                                    <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-red-500"></div>
-
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-4">
-                                            <!-- PDF/Doc Icon -->
-                                            <div
-                                                class="w-12 h-12 rounded-xl bg-red-50 text-red-500 flex items-center justify-center shrink-0 border border-red-100">
-                                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                                    <path
-                                                        d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
-                                                </svg>
-                                            </div>
-                                            <div>
-                                                <p class="text-sm font-bold text-slate-800 line-clamp-1"
-                                                    x-text="resumeName">Resume.pdf</p>
-                                                <p
-                                                    class="text-[10px] text-slate-500 uppercase font-semibold tracking-wider">
-                                                    Uploaded & Parsed</p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Replace Button -->
-                                        <button @click="resumeUploaded = false"
-                                            class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                                            title="Replace File">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
+                        class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-lg">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
                     </div>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-2">Upload Your Resume</h2>
+                    <p class="text-slate-500">Get instant AI-powered ATS compatibility analysis</p>
+                </div>
 
-                    <!-- Extracted Data Preview (Glass) -->
-                    <div class="bg-white/40 backdrop-blur-md rounded-3xl border border-white/60 p-6 shadow-lg"
-                        x-show="parsedData">
-                        <h3 class="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <label
+                    class="relative flex flex-col items-center justify-center w-full h-48 rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-300"
+                    :class="isAnalyzing ? 'border-emerald-500 bg-emerald-50/50' :
+                        'border-slate-300 hover:border-emerald-400 bg-slate-50/50 hover:bg-white'">
+
+                    <div x-show="!isAnalyzing" class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <div class="w-14 h-14 mb-4 rounded-full bg-white shadow-md flex items-center justify-center">
+                            <svg class="w-7 h-7 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M10 21h7a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v11m0 5l4.879-4.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242z">
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
                                 </path>
                             </svg>
-                            Extracted Profile
-                        </h3>
-                        <div class="space-y-4">
-                            <div class="flex items-start gap-3">
-                                <div
-                                    class="w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-400 shrink-0">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <label class="text-[10px] uppercase font-bold text-slate-400">Identity</label>
-                                    <div class="text-sm font-bold text-slate-800" x-text="parsedData?.name || '-'"></div>
-                                    <div class="text-xs text-slate-500" x-text="parsedData?.email || '-'"></div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="text-[10px] uppercase font-bold text-slate-400 mb-2 block">Top Skills
-                                    Detected</label>
-                                <div class="flex flex-wrap gap-1.5">
-                                    <template x-for="skill in (parsedData?.skills || [])">
-                                        <span
-                                            class="px-2.5 py-1 bg-white/80 border border-slate-100 text-slate-600 rounded-lg text-[11px] font-medium shadow-sm"
-                                            x-text="skill"></span>
-                                    </template>
-                                    <span x-show="!parsedData?.skills?.length" class="text-xs text-slate-400 italic">No
-                                        skills automatically detected.</span>
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Right Column: JD & Action (Col-span-8) -->
-                <div class="lg:col-span-8 space-y-8">
-
-                    <!-- Step 2: JD Input -->
-                    <div
-                        class="relative bg-white rounded-[2rem] border border-slate-200 shadow-2xl shadow-slate-200/50 p-1">
-                        <div class="p-8">
-                            <div class="flex items-center justify-between mb-6">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-lg shadow-indigo-500/30">
-                                        2</div>
-                                    <div>
-                                        <h2 class="text-lg font-bold text-slate-800">Target Role</h2>
-                                        <p class="text-xs text-slate-500">Paste the job description you are applying for
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="relative group">
-                                <div
-                                    class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl opacity-20 group-focus-within:opacity-100 transition duration-500 blur">
-                                </div>
-                                <div class="relative">
-                                    <textarea x-model="jobDescription"
-                                        class="w-full h-72 p-6 bg-slate-50 border-0 rounded-xl focus:ring-0 text-slate-700 text-sm leading-7 placeholder:text-slate-400 resize-none font-medium transition-colors focus:bg-white"
-                                        placeholder="Paste the full job description here...
-• Responsibilities
-• Requirements
-• Desired Skills"></textarea>
-
-                                    <!-- Character Count -->
-                                    <div class="absolute bottom-4 right-4 text-xs font-mono px-2 py-1 bg-white rounded-md border border-slate-200 text-slate-400 shadow-sm transition-colors"
-                                        :class="jobDescription.length >= 50 ? 'text-green-600 border-green-200 bg-green-50' : ''">
-                                        <span x-text="jobDescription.length">0</span> chars
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Action Bar -->
-                            <div class="mt-8 flex items-center justify-end gap-4">
-                                <div class="text-xs text-slate-400 italic" x-show="!isValidToGenerate && !isGenerating">
-                                    <span x-show="!resumeUploaded">Upload resume first • </span>
-                                    <span x-show="jobDescription.length < 50">Paste JD (min 50 chars)</span>
-                                </div>
-
-                                <!-- New Submit Button Design -->
-                                <button type="button" @click.prevent="generateResume" :disabled="!isValidToGenerate"
-                                    class="group relative inline-flex items-center justify-center px-10 py-5 text-base font-bold text-white transition-all duration-300 shadow-xl rounded-2xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 overflow-hidden transform hover:-translate-y-1"
-                                    :class="!isValidToGenerate ?
-                                        'bg-slate-300 cursor-not-allowed opacity-70 shadow-none hover:translate-y-0' :
-                                        'bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 hover:shadow-2xl hover:shadow-indigo-500/40'">
-
-                                    <!-- Background Animation -->
-                                    <div
-                                        class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-[200%] rotate-45 transition-transform duration-1000 group-hover:translate-x-[200%]">
-                                    </div>
-
-                                    <span class="relative flex items-center gap-3">
-                                        <template x-if="!isGenerating">
-                                            <div class="flex items-center gap-3">
-                                                <svg class="w-6 h-6 text-indigo-100" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
-                                                    </path>
-                                                </svg>
-                                                <span class="tracking-wide text-lg">Generate Magic Resume</span>
-                                            </div>
-                                        </template>
-
-                                        <template x-if="isGenerating">
-                                            <div class="flex items-center gap-3">
-                                                <svg class="animate-spin w-6 h-6 text-white"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                    viewBox="0 0 24 24">
-                                                    <circle class="opacity-25" cx="12" cy="12" r="10"
-                                                        stroke="currentColor" stroke-width="4"></circle>
-                                                    <path class="opacity-75" fill="currentColor"
-                                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                                    </path>
-                                                </svg>
-                                                <span class="tracking-wide text-lg animate-pulse">Crafting your new
-                                                    CV...</span>
-                                            </div>
-                                        </template>
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
+                        <p class="mb-1 text-sm font-semibold text-slate-700">Click to upload resume</p>
+                        <p class="text-xs text-slate-400">PDF or DOCX (max 5MB)</p>
                     </div>
 
-                    <!-- Result Section -->
-                    <div x-show="generated" style="display: none;" x-transition:enter="transition ease-out duration-500"
-                        x-transition:enter-start="opacity-0 translate-y-8"
-                        x-transition:enter-end="opacity-100 translate-y-0"
-                        class="relative overflow-hidden rounded-[2rem] bg-slate-900 border border-slate-800 shadow-2xl">
-
-                        <!-- Background Effects -->
-                        <div
-                            class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-indigo-500/30 blur-[100px] rounded-full pointer-events-none">
-                        </div>
-                        <div
-                            class="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-purple-500/20 blur-[100px] rounded-full pointer-events-none">
-                        </div>
-
-                        <div class="relative p-10">
-                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-                                <div>
-                                    <h2 class="text-3xl font-bold text-white mb-2">Resume Optimized! 🚀</h2>
-                                    <p class="text-slate-400 text-lg">Your new ATS-ready resume is ready for download.</p>
-                                </div>
-                                <div
-                                    class="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full border border-white/10 backdrop-blur-sm">
-                                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                                    <span class="text-xs font-bold text-green-300 uppercase tracking-widest">AI
-                                        Processed</span>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <a href="{{ route('resume-builder.download', ['format' => 'pdf']) }}" target="_blank"
-                                    class="group relative flex items-center justify-center gap-3 p-6 bg-white rounded-2xl hover:bg-slate-50 transition-all border border-transparent hover:scale-[1.02] shadow-xl">
-                                    <div
-                                        class="bg-red-50 p-3 rounded-xl border border-red-100 group-hover:bg-red-100 transition-colors">
-                                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                    <div class="text-left">
-                                        <p class="text-slate-900 font-bold text-lg">Download PDF</p>
-                                        <p class="text-slate-500 text-xs">Best for Applications</p>
-                                    </div>
-                                    <div
-                                        class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-slate-300">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                        </svg>
-                                    </div>
-                                </a>
-
-                                <a href="{{ route('resume-builder.download', ['format' => 'docx']) }}" target="_blank"
-                                    class="group relative flex items-center justify-center gap-3 p-6 bg-slate-800/80 rounded-2xl hover:bg-slate-800 transition-all border border-slate-700 hover:border-slate-600 hover:scale-[1.02] shadow-xl">
-                                    <div
-                                        class="bg-blue-900/50 p-3 rounded-xl border border-blue-800 group-hover:bg-blue-900 transition-colors">
-                                        <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                    <div class="text-left">
-                                        <p class="text-white font-bold text-lg">Download Word</p>
-                                        <p class="text-slate-400 text-xs">Formatted for Editing</p>
-                                    </div>
-                                    <div
-                                        class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-slate-500">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                        </svg>
-                                    </div>
-                                </a>
+                    <div x-show="isAnalyzing" style="display: none;"
+                        class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <div class="relative w-14 h-14 mb-4">
+                            <div class="absolute inset-0 rounded-full border-4 border-emerald-100"></div>
+                            <div
+                                class="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin">
                             </div>
                         </div>
+                        <p class="text-sm text-emerald-600 font-bold animate-pulse">Analyzing your resume...</p>
+                        <p class="text-xs text-slate-400 mt-1">This may take a moment</p>
                     </div>
 
-                </div>
+                    <input type="file" class="hidden" @change="analyzeResume" accept=".pdf,.docx">
+                </label>
             </div>
+
+            <!-- Analysis Results -->
+            <div x-show="analysisComplete" id="analysis-results" style="display: none;" class="space-y-6">
+
+                <!-- Score Card -->
+                <div class="relative bg-white rounded-3xl p-8 border border-slate-200 shadow-xl overflow-hidden">
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-emerald-100 to-teal-50 rounded-full blur-3xl opacity-50 -mr-20 -mt-20">
+                    </div>
+
+                    <div class="relative flex flex-col md:flex-row md:items-center gap-8">
+                        <!-- Score Circle -->
+                        <div class="flex-shrink-0">
+                            <div class="relative w-36 h-36">
+                                <svg class="w-36 h-36 transform -rotate-90">
+                                    <circle cx="72" cy="72" r="64" fill="none" stroke="#e2e8f0"
+                                        stroke-width="12">
+                                    </circle>
+                                    <circle cx="72" cy="72" r="64" fill="none"
+                                        :stroke="getScoreColor(analysisResult?.overall_score || 0)" stroke-width="12"
+                                        stroke-linecap="round"
+                                        :stroke-dasharray="`${(analysisResult?.overall_score || 0) * 4.02} 999`">
+                                    </circle>
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span class="text-4xl font-bold"
+                                        :style="`color: ${getScoreColor(analysisResult?.overall_score || 0)}`"
+                                        x-text="analysisResult?.overall_score || 0"></span>
+                                    <span class="text-xs text-slate-500 font-medium">/ 100</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <h3 class="text-2xl font-bold text-slate-800">ATS Score</h3>
+                                <span class="px-3 py-1 rounded-full text-sm font-semibold"
+                                    :style="`background-color: ${getScoreColor(analysisResult?.overall_score || 0)}20; color: ${getScoreColor(analysisResult?.overall_score || 0)}`"
+                                    x-text="getScoreLabel(analysisResult?.overall_score || 0)"></span>
+                            </div>
+                            <p class="text-slate-600 mb-4" x-text="analyzerFileName"></p>
+                            <button @click="resetAnalysis"
+                                class="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-medium transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                                    </path>
+                                </svg>
+                                Analyze Another Resume
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Priority Summary Card -->
+                <template x-if="analysisResult?.priority_summary">
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                                </path>
+                            </svg>
+                            Priority Action Items
+                        </h4>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="text-center p-4 rounded-xl bg-red-50 border border-red-100">
+                                <div class="text-3xl font-bold text-red-600"
+                                    x-text="analysisResult.priority_summary.critical || 0"></div>
+                                <div class="text-sm font-medium text-red-700">🔴 Critical</div>
+                            </div>
+                            <div class="text-center p-4 rounded-xl bg-amber-50 border border-amber-100">
+                                <div class="text-3xl font-bold text-amber-600"
+                                    x-text="analysisResult.priority_summary.important || 0"></div>
+                                <div class="text-sm font-medium text-amber-700">🟡 Important</div>
+                            </div>
+                            <div class="text-center p-4 rounded-xl bg-emerald-50 border border-emerald-100">
+                                <div class="text-3xl font-bold text-emerald-600"
+                                    x-text="analysisResult.priority_summary.optional || 0"></div>
+                                <div class="text-sm font-medium text-emerald-700">🟢 Optional</div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Section Breakdown -->
+                <template x-if="analysisResult?.section_breakdown?.length > 0">
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                            </svg>
+                            Section-by-Section Breakdown
+                        </h4>
+                        <div class="space-y-3">
+                            <template x-for="sec in analysisResult.section_breakdown" :key="sec.section">
+                                <div
+                                    class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-xl"
+                                            x-text="sec.status === 'complete' ? '✅' : sec.status === 'present' ? '✅' : sec.status === 'needs_improvement' ? '⚠️' : '❌'"></span>
+                                        <div>
+                                            <p class="font-semibold text-slate-800" x-text="sec.section"></p>
+                                            <p class="text-xs text-slate-500" x-text="sec.word_count + ' words'"></p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="px-2 py-1 rounded-full text-xs font-medium"
+                                            :class="sec.status === 'complete' ? 'bg-emerald-100 text-emerald-700' : sec
+                                                .status === 'present' ? 'bg-blue-100 text-blue-700' : sec
+                                                .status === 'needs_improvement' ? 'bg-amber-100 text-amber-700' :
+                                                'bg-red-100 text-red-700'"
+                                            x-text="sec.status.replace('_', ' ')"></span>
+                                        <template x-if="sec.issues?.length > 0">
+                                            <p class="text-xs text-slate-500 mt-1" x-text="sec.issues[0]"></p>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Content Metrics -->
+                <template x-if="analysisResult?.content_metrics">
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                                </path>
+                            </svg>
+                            Content Strength Metrics
+                        </h4>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="text-center p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <div class="text-2xl font-bold text-slate-800"
+                                    x-text="analysisResult.content_metrics.total_words || 0"></div>
+                                <div class="text-xs text-slate-500">Total Words</div>
+                            </div>
+                            <div class="text-center p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <div class="text-2xl font-bold text-emerald-600"
+                                    x-text="(analysisResult.content_metrics.action_verb_percentage || 0) + '%'"></div>
+                                <div class="text-xs text-slate-500">Action Verbs</div>
+                            </div>
+                            <div class="text-center p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <div class="text-2xl font-bold text-blue-600">
+                                    <span x-text="analysisResult.content_metrics.quantifiable_achievements || 0"></span>
+                                    <span class="text-sm text-slate-400">/ <span
+                                            x-text="analysisResult.content_metrics.recommended_achievements || 15"></span></span>
+                                </div>
+                                <div class="text-xs text-slate-500">Achievements</div>
+                            </div>
+                            <div class="text-center p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                <div class="text-2xl font-bold text-indigo-600"
+                                    x-text="analysisResult.content_metrics.keywords_found || 0"></div>
+                                <div class="text-xs text-slate-500">Keywords Found</div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- ATS Compatibility Checklist -->
+                <template x-if="analysisResult?.ats_checklist?.length > 0">
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            ATS Compatibility Checklist
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <template x-for="item in analysisResult.ats_checklist" :key="item.item">
+                                <div class="flex items-center gap-3 p-3 rounded-xl"
+                                    :class="item.passed ? 'bg-emerald-50' : 'bg-red-50'">
+                                    <span class="text-xl" x-text="item.passed ? '✅' : '❌'"></span>
+                                    <div class="flex-1">
+                                        <p class="font-medium" :class="item.passed ? 'text-emerald-800' : 'text-red-800'"
+                                            x-text="item.item"></p>
+                                        <template x-if="item.note">
+                                            <p class="text-xs" :class="item.passed ? 'text-emerald-600' : 'text-red-600'"
+                                                x-text="item.note"></p>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Improvement Examples (Before/After) -->
+                <template x-if="analysisResult?.improvement_examples?.length > 0">
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                            Before → After Examples
+                        </h4>
+                        <div class="space-y-4">
+                            <template x-for="(ex, idx) in analysisResult.improvement_examples" :key="idx">
+                                <div
+                                    class="p-4 rounded-xl bg-gradient-to-r from-slate-50 to-emerald-50 border border-slate-200">
+                                    <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2"
+                                        x-text="ex.section"></div>
+                                    <div class="grid md:grid-cols-2 gap-4">
+                                        <div class="p-3 rounded-lg bg-red-50 border border-red-200">
+                                            <div class="text-xs font-bold text-red-600 mb-1">❌ Current</div>
+                                            <p class="text-sm text-red-800" x-text="ex.current"></p>
+                                        </div>
+                                        <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+                                            <div class="text-xs font-bold text-emerald-600 mb-1">✅ Improved</div>
+                                            <p class="text-sm text-emerald-800" x-text="ex.improved"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Contact & Resume Length Row -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Contact Validation -->
+                    <template x-if="analysisResult?.contact_validation">
+                        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                            <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-cyan-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                                Contact Validation
+                            </h4>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50">
+                                    <span class="text-sm text-slate-600">Email</span>
+                                    <span
+                                        x-text="analysisResult.contact_validation.email?.present ? (analysisResult.contact_validation.email?.professional ? '✅ Professional' : '⚠️ Present') : '❌ Missing'"
+                                        class="text-sm font-medium"></span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50">
+                                    <span class="text-sm text-slate-600">Phone</span>
+                                    <span
+                                        x-text="analysisResult.contact_validation.phone?.present ? '✅ Present' : '❌ Missing'"
+                                        class="text-sm font-medium"></span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50">
+                                    <span class="text-sm text-slate-600">LinkedIn</span>
+                                    <span
+                                        x-text="analysisResult.contact_validation.linkedin?.present ? '✅ Present' : '❌ Missing'"
+                                        class="text-sm font-medium"></span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50">
+                                    <span class="text-sm text-slate-600">Location</span>
+                                    <span
+                                        x-text="analysisResult.contact_validation.location?.present ? '✅ Present' : '❌ Missing'"
+                                        class="text-sm font-medium"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Resume Length -->
+                    <template x-if="analysisResult?.resume_length">
+                        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                            <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-violet-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    </path>
+                                </svg>
+                                Resume Length
+                            </h4>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-slate-600">Estimated Pages</span>
+                                    <span class="text-2xl font-bold text-slate-800"
+                                        x-text="analysisResult.resume_length.estimated_pages || '~1'"></span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-slate-600">Recommended</span>
+                                    <span class="text-lg font-medium text-emerald-600"
+                                        x-text="(analysisResult.resume_length.recommended_pages || 1) + ' page(s)'"></span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-slate-600">Density</span>
+                                    <span class="px-3 py-1 rounded-full text-sm font-medium"
+                                        :class="analysisResult.resume_length.content_density === 'good' ?
+                                            'bg-emerald-100 text-emerald-700' : analysisResult.resume_length
+                                            .content_density === 'sparse' ? 'bg-amber-100 text-amber-700' :
+                                            'bg-red-100 text-red-700'"
+                                        x-text="analysisResult.resume_length.content_density || 'N/A'"></span>
+                                </div>
+                                <template x-if="analysisResult.resume_length.verdict">
+                                    <p class="text-sm text-slate-500 italic"
+                                        x-text="analysisResult.resume_length.verdict"></p>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Missing Sections -->
+                <template x-if="analysisResult?.missing_sections?.length > 0">
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                </path>
+                            </svg>
+                            Missing Sections
+                        </h4>
+                        <div class="space-y-3">
+                            <template x-for="section in analysisResult.missing_sections" :key="section.section">
+                                <div class="flex items-start gap-3 p-3 rounded-xl border"
+                                    :class="getPriorityColor(section.priority)">
+                                    <span class="px-2 py-0.5 text-xs font-bold uppercase rounded"
+                                        :class="section.priority === 'critical' ? 'bg-red-200 text-red-800' : section
+                                            .priority === 'important' ? 'bg-amber-200 text-amber-800' :
+                                            'bg-blue-200 text-blue-800'"
+                                        x-text="section.priority"></span>
+                                    <div>
+                                        <p class="font-semibold" x-text="section.section"></p>
+                                        <p class="text-sm opacity-75" x-text="section.suggestion"></p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Recommendations -->
+                <template x-if="analysisResult?.recommendations?.length > 0">
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Recommendations
+                        </h4>
+                        <div class="space-y-3">
+                            <template x-for="rec in analysisResult.recommendations" :key="rec.title">
+                                <div class="flex items-start gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100">
+                                    <span class="px-2 py-0.5 text-xs font-bold uppercase rounded flex-shrink-0"
+                                        :class="rec.priority === 'critical' ? 'bg-red-100 text-red-700' : rec
+                                            .priority === 'important' ? 'bg-amber-100 text-amber-700' :
+                                            'bg-blue-100 text-blue-700'"
+                                        x-text="rec.priority"></span>
+                                    <div>
+                                        <p class="font-semibold text-slate-800" x-text="rec.title"></p>
+                                        <p class="text-sm text-slate-600 mt-1" x-text="rec.description"></p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Keyword Suggestions -->
+                <template x-if="analysisResult?.keyword_suggestions?.length > 0">
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
+                                </path>
+                            </svg>
+                            Suggested Keywords
+                        </h4>
+                        <div class="space-y-2">
+                            <template x-for="kw in analysisResult.keyword_suggestions" :key="kw.keyword">
+                                <div
+                                    class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-3 py-1 rounded-full text-sm font-medium border"
+                                            :class="kw.relevance === 'high' ?
+                                                'bg-emerald-50 text-emerald-700 border-emerald-200' : kw
+                                                .relevance === 'medium' ?
+                                                'bg-amber-50 text-amber-700 border-amber-200' :
+                                                'bg-slate-50 text-slate-600 border-slate-200'"
+                                            x-text="kw.keyword"></span>
+                                        <span class="text-xs px-2 py-0.5 rounded bg-slate-200 text-slate-600"
+                                            x-text="kw.relevance"></span>
+                                    </div>
+                                    <template x-if="kw.where_to_add">
+                                        <span class="text-xs text-slate-500" x-text="'→ ' + kw.where_to_add"></span>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Formatting Issues -->
+                <template x-if="analysisResult?.formatting_issues?.length > 0">
+                    <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-lg">
+                        <h4 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                </path>
+                            </svg>
+                            Formatting Issues
+                        </h4>
+                        <div class="space-y-2">
+                            <template x-for="issue in analysisResult.formatting_issues" :key="issue.issue">
+                                <div class="flex items-start gap-3 p-3 rounded-lg bg-slate-50">
+                                    <svg class="w-5 h-5 flex-shrink-0 mt-0.5" :class="getSeverityColor(issue.severity)"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <div>
+                                        <p class="font-medium text-slate-800" x-text="issue.issue"></p>
+                                        <p class="text-sm text-slate-500" x-text="issue.fix"></p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+
+            </div>
+
         </div>
 
         <style>
@@ -534,4 +639,5 @@
                 animation-delay: 4s;
             }
         </style>
-    @endsection
+    </div>
+@endsection

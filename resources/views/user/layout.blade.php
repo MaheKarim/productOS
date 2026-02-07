@@ -49,10 +49,11 @@
             { id: 'dashboard', label: 'Dashboard', route: '{{ route('dashboard') }}', icon: 'dashboard', section: 'Main' },
             { id: 'career-compass', label: 'Career Compass', route: '{{ route('career-compass.history') }}', icon: 'map', section: 'Main' },
             { id: 'strategic-roadmap', label: 'Strategic Roadmap', route: '{{ route('user.strategic-roadmap.index') }}', icon: 'roadmap', section: 'Main' },
-            { id: 'resume-builder', label: 'Resume Builder', route: '{{ route('resume-builder.index') }}', icon: 'file-text', section: 'Main' },
+            { id: 'resume-builder', label: 'Resume Analyzer', route: '{{ route('resume-builder.index') }}', icon: 'file-text', section: 'Main' },
             { id: 'yt-summarizer', label: 'YT Summarizer', route: '{{ route('user.yt-summarize.index') }}', icon: 'video', section: 'Main' },
             { id: 'profile', label: 'Profile', route: '{{ route('profile.edit') }}', icon: 'user', section: 'Account' },
             { id: 'interview-prep', label: 'Interview Prep', route: '#', icon: 'clipboard-list', section: 'Account' },
+            { id: 'feedback', label: 'Feedback', route: '{{ route('feedback.dashboard') }}', icon: 'message-circle', section: 'Account' },
             { id: 'settings', label: 'Settings', route: '#', icon: 'settings', section: 'Support' },
             { id: 'help', label: 'Help', route: '#', icon: 'help', section: 'Support' }
         ],
@@ -145,24 +146,18 @@
                     </div>
                 </a>
 
-                @php $resumeStatus = $featureService->checkAccess(Auth::user(), 'resume_builder'); @endphp
-                <a href="{{ $resumeStatus['status'] === 'inactive' ? '#' : route('resume-builder.index') }}"
-                    x-show="isVisible({label: 'Resume Builder'})"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('resume-builder.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }} {{ $resumeStatus['status'] === 'inactive' ? 'opacity-60 cursor-not-allowed' : '' }}">
+
+                <a href="{{ route('resume-builder.index') }}" x-show="isVisible({label: 'Resume Analyzer'})"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('resume-builder.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('resume-builder.*') ? 'text-blue-600' : 'text-slate-400' }}"
                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                         </path>
                     </svg>
-                    <div class="flex-1 flex items-center justify-between">
-                        <span x-html="highlight('Resume Builder')">Resume Builder</span>
-                        @if ($resumeStatus['status'] === 'inactive')
-                            <span
-                                class="text-[10px] bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded font-medium">Soon</span>
-                        @endif
-                    </div>
+                    <span x-html="highlight('Resume Analyzer')">Resume Analyzer</span>
                 </a>
+
 
                 <a href="{{ route('user.yt-summarize.index') }}" x-show="isVisible({label: 'YT Summarizer'})"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('user.yt-summarize.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
@@ -229,6 +224,17 @@
                     <span
                         class="ml-auto text-xs px-1.5 py-0.5 bg-slate-100 text-slate-400 rounded font-medium">Soon</span>
                 </a>
+            </div>
+            <a href="{{ route('feedback.dashboard') }}" x-show="isVisible({label: 'Feedback'})"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('feedback.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                <svg class="w-5 h-5 {{ request()->routeIs('feedback.*') ? 'text-blue-600' : 'text-slate-400' }}"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
+                    </path>
+                </svg>
+                <span x-html="highlight('Feedback')">Feedback</span>
+            </a>
             </div>
         </nav>
 
@@ -335,7 +341,7 @@
                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
                         </path>
                     </svg>
-                    Resume Builder
+                    Resume Analyzer
                 </a>
                 <a href="{{ route('user.yt-summarize.index') }}"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50">
@@ -696,12 +702,12 @@
                                     <div class="flex items-center justify-between mt-2">
                                         <span class="text-xs text-slate-400">${item.time_since_created}</span>
                                         ${item.notification.action_text && item.notification.action_url ? `
-                                                                <a href="${item.notification.action_url}" target="_blank"
-                                                                   onclick="event.stopPropagation(); recordActionClick(${item.id}, '${item.notification.action_url}')"
-                                                                   class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
-                                                                    ${item.notification.action_text}
-                                                                </a>
-                                                            ` : ''}
+                                                                                    <a href="${item.notification.action_url}" target="_blank"
+                                                                                       onclick="event.stopPropagation(); recordActionClick(${item.id}, '${item.notification.action_url}')"
+                                                                                       class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
+                                                                                        ${item.notification.action_text}
+                                                                                    </a>
+                                                                                ` : ''}
                                     </div>
                                 </div>
                             </div>

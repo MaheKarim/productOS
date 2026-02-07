@@ -449,6 +449,17 @@
                     </div>
 
 
+                    <a href="{{ route('admin.feedback.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.feedback.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="feedback">
+                        <i data-lucide="message-circle"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.feedback.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        Feedback
+                        <span
+                            class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-blue-500/20 text-blue-400 font-bold">
+                            {{ \App\Models\Feedback::where('status', 'submitted')->count() }}
+                        </span>
+                    </a>
                     <a href="{{ route('admin.notice-bars.index') }}"
                         class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.notice-bars.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
                         data-menu-name="notice-bars">

@@ -26,6 +26,11 @@
                 </p>
 
                 <div class="mt-8 flex flex-wrap gap-4">
+                    <a href="{{ route('feedback.dashboard') }}"
+                        class="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/20">
+                        <i class="fas fa-comment-dots mr-2"></i>
+                        My Feedback
+                    </a>
                     <a href="{{ route('profile.edit') }}"
                         class="px-6 py-3 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-50 transition-colors shadow-lg shadow-white/10">
                         Edit Profile
@@ -55,7 +60,8 @@
                 @else
                     <div
                         class="absolute top-2 right-2 bg-amber-50 text-amber-600 text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 border border-amber-100">
-                        <i class="fa-solid fa-coins"></i> {{ $roadmapStatus['feature']->credit_cost }}
+                        <i class="fa-solid fa-coins"></i>
+                        {{ $roadmapStatus['feature']->credit_cost ?? ($roadmapStatus['cost'] ?? 0) }}
                     </div>
                 @endif
                 <div
@@ -77,7 +83,8 @@
                 @else
                     <div
                         class="absolute top-2 right-2 bg-amber-50 text-amber-600 text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 border border-amber-100">
-                        <i class="fa-solid fa-coins"></i> {{ $resumeStatus['feature']->credit_cost }}
+                        <i class="fa-solid fa-coins"></i>
+                        {{ $resumeStatus['feature']->credit_cost ?? ($resumeStatus['cost'] ?? 0) }}
                     </div>
                 @endif
                 <div
@@ -99,7 +106,8 @@
                 @else
                     <div
                         class="absolute top-2 right-2 bg-amber-50 text-amber-600 text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 border border-amber-100">
-                        <i class="fa-solid fa-coins"></i> {{ $interviewStatus['feature']->credit_cost }}
+                        <i class="fa-solid fa-coins"></i>
+                        {{ $interviewStatus['feature']->credit_cost ?? ($interviewStatus['cost'] ?? 0) }}
                     </div>
                 @endif
                 <div

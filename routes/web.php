@@ -138,6 +138,7 @@ Route::middleware(['auth', 'onboarding'])->group(function () {
         Route::get('/', [\App\Http\Controllers\ResumeBuilderController::class, 'index'])->name('index');
         Route::post('/upload', [\App\Http\Controllers\ResumeBuilderController::class, 'upload'])->name('upload');
         Route::post('/generate', [\App\Http\Controllers\ResumeBuilderController::class, 'generate'])->name('generate');
+        Route::post('/analyze', [\App\Http\Controllers\ResumeBuilderController::class, 'analyze'])->name('analyze');
         Route::get('/download/{format}', [\App\Http\Controllers\ResumeBuilderController::class, 'download'])->name('download');
     });
 
@@ -170,6 +171,18 @@ Route::middleware(['auth', 'onboarding'])->group(function () {
         Route::post('/bulk/destroy', [\App\Http\Controllers\UserNotificationController::class, 'bulkDestroy'])->name('bulk.destroy');
         Route::post('/{userNotification}/action-click', [\App\Http\Controllers\UserNotificationController::class, 'recordActionClick'])->name('action-click');
         Route::get('/grouped', [\App\Http\Controllers\UserNotificationController::class, 'grouped'])->name('grouped');
+    });
+
+    // Feedback System
+    // Feedback System
+    Route::prefix('my/feedback')->name('feedback.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\FeedbackController::class, 'dashboard'])->name('dashboard'); // Default to dashboard
+        Route::get('/submit', [\App\Http\Controllers\FeedbackController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\FeedbackController::class, 'store'])->name('store');
+        Route::get('/thank-you/{feedback}', [\App\Http\Controllers\FeedbackController::class, 'thankYou'])->name('thank-you');
+        // Route::get('/my-feedback', [\App\Http\Controllers\FeedbackController::class, 'dashboard'])->name('dashboard'); // Removed redundant
+        Route::get('/{feedbackId}', [\App\Http\Controllers\FeedbackController::class, 'show'])->name('show');
+        Route::post('/{feedbackId}/withdraw', [\App\Http\Controllers\FeedbackController::class, 'withdraw'])->name('withdraw');
     });
 });
 
@@ -362,5 +375,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('jobs/parse', [\App\Http\Controllers\Admin\JobController::class, 'parse'])->name('admin.jobs.parse');
     Route::resource('jobs', \App\Http\Controllers\Admin\JobController::class)->names('admin.jobs');
     Route::resource('job-categories', \App\Http\Controllers\Admin\JobCategoryController::class)->names('admin.job-categories');
+
+    // Feedback Management
+    Route::prefix('feedback')->name('admin.feedback.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\FeedbackController::class, 'index'])->name('index');
+        Route::get('/analytics', [\App\Http\Controllers\Admin\FeedbackController::class, 'analytics'])->name('analytics');
+        Route::get('/export', [\App\Http\Controllers\Admin\FeedbackController::class, 'export'])->name('export');
+        Route::post('/bulk-update-status', [\App\Http\Controllers\Admin\FeedbackController::class, 'bulkUpdateStatus'])->name('bulk-update-status');
+        Route::post('/analyze', [\App\Http\Controllers\Admin\FeedbackController::class, 'analyze'])->name('analyze');
+        Route::get('/{feedbackId}', [\App\Http\Controllers\Admin\FeedbackController::class, 'show'])->name('show');
+        Route::patch('/{feedbackId}/status', [\App\Http\Controllers\Admin\FeedbackController::class, 'updateStatus'])->name('update-status');
+        Route::post('/{feedbackId}/internal-note', [\App\Http\Controllers\Admin\FeedbackController::class, 'addInternalNote'])->name('add-internal-note');
+    });
 });
 

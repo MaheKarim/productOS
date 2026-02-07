@@ -169,4 +169,28 @@ class User extends Authenticatable implements CanResetPassword
     {
         return $this->notificationPreferences ?? NotificationPreference::getForUser($this->id);
     }
+
+    /**
+     * Get the user's feedback submissions.
+     */
+    public function feedback()
+    {
+        return $this->hasMany(Feedback::class);
+    }
+
+    /**
+     * Get the user's active feedback (not withdrawn).
+     */
+    public function activeFeedback()
+    {
+        return $this->feedback()->active();
+    }
+
+    /**
+     * Get the user's feedback status history changes as admin.
+     */
+    public function feedbackStatusChanges()
+    {
+        return $this->hasMany(FeedbackStatusHistory::class, 'admin_user_id');
+    }
 }
