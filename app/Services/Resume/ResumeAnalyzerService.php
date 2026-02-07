@@ -207,12 +207,17 @@ PROMPT;
   }
 
   /**
-   * Save analysis to database.
+   * Save analysis to database (replaces any existing analysis for user).
    */
   protected function saveAnalysis(array $data, string $rawText, ?string $fileName): ResumeAnalysis
   {
+    $userId = Auth::id();
+
+    // Delete any existing analyses for this user (keep only latest)
+    ResumeAnalysis::where('user_id', $userId)->delete();
+
     return ResumeAnalysis::create([
-      'user_id' => Auth::id(),
+      'user_id' => $userId,
       'file_name' => $fileName,
       'overall_score' => $data['overall_score'] ?? 0,
       'priority_summary' => $data['priority_summary'] ?? [],

@@ -28,7 +28,13 @@ class ResumeBuilderController extends Controller
     public function index()
     {
         $user = Auth::user();
-        return view('tools.resume-builder.index', compact('user'));
+
+        // Load existing analysis for this user (if any)
+        $existingAnalysis = \App\Models\ResumeAnalysis::where('user_id', $user->id)
+            ->latest()
+            ->first();
+
+        return view('tools.resume-builder.index', compact('user', 'existingAnalysis'));
     }
 
     public function upload(Request $request)

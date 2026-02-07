@@ -77,105 +77,107 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {{-- Featured Directory Items --}}
                 <div
-                    class="relative group bg-[#0f172a] rounded-[2rem] p-6 border border-amber-500/10 overflow-hidden hover:border-amber-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_-5px_rgba(245,158,11,0.15)]">
+                    class="relative group bg-white rounded-2xl p-6 border border-slate-200 shadow-sm overflow-hidden hover:border-amber-300 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                     <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-amber-500/10 transition-colors">
+                        class="absolute top-0 right-0 w-24 h-24 bg-amber-100 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 opacity-50">
                     </div>
 
                     <div class="relative z-10 flex flex-col h-full justify-between">
                         <div class="mb-4">
                             <div
-                                class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                                <i data-lucide="star" class="text-amber-500 w-6 h-6"></i>
+                                class="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="star" class="text-amber-600 w-6 h-6"></i>
                             </div>
-                            <h4 class="text-xs font-bold text-amber-500 uppercase tracking-widest mb-1">Directory</h4>
-                            <p class="text-3xl font-black text-white tracking-tight">{{ $stats['directory_featured'] }}</p>
-                            <p class="text-xs text-slate-400 font-medium mt-1">Featured across platform</p>
+                            <h4 class="text-xs font-bold text-amber-600 uppercase tracking-widest mb-1">Directory</h4>
+                            <p class="text-3xl font-black text-slate-800 tracking-tight">{{ $stats['directory_featured'] }}
+                            </p>
+                            <p class="text-xs text-slate-500 font-medium mt-1">Featured across platform</p>
                         </div>
                         <a href="{{ route('admin.directory.index', ['featured' => 1]) }}"
-                            class="flex items-center justify-between w-full p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 hover:border-amber-500/30 transition-all group/link">
-                            <span class="text-xs font-bold text-slate-300 group-hover/link:text-white">View Featured</span>
+                            class="flex items-center justify-between w-full p-2 rounded-lg bg-slate-50 hover:bg-amber-50 border border-slate-100 hover:border-amber-200 transition-all group/link">
+                            <span class="text-xs font-bold text-slate-600 group-hover/link:text-amber-700">View
+                                Featured</span>
                             <i data-lucide="arrow-right"
-                                class="w-4 h-4 text-slate-500 group-hover/link:text-amber-500 transition-colors"></i>
+                                class="w-4 h-4 text-slate-400 group-hover/link:text-amber-600 transition-colors"></i>
                         </a>
                     </div>
                 </div>
 
                 {{-- Impact Projects --}}
                 <div
-                    class="relative group bg-[#0f172a] rounded-[2rem] p-6 border border-emerald-500/10 overflow-hidden hover:border-emerald-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_-5px_rgba(16,185,129,0.15)]">
+                    class="relative group bg-white rounded-2xl p-6 border border-slate-200 shadow-sm overflow-hidden hover:border-emerald-300 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                     <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-emerald-500/10 transition-colors">
+                        class="absolute top-0 right-0 w-24 h-24 bg-emerald-100 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 opacity-50">
                     </div>
 
                     <div class="relative z-10 flex flex-col h-full justify-between">
                         <div class="mb-4">
                             <div
-                                class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                                <i data-lucide="briefcase" class="text-emerald-500 w-6 h-6"></i>
+                                class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="briefcase" class="text-emerald-600 w-6 h-6"></i>
                             </div>
-                            <h4 class="text-xs font-bold text-emerald-500 uppercase tracking-widest mb-1">Projects</h4>
-                            <p class="text-3xl font-black text-white tracking-tight">{{ $stats['projects'] }}</p>
-                            <p class="text-xs text-slate-400 font-medium mt-1">Active implementations</p>
+                            <h4 class="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1">Projects</h4>
+                            <p class="text-3xl font-black text-slate-800 tracking-tight">{{ $stats['projects'] }}</p>
+                            <p class="text-xs text-slate-500 font-medium mt-1">Active implementations</p>
                         </div>
                         <a href="{{ route('admin.projects.index') }}"
-                            class="flex items-center justify-between w-full p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 hover:border-emerald-500/30 transition-all group/link">
-                            <span class="text-xs font-bold text-slate-300 group-hover/link:text-white">Manage
+                            class="flex items-center justify-between w-full p-2 rounded-lg bg-slate-50 hover:bg-emerald-50 border border-slate-100 hover:border-emerald-200 transition-all group/link">
+                            <span class="text-xs font-bold text-slate-600 group-hover/link:text-emerald-700">Manage
                                 Projects</span>
                             <i data-lucide="arrow-right"
-                                class="w-4 h-4 text-slate-500 group-hover/link:text-emerald-500 transition-colors"></i>
+                                class="w-4 h-4 text-slate-400 group-hover/link:text-emerald-600 transition-colors"></i>
                         </a>
                     </div>
                 </div>
 
                 {{-- Testimonials --}}
                 <div
-                    class="relative group bg-[#0f172a] rounded-[2rem] p-6 border border-violet-500/10 overflow-hidden hover:border-violet-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.15)]">
+                    class="relative group bg-white rounded-2xl p-6 border border-slate-200 shadow-sm overflow-hidden hover:border-violet-300 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                     <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-violet-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-violet-500/10 transition-colors">
+                        class="absolute top-0 right-0 w-24 h-24 bg-violet-100 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 opacity-50">
                     </div>
 
                     <div class="relative z-10 flex flex-col h-full justify-between">
                         <div class="mb-4">
                             <div
-                                class="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                                <i data-lucide="message-square" class="text-violet-500 w-6 h-6"></i>
+                                class="w-12 h-12 rounded-xl bg-violet-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="message-square" class="text-violet-600 w-6 h-6"></i>
                             </div>
-                            <h4 class="text-xs font-bold text-violet-500 uppercase tracking-widest mb-1">Testimonials</h4>
-                            <p class="text-3xl font-black text-white tracking-tight">{{ $stats['testimonials'] }}</p>
-                            <p class="text-xs text-slate-400 font-medium mt-1">Client feedback</p>
+                            <h4 class="text-xs font-bold text-violet-600 uppercase tracking-widest mb-1">Testimonials</h4>
+                            <p class="text-3xl font-black text-slate-800 tracking-tight">{{ $stats['testimonials'] }}</p>
+                            <p class="text-xs text-slate-500 font-medium mt-1">Client feedback</p>
                         </div>
                         <a href="{{ route('admin.testimonials.index') }}"
-                            class="flex items-center justify-between w-full p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 hover:border-violet-500/30 transition-all group/link">
-                            <span class="text-xs font-bold text-slate-300 group-hover/link:text-white">View All</span>
+                            class="flex items-center justify-between w-full p-2 rounded-lg bg-slate-50 hover:bg-violet-50 border border-slate-100 hover:border-violet-200 transition-all group/link">
+                            <span class="text-xs font-bold text-slate-600 group-hover/link:text-violet-700">View All</span>
                             <i data-lucide="arrow-right"
-                                class="w-4 h-4 text-slate-500 group-hover/link:text-violet-500 transition-colors"></i>
+                                class="w-4 h-4 text-slate-400 group-hover/link:text-violet-600 transition-colors"></i>
                         </a>
                     </div>
                 </div>
 
                 {{-- Footer Config --}}
                 <div
-                    class="relative group bg-[#0f172a] rounded-[2rem] p-6 border border-pink-500/10 overflow-hidden hover:border-pink-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_-5px_rgba(236,72,153,0.15)]">
+                    class="relative group bg-white rounded-2xl p-6 border border-slate-200 shadow-sm overflow-hidden hover:border-pink-300 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                     <div
-                        class="absolute top-0 right-0 w-24 h-24 bg-pink-500/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-pink-500/10 transition-colors">
+                        class="absolute top-0 right-0 w-24 h-24 bg-pink-100 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 opacity-50">
                     </div>
 
                     <div class="relative z-10 flex flex-col h-full justify-between">
                         <div class="mb-4">
                             <div
-                                class="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                                <i data-lucide="settings-2" class="text-pink-500 w-6 h-6"></i>
+                                class="w-12 h-12 rounded-xl bg-pink-100 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="settings-2" class="text-pink-600 w-6 h-6"></i>
                             </div>
-                            <h4 class="text-xs font-bold text-pink-500 uppercase tracking-widest mb-1">Configuration</h4>
-                            <p class="text-3xl font-black text-white tracking-tight">{{ $stats['footer'] }}</p>
-                            <p class="text-xs text-slate-400 font-medium mt-1">System settings</p>
+                            <h4 class="text-xs font-bold text-pink-600 uppercase tracking-widest mb-1">Configuration</h4>
+                            <p class="text-3xl font-black text-slate-800 tracking-tight">{{ $stats['footer'] }}</p>
+                            <p class="text-xs text-slate-500 font-medium mt-1">System settings</p>
                         </div>
                         <a href="{{ route('admin.footer.index') }}"
-                            class="flex items-center justify-between w-full p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/5 hover:border-pink-500/30 transition-all group/link">
-                            <span class="text-xs font-bold text-slate-300 group-hover/link:text-white">Manage</span>
+                            class="flex items-center justify-between w-full p-2 rounded-lg bg-slate-50 hover:bg-pink-50 border border-slate-100 hover:border-pink-200 transition-all group/link">
+                            <span class="text-xs font-bold text-slate-600 group-hover/link:text-pink-700">Manage</span>
                             <i data-lucide="arrow-right"
-                                class="w-4 h-4 text-slate-500 group-hover/link:text-pink-500 transition-colors"></i>
+                                class="w-4 h-4 text-slate-400 group-hover/link:text-pink-600 transition-colors"></i>
                         </a>
                     </div>
                 </div>

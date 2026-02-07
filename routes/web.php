@@ -184,6 +184,15 @@ Route::middleware(['auth', 'onboarding'])->group(function () {
         Route::get('/{feedbackId}', [\App\Http\Controllers\FeedbackController::class, 'show'])->name('show');
         Route::post('/{feedbackId}/withdraw', [\App\Http\Controllers\FeedbackController::class, 'withdraw'])->name('withdraw');
     });
+
+    // AI ICP Builder
+    Route::prefix('my/icp-builder')->name('icp-builder.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\IcpBuilderController::class, 'index'])->name('index');
+        Route::get('/wizard', [\App\Http\Controllers\IcpBuilderController::class, 'create'])->name('create');
+        Route::post('/generate', [\App\Http\Controllers\IcpBuilderController::class, 'store'])->name('store');
+        Route::get('/{icp}', [\App\Http\Controllers\IcpBuilderController::class, 'show'])->name('show');
+    });
+
 });
 
 // Public Roadmap

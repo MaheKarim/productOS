@@ -50,6 +50,7 @@
             { id: 'career-compass', label: 'Career Compass', route: '{{ route('career-compass.history') }}', icon: 'map', section: 'Main' },
             { id: 'strategic-roadmap', label: 'Strategic Roadmap', route: '{{ route('user.strategic-roadmap.index') }}', icon: 'roadmap', section: 'Main' },
             { id: 'resume-builder', label: 'Resume Analyzer', route: '{{ route('resume-builder.index') }}', icon: 'file-text', section: 'Main' },
+            { id: 'icp-builder', label: 'ICP Generator', route: '{{ route('icp-builder.index') }}', icon: 'target', section: 'Main' },
             { id: 'yt-summarizer', label: 'YT Summarizer', route: '{{ route('user.yt-summarize.index') }}', icon: 'video', section: 'Main' },
             { id: 'profile', label: 'Profile', route: '{{ route('profile.edit') }}', icon: 'user', section: 'Account' },
             { id: 'interview-prep', label: 'Interview Prep', route: '#', icon: 'clipboard-list', section: 'Account' },
@@ -156,6 +157,20 @@
                         </path>
                     </svg>
                     <span x-html="highlight('Resume Analyzer')">Resume Analyzer</span>
+                </a>
+
+                <a href="{{ route('icp-builder.index') }}" x-show="isVisible({label: 'ICP Generator'})"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('icp-builder.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('icp-builder.*') ? 'text-blue-600' : 'text-slate-400' }}"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"></circle>
+                        <circle cx="12" cy="12" r="6" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"></circle>
+                        <circle cx="12" cy="12" r="2" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"></circle>
+                    </svg>
+                    <span x-html="highlight('ICP Generator')">ICP Generator</span>
                 </a>
 
 
@@ -342,6 +357,11 @@
                         </path>
                     </svg>
                     Resume Analyzer
+                </a>
+                <a href="{{ route('icp-builder.index') }}"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50">
+                    <i data-lucide="target" class="w-5 h-5 text-slate-400"></i>
+                    ICP Generator
                 </a>
                 <a href="{{ route('user.yt-summarize.index') }}"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50">
@@ -702,12 +722,12 @@
                                     <div class="flex items-center justify-between mt-2">
                                         <span class="text-xs text-slate-400">${item.time_since_created}</span>
                                         ${item.notification.action_text && item.notification.action_url ? `
-                                                                                    <a href="${item.notification.action_url}" target="_blank"
-                                                                                       onclick="event.stopPropagation(); recordActionClick(${item.id}, '${item.notification.action_url}')"
-                                                                                       class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
-                                                                                        ${item.notification.action_text}
-                                                                                    </a>
-                                                                                ` : ''}
+                                                                                                    <a href="${item.notification.action_url}" target="_blank"
+                                                                                                       onclick="event.stopPropagation(); recordActionClick(${item.id}, '${item.notification.action_url}')"
+                                                                                                       class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
+                                                                                                        ${item.notification.action_text}
+                                                                                                    </a>
+                                                                                                ` : ''}
                                     </div>
                                 </div>
                             </div>

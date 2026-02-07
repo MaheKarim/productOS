@@ -8,9 +8,9 @@
             return {
                 // Analyzer state
                 isAnalyzing: false,
-                analysisComplete: false,
-                analysisResult: null,
-                analyzerFileName: '',
+                analysisComplete: @json($existingAnalysis ? true : false),
+                analysisResult: @json($existingAnalysis),
+                analyzerFileName: @json($existingAnalysis?->file_name ?? ''),
 
                 async analyzeResume(e) {
                     const file = e.target.files[0];
@@ -87,6 +87,7 @@
             }
         }
     </script>
+
 
     <div class="relative min-h-screen py-8" x-data="resumeAnalyzer()">
 
