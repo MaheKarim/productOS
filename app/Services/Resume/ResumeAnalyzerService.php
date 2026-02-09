@@ -3,6 +3,7 @@
 namespace App\Services\Resume;
 
 use App\Models\ResumeAnalysis;
+use App\Models\SystemPrompt;
 use App\Services\AiProviderService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -72,6 +73,25 @@ class ResumeAnalyzerService
    * Build the AI prompt for ATS analysis.
    */
   protected function buildAnalysisPrompt(string $resumeText): string
+  {
+    // Fetch prompt from database
+    $systemPrompt = SystemPrompt::where('type', 'resume_ats_analysis')
+      ->where('is_default', true)
+      ->first();
+
+    if ($systemPrompt) {
+      // Replace placeholder with actual resume text
+      return str_replace('{{resume_text}}', $resumeText, $systemPrompt->content);
+    }
+
+    // Fallback to default prompt if not found in database
+    return $this->getDefaultAtsPrompt($resumeText);
+  }
+
+  /**
+   * Get the default ATS analysis prompt (fallback).
+   */
+  protected function getDefaultAtsPrompt(string $resumeText): string
   {
     return <<<PROMPT
 You are an ATS analyzer. Return ONLY valid JSON, no markdown or explanation.
@@ -292,6 +312,47 @@ PROMPT;
     $requiredSkills = implode(', ', $jobDetails['skills'] ?? []);
     $experienceLevel = $jobDetails['experience_level'] ?? 'Not specified';
 
+    // Fetch prompt from database
+    $systemPrompt = SystemPrompt::where('type', 'resume_job_analysis')
+      ->where('is_default', true)
+      ->first();
+
+    if ($systemPrompt) {
+      // Replace placeholders with actual values
+      $prompt = str_replace([
+        '{{job_title}}',
+        '{{company}}',
+        '{{experience_level}}',
+        '{{required_skills}}',
+        '{{job_description}}',
+        '{{resume_text}}',
+      ], [
+        $jobTitle,
+        $company,
+        $experienceLevel,
+        $requiredSkills,
+        $jobDescription,
+        $resumeText,
+      ], $systemPrompt->content);
+
+      return $prompt;
+    }
+
+    // Fallback to default prompt
+    return $this->getDefaultJobAnalysisPrompt($resumeText, $jobTitle, $company, $experienceLevel, $requiredSkills, $jobDescription);
+  }
+
+  /**
+   * Get the default job analysis prompt (fallback).
+   */
+  protected function getDefaultJobAnalysisPrompt(
+    string $resumeText,
+    string $jobTitle,
+    string $company,
+    string $experienceLevel,
+    string $requiredSkills,
+    string $jobDescription
+  ): string {
     return <<<PROMPT
 You are an expert resume analyst. Compare the candidate's resume against the job posting and provide a comprehensive analysis.
 

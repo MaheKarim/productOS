@@ -148,18 +148,6 @@
                             class="mr-3 w-5 h-5 {{ request()->routeIs('admin.dashboard') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
                         Dashboard
                     </a>
-                    <!-- Reports Section -->
-                    <div class="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Reports & Logs</p>
-                    </div>
-
-                    <a href="{{ route('admin.activity-logs.index') }}"
-                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.activity-logs.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
-                        data-menu-name="activity-logs">
-                        <i data-lucide="list-checks"
-                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.activity-logs.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
-                        Activity Logs
-                    </a>
 
                     <div class="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">AI System
                     </div>
@@ -251,8 +239,6 @@
                         <i data-lucide="map"
                             class="mr-3 w-5 h-5 {{ request()->routeIs('admin.roadmap.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
                         PM Roadmap
-                        <span
-                            class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-teal-500/20 text-teal-400 font-bold">{{ \App\Models\RoadmapTopic::count() }}</span>
                     </a>
 
                     {{-- Question Bank Management --}}
@@ -455,10 +441,6 @@
                         <i data-lucide="message-circle"
                             class="mr-3 w-5 h-5 {{ request()->routeIs('admin.feedback.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
                         Feedback
-                        <span
-                            class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-blue-500/20 text-blue-400 font-bold">
-                            {{ \App\Models\Feedback::where('status', 'submitted')->count() }}
-                        </span>
                     </a>
                     <a href="{{ route('admin.notice-bars.index') }}"
                         class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.notice-bars.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
@@ -474,11 +456,21 @@
                         <i data-lucide="bell"
                             class="mr-3 w-5 h-5 {{ request()->routeIs('admin.notifications.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
                         Notifications
-                        <span
-                            class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-indigo-500/20 text-indigo-400 font-bold">
-                            {{ \App\Models\Notification::count() }}
-                        </span>
+
                     </a>
+                    <!-- Reports Section -->
+
+                    <div class="px-4 mb-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Reports &
+                        Logs
+                    </div>
+                    <a href="{{ route('admin.activity-logs.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.activity-logs.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="activity-logs">
+                        <i data-lucide="list-checks"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.activity-logs.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        Activity Logs
+                    </a>
+
 
                     <a href="{{ route('admin.settings.index') }}"
                         class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.settings.index') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}">

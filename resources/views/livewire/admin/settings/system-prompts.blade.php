@@ -122,13 +122,28 @@
 
                     <!-- Body -->
                     <div class="px-6 py-6 space-y-5">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                             <!-- Name -->
                             <div class="space-y-1.5">
                                 <label class="block text-sm font-medium text-slate-700">Prompt Name</label>
                                 <input type="text" wire:model="form.name" placeholder="e.g., Marketing Analysis"
                                     class="block w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-soft">
                                 @error('form.name')
+                                    <span class="text-rose-500 text-xs flex items-center mt-1"><i data-lucide="alert-circle"
+                                            class="w-3 h-3 mr-1"></i>{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <!-- Type -->
+                            <div class="space-y-1.5">
+                                <label class="block text-sm font-medium text-slate-700">Prompt Type</label>
+                                <select wire:model="form.type"
+                                    class="block w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 sm:text-sm transition-soft">
+                                    <option value="youtube_analysis">YouTube Analysis</option>
+                                    <option value="resume_ats_analysis">Resume ATS Analysis</option>
+                                    <option value="resume_job_analysis">Resume vs Job Analysis</option>
+                                </select>
+                                @error('form.type')
                                     <span class="text-rose-500 text-xs flex items-center mt-1"><i data-lucide="alert-circle"
                                             class="w-3 h-3 mr-1"></i>{{ $message }}</span>
                                 @enderror
@@ -151,7 +166,8 @@
                         <div class="space-y-2">
                             <div class="flex justify-between items-center">
                                 <label class="block text-sm font-medium text-slate-700">System Instructions</label>
-                                <span class="text-xs font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded">Markdown
+                                <span
+                                    class="text-xs font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded">Markdown
                                     Supported</span>
                             </div>
                             <div class="relative group">
