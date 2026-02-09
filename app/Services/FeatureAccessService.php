@@ -24,6 +24,11 @@ class FeatureAccessService
             return ['status' => 'inactive', 'message' => 'This feature is coming soon'];
         }
 
+        // -1 means unlimited usage, no credit check needed
+        if ($feature->credit_cost == -1) {
+            return ['status' => 'allowed', 'feature' => $feature];
+        }
+
         if ($user->credits < $feature->credit_cost) {
             return [
                 'status' => 'insufficient_credits',
@@ -46,6 +51,12 @@ class FeatureAccessService
         if (!$feature || !$feature->is_active) {
             $this->logUsage($user, $featureKey, 0, 0, 'inactive', $metadata); // Log attempts on inactive features
             return false;
+        }
+
+        // -1 means unlimited usage, no credit deduction needed
+        if ($feature->credit_cost == -1) {
+            $this->logUsage($user, $featureKey, 0, $user->credits, 'success', $metadata);
+            return true;
         }
 
         // zero cost checks

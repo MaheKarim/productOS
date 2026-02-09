@@ -34,8 +34,6 @@ class SystemSettingsController extends Controller
             'email_templates' => 'Email Templates',
             'maintenance' => 'Maintenance',
             'auth' => 'User & Auth',
-            'logs' => 'Activity Logs',
-            'notifications' => 'Notifications',
         ];
 
         return view('admin.system-settings.index', compact('settings', 'groups'));

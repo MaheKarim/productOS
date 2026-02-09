@@ -47,11 +47,16 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-2">
-                                            <i class="fa-solid fa-coins text-amber-500 text-xs"></i>
+                                            @if ($feature->credit_cost == -1)
+                                                <i class="fa-solid fa-infinity text-green-500 text-xs"></i>
+                                            @else
+                                                <i class="fa-solid fa-coins text-amber-500 text-xs"></i>
+                                            @endif
                                             <input type="number" name="credit_cost" value="{{ $feature->credit_cost }}"
-                                                min="0"
-                                                class="w-20 px-2 py-1 text-sm border border-slate-200 rounded-md focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all">
+                                                min="-1"
+                                                class="w-20 px-2 py-1 text-sm border border-slate-200 rounded-md focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all {{ $feature->credit_cost == -1 ? 'text-green-600 font-medium' : '' }}">
                                         </div>
+                                        <p class="text-xs text-slate-400 mt-1">-1 = Unlimited</p>
                                     </td>
                                     <td class="px-6 py-4">
                                         <label class="relative inline-flex items-center cursor-pointer">

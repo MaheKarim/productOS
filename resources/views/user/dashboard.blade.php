@@ -59,9 +59,14 @@
                         Coming Soon</div>
                 @else
                     <div
-                        class="absolute top-2 right-2 bg-amber-50 text-amber-600 text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 border border-amber-100">
-                        <i class="fa-solid fa-coins"></i>
-                        {{ $roadmapStatus['feature']->credit_cost ?? ($roadmapStatus['cost'] ?? 0) }}
+                        class="absolute top-2 right-2 {{ ($roadmapStatus['feature']->credit_cost ?? 0) == -1 ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600' }} text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 border {{ ($roadmapStatus['feature']->credit_cost ?? 0) == -1 ? 'border-green-100' : 'border-amber-100' }}">
+                        @if (($roadmapStatus['feature']->credit_cost ?? 0) == -1)
+                            <i class="fa-solid fa-infinity"></i>
+                            Unlimited
+                        @else
+                            <i class="fa-solid fa-coins"></i>
+                            {{ $roadmapStatus['feature']->credit_cost ?? ($roadmapStatus['cost'] ?? 0) }}
+                        @endif
                     </div>
                 @endif
                 <div
@@ -82,9 +87,14 @@
                         Coming Soon</div>
                 @else
                     <div
-                        class="absolute top-2 right-2 bg-amber-50 text-amber-600 text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 border border-amber-100">
-                        <i class="fa-solid fa-coins"></i>
-                        {{ $resumeStatus['feature']->credit_cost ?? ($resumeStatus['cost'] ?? 0) }}
+                        class="absolute top-2 right-2 {{ ($resumeStatus['feature']->credit_cost ?? 0) == -1 ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600' }} text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 border {{ ($resumeStatus['feature']->credit_cost ?? 0) == -1 ? 'border-green-100' : 'border-amber-100' }}">
+                        @if (($resumeStatus['feature']->credit_cost ?? 0) == -1)
+                            <i class="fa-solid fa-infinity"></i>
+                            Unlimited
+                        @else
+                            <i class="fa-solid fa-coins"></i>
+                            {{ $resumeStatus['feature']->credit_cost ?? ($resumeStatus['cost'] ?? 0) }}
+                        @endif
                     </div>
                 @endif
                 <div
@@ -105,9 +115,14 @@
                         Coming Soon</div>
                 @else
                     <div
-                        class="absolute top-2 right-2 bg-amber-50 text-amber-600 text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 border border-amber-100">
-                        <i class="fa-solid fa-coins"></i>
-                        {{ $interviewStatus['feature']->credit_cost ?? ($interviewStatus['cost'] ?? 0) }}
+                        class="absolute top-2 right-2 {{ ($interviewStatus['feature']->credit_cost ?? 0) == -1 ? 'bg-green-50 text-green-600' : 'bg-amber-50 text-amber-600' }} text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 border {{ ($interviewStatus['feature']->credit_cost ?? 0) == -1 ? 'border-green-100' : 'border-amber-100' }}">
+                        @if (($interviewStatus['feature']->credit_cost ?? 0) == -1)
+                            <i class="fa-solid fa-infinity"></i>
+                            Unlimited
+                        @else
+                            <i class="fa-solid fa-coins"></i>
+                            {{ $interviewStatus['feature']->credit_cost ?? ($interviewStatus['cost'] ?? 0) }}
+                        @endif
                     </div>
                 @endif
                 <div

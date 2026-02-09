@@ -1110,7 +1110,7 @@
                     </div>
                     <div class="text-right">
                         <p class="text-xs text-slate-500">${feature.credits_consumed} credits used</p>
-                        <p class="text-xs text-slate-400">${feature.credit_cost} credits/cost</p>
+                        <p class="text-xs ${feature.credit_cost == -1 ? 'text-green-500 font-medium' : 'text-slate-400'}">${feature.credit_cost == -1 ? 'Unlimited' : feature.credit_cost + ' credits/cost'}</p>
                     </div>
                 </div>
             `).join('');

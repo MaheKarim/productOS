@@ -24,7 +24,7 @@ class FeatureController extends Controller
     {
         $validated = $request->validate([
             'is_active' => 'boolean',
-            'credit_cost' => 'required|integer|min:0',
+            'credit_cost' => 'required|integer|min:-1',
         ]);
 
         // Handle checkbox logic (if unchecked, it's not sent in request)
