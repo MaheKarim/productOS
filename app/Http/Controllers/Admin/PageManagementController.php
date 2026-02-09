@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Feature;
 use App\Models\Page;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,9 @@ class PageManagementController extends Controller
             ->orderBy('menu_order')
             ->get();
 
-        return view('admin.pages.index', compact('pages'));
+        $features = Feature::all();
+
+        return view('admin.pages.index', compact('pages', 'features'));
     }
 
     /**
