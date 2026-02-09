@@ -70,6 +70,22 @@
                                 <i data-lucide="external-link" class="w-4 h-4"></i>
                             </a>
                         @endif
+
+                        {{-- Analyze With My Resume Button --}}
+                        @auth
+                            <a href="{{ route('user.job-analyze.index-with-job', $job->slug) }}"
+                                class="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl transition-all cursor-pointer shadow-lg shadow-purple-600/20">
+                                <i data-lucide="file-text" class="w-4 h-4"></i>
+                                Analyze With My Resume
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}?redirect={{ urlencode(route('jobs.show', $job->slug)) }}"
+                                class="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl transition-all cursor-pointer shadow-lg shadow-purple-600/20">
+                                <i data-lucide="file-text" class="w-4 h-4"></i>
+                                Analyze With My Resume
+                            </a>
+                        @endauth
+
                         <span class="text-sm text-slate-400">
                             Posted {{ $job->posted_date ? $job->posted_date->diffForHumans() : 'Recently' }}
                         </span>

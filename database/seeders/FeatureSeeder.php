@@ -25,7 +25,7 @@ class FeatureSeeder extends Seeder
             ],
             [
                 'key' => 'resume_builder',
-                'name' => 'Resume Builder',
+                'name' => 'Resume Analyzer',
                 'description' => 'Build professional ATS-friendly resumes',
                 'is_active' => true,
                 'credit_cost' => 15,
@@ -40,6 +40,24 @@ class FeatureSeeder extends Seeder
                 'credit_cost' => 5,
                 'route_name' => 'user.strategic-roadmap.index',
                 'icon' => 'fa-solid fa-map-location-dot',
+            ],
+            [
+                'key' => 'icp_builder',
+                'name' => 'AI ICP Builder',
+                'description' => 'Build ideal customer profiles with AI assistance',
+                'is_active' => true,
+                'credit_cost' => 10,
+                'route_name' => 'icp.index',
+                'icon' => 'fa-solid fa-users-viewfinder',
+            ],
+            [
+                'key' => 'job_analyze',
+                'name' => 'Job Analyze',
+                'description' => 'Analyze job postings against your resume',
+                'is_active' => true,
+                'credit_cost' => 5,
+                'route_name' => 'user.job-analyze.index',
+                'icon' => 'fa-solid fa-magnifying-glass-chart',
             ],
         ];
 

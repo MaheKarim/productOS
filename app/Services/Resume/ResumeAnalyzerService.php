@@ -237,4 +237,170 @@ PROMPT;
     ]);
   }
 
+  /**
+   * Analyze resume against a specific job posting.
+   */
+  public function analyzeAgainstJob(string $resumeText, array $jobDetails): array
+  {
+    $provider = $this->aiService->getActiveProvider();
+
+    if (!$provider) {
+      throw new \Exception('No AI provider available for analysis.');
+    }
+
+    // Increase time limit for AI processing
+    set_time_limit(180);
+
+    // Truncate text to prevent timeout
+    $truncatedResume = mb_substr($resumeText, 0, 8000);
+    $truncatedJobDesc = mb_substr($jobDetails['description'] ?? '', 0, 4000);
+
+    $prompt = $this->buildJobAnalysisPrompt($truncatedResume, $jobDetails);
+
+    try {
+      $response = $this->aiService->makeCompletionRequestWithFailover(
+        $provider,
+        $provider->default_model,
+        [['role' => 'user', 'content' => $prompt]],
+        ['max_tokens' => 4096]
+      );
+
+      if (!$response['success']) {
+        Log::error('Job-Resume Analysis AI request failed: ' . ($response['error'] ?? 'Unknown'));
+        throw new \Exception('AI analysis failed. Please try again.');
+      }
+
+      $content = $response['data']['choices'][0]['message']['content'];
+      $analysisData = $this->parseJobAnalysisResponse($content);
+
+      return $analysisData;
+
+    } catch (\Exception $e) {
+      Log::error('Job-resume analysis error: ' . $e->getMessage());
+      throw $e;
+    }
+  }
+
+  /**
+   * Build the AI prompt for job-resume analysis.
+   */
+  protected function buildJobAnalysisPrompt(string $resumeText, array $jobDetails): string
+  {
+    $jobTitle = $jobDetails['title'] ?? 'Unknown Position';
+    $company = $jobDetails['company'] ?? 'Unknown Company';
+    $jobDescription = $jobDetails['description'] ?? '';
+    $requiredSkills = implode(', ', $jobDetails['skills'] ?? []);
+    $experienceLevel = $jobDetails['experience_level'] ?? 'Not specified';
+
+    return <<<PROMPT
+You are an expert resume analyst. Compare the candidate's resume against the job posting and provide a comprehensive analysis.
+
+JOB POSTING:
+Title: {$jobTitle}
+Company: {$company}
+Experience Level: {$experienceLevel}
+Required Skills: {$requiredSkills}
+
+Job Description:
+{$jobDescription}
+
+CANDIDATE RESUME:
+{$resumeText}
+
+Return ONLY valid JSON with this structure:
+{
+  "overall_match_score": 0-100,
+  "match_summary": "Brief summary of overall fit",
+  "gap_analysis": {
+    "missing_skills": [{"skill": "skill name", "importance": "critical|important|nice_to_have", "suggestion": "how to address"}],
+    "missing_qualifications": [{"qualification": "qualification", "importance": "critical|important", "suggestion": "how to address"}],
+    "experience_gaps": [{"area": "area", "current": "current level", "required": "required level", "gap": "description"}]
+  },
+  "strengths_assessment": {
+    "skill_matches": [{"skill": "skill name", "proficiency": "high|medium|low", "evidence": "where shown in resume"}],
+    "relevant_experience": [{"experience": "experience description", "relevance": "high|medium|low", "years": "duration"}],
+    "achievements_aligned": [{"achievement": "achievement", "alignment": "how it aligns with job", "impact": "high|medium|low"}]
+  },
+  "weakness_identification": {
+    "skill_weaknesses": [{"skill": "skill area", "current_level": "current assessment", "improvement_needed": "what needs improvement"}],
+    "experience_shortfalls": [{"area": "experience area", "shortfall": "what's missing", "recommendation": "how to gain experience"}],
+    "presentation_issues": [{"issue": "presentation problem", "impact": "severity", "solution": "how to fix"}]
+  },
+  "resume_optimization_suggestions": {
+    "keyword_optimizations": [{"keyword": "important keyword", "current_usage": "how used now", "recommended_usage": "how to use better"}],
+    "content_recommendations": [{"section": "resume section", "current_state": "current content", "recommended_change": "what to change"}],
+    "formatting_improvements": [{"aspect": "formatting aspect", "current_issue": "current problem", "improvement": "how to improve"}]
+  },
+  "interview_prep_focus_areas": {
+    "strengths_to_emphasize": ["strength 1", "strength 2"],
+    "weaknesses_to_address": ["weakness 1", "weakness 2"],
+    "key_stories_to_prepare": [{"story": "achievement or experience", "relevance": "why it's important for this job"}],
+    "technical_topics_to_review": ["topic 1", "topic 2"]
+  },
+  "next_steps": {
+    "immediate_actions": ["action 1", "action 2"],
+    "long_term_improvements": ["improvement 1", "improvement 2"],
+    "interview_preparation_priority": "high|medium|low"
+  }
+}
+
+Be specific and actionable. Provide concrete examples and clear recommendations. Focus on practical advice that will help the candidate improve their chances.
+PROMPT;
+  }
+
+  /**
+   * Parse the AI response for job analysis.
+   */
+  protected function parseJobAnalysisResponse(string $content): array
+  {
+    Log::info('Job Analysis raw response (first 500 chars): ' . substr($content, 0, 500));
+
+    $json = $content;
+
+    // Try to extract JSON from markdown code block
+    if (preg_match('/```(?:json)?\s*([\s\S]*?)\s*```/', $content, $matches)) {
+      $json = $matches[1];
+    }
+    // Try to find JSON object pattern
+    elseif (preg_match('/\{[\s\S]*"overall_match_score"[\s\S]*\}/', $content, $matches)) {
+      $json = $matches[0];
+    }
+
+    $json = trim($json);
+
+    // Try to fix truncated JSON
+    if (substr($json, -1) !== '}') {
+      $lastBrace = strrpos($json, '}');
+      if ($lastBrace !== false) {
+        $json = substr($json, 0, $lastBrace + 1);
+      }
+    }
+
+    $decoded = json_decode($json, true);
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+      Log::warning('Failed to parse job analysis JSON: ' . json_last_error_msg());
+      return $this->getDefaultJobAnalysis();
+    }
+
+    return $decoded;
+  }
+
+  /**
+   * Get default job analysis structure for fallback.
+   */
+  protected function getDefaultJobAnalysis(): array
+  {
+    return [
+      'overall_match_score' => 0,
+      'match_summary' => 'Analysis could not be completed. Please try again.',
+      'gap_analysis' => ['missing_skills' => [], 'missing_qualifications' => [], 'experience_gaps' => []],
+      'strengths_assessment' => ['skill_matches' => [], 'relevant_experience' => [], 'achievements_aligned' => []],
+      'weakness_identification' => ['skill_weaknesses' => [], 'experience_shortfalls' => [], 'presentation_issues' => []],
+      'resume_optimization_suggestions' => ['keyword_optimizations' => [], 'content_recommendations' => [], 'formatting_improvements' => []],
+      'interview_prep_focus_areas' => ['strengths_to_emphasize' => [], 'weaknesses_to_address' => [], 'key_stories_to_prepare' => [], 'technical_topics_to_review' => []],
+      'next_steps' => ['immediate_actions' => [], 'long_term_improvements' => [], 'interview_preparation_priority' => 'medium'],
+    ];
+  }
+
 }

@@ -50,6 +50,7 @@
             { id: 'career-compass', label: 'Career Compass', route: '{{ route('career-compass.history') }}', icon: 'map', section: 'Main' },
             { id: 'strategic-roadmap', label: 'Strategic Roadmap', route: '{{ route('user.strategic-roadmap.index') }}', icon: 'roadmap', section: 'Main' },
             { id: 'resume-builder', label: 'Resume Analyzer', route: '{{ route('resume-builder.index') }}', icon: 'file-text', section: 'Main' },
+            { id: 'job-analyze', label: 'Job Analyze', route: '{{ route('user.job-analyze.index') }}', icon: 'search', section: 'Main' },
             { id: 'icp-builder', label: 'ICP Generator', route: '{{ route('icp-builder.index') }}', icon: 'target', section: 'Main' },
             { id: 'yt-summarizer', label: 'YT Summarizer', route: '{{ route('user.yt-summarize.index') }}', icon: 'video', section: 'Main' },
             { id: 'profile', label: 'Profile', route: '{{ route('profile.edit') }}', icon: 'user', section: 'Account' },
@@ -157,6 +158,19 @@
                         </path>
                     </svg>
                     <span x-html="highlight('Resume Analyzer')">Resume Analyzer</span>
+                </a>
+
+                {{-- Job Analyze --}}
+                <a href="{{ route('user.job-analyze.index') }}" x-show="isVisible({label: 'Job Analyze'})"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('user.job-analyze.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('user.job-analyze.*') ? 'text-blue-600' : 'text-slate-400' }}"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7">
+                        </path>
+                    </svg>
+                    <span x-html="highlight('Job Analyze')">Job Analyze</span>
+                    <span id="job-analyze-badge" class="ml-auto text-xs px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded-full font-medium hidden">0</span>
                 </a>
 
                 <a href="{{ route('icp-builder.index') }}" x-show="isVisible({label: 'ICP Generator'})"
@@ -867,6 +881,11 @@
             }, 30000);
         });
     </script>
+
+    <!-- Job Analyze JavaScript -->
+    @if(request()->routeIs('user.job-analyze.*'))
+    <script src="{{ asset('js/job-analyze.js') }}"></script>
+    @endif
 </body>
 
 </html>

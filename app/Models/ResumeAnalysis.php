@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class ResumeAnalysis extends Model
 {
@@ -14,8 +15,12 @@ class ResumeAnalysis extends Model
 
     protected $fillable = [
         'user_id',
+        'uuid',
         'file_name',
+        'job_id',
+        'analysis_type',
         'overall_score',
+        'confidence_score',
         'priority_summary',
         'section_breakdown',
         'content_metrics',
@@ -30,7 +35,31 @@ class ResumeAnalysis extends Model
         'recommendations',
         'action_verbs',
         'raw_resume_text',
+        'job_description',
+        'analysis_results',
     ];
+
+    /**
+     * Bootstrap the model.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uuid)) {
+                $model->uuid = Str::uuid()->toString();
+            }
+        });
+    }
+
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
 
     protected $casts = [
         'priority_summary' => 'array',
@@ -46,6 +75,8 @@ class ResumeAnalysis extends Model
         'section_scores' => 'array',
         'recommendations' => 'array',
         'action_verbs' => 'array',
+        'analysis_results' => 'array',
+        'job_description' => 'array',
     ];
 
     /**
@@ -54,6 +85,38 @@ class ResumeAnalysis extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the job associated with this analysis (if any).
+     */
+    public function job(): BelongsTo
+    {
+        return $this->belongsTo(Job::class, 'job_id');
+    }
+
+    /**
+     * Check if this is a job comparison analysis.
+     */
+    public function isJobComparison(): bool
+    {
+        return $this->analysis_type === 'job_comparison' && !is_null($this->job_id);
+    }
+
+    /**
+     * Get the analysis results as a decoded array.
+     */
+    public function getAnalysisResultsAttribute($value)
+    {
+        return json_decode($value, true) ?? [];
+    }
+
+    /**
+     * Set the analysis results as JSON.
+     */
+    public function setAnalysisResultsAttribute($value)
+    {
+        $this->attributes['analysis_results'] = is_array($value) ? json_encode($value) : $value;
     }
 
     /**

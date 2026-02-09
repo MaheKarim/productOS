@@ -140,6 +140,19 @@ Route::middleware(['auth', 'onboarding'])->group(function () {
         Route::post('/generate', [\App\Http\Controllers\ResumeBuilderController::class, 'generate'])->name('generate');
         Route::post('/analyze', [\App\Http\Controllers\ResumeBuilderController::class, 'analyze'])->name('analyze');
         Route::get('/download/{format}', [\App\Http\Controllers\ResumeBuilderController::class, 'download'])->name('download');
+        Route::get('/analysis/{job_id}', [\App\Http\Controllers\ResumeBuilderController::class, 'jobAnalysis'])->name('job-analysis');
+    });
+
+    // Job Analyze
+    Route::prefix('my/job-analyze')->name('user.job-analyze.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\User\JobAnalyzeController::class, 'index'])->name('index');
+        Route::get('/job/{slug}', [\App\Http\Controllers\User\JobAnalyzeController::class, 'indexWithJob'])->name('index-with-job');
+        Route::get('/{analysis}', [\App\Http\Controllers\User\JobAnalyzeController::class, 'show'])->name('show');
+        Route::get('/{analysis}/prepare-interview', [\App\Http\Controllers\User\JobAnalyzeController::class, 'prepareInterview'])->name('prepare-interview');
+        Route::delete('/{analysis}', [\App\Http\Controllers\User\JobAnalyzeController::class, 'destroy'])->name('destroy');
+        Route::get('/search/jobs', [\App\Http\Controllers\User\JobAnalyzeController::class, 'searchJobs'])->name('search-jobs');
+        Route::post('/analyze-job', [\App\Http\Controllers\User\JobAnalyzeController::class, 'analyzeJob'])->name('analyze-job');
+        Route::post('/perform-analysis', [\App\Http\Controllers\User\JobAnalyzeController::class, 'performAnalysis'])->name('perform-analysis');
     });
 
     // Interview Preparation
