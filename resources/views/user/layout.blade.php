@@ -148,7 +148,35 @@
                     </div>
                 </a>
 
+                <a href="{{ route('user.yt-summarize.index') }}" x-show="isVisible({label: 'YT Summarizer'})"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('user.yt-summarize.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('user.yt-summarize.*') ? 'text-blue-600' : 'text-slate-400' }}"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                    <span x-html="highlight('YT Summarizer')">YT Summarizer</span>
+                </a>
 
+                <a href="{{ route('icp-builder.index') }}" x-show="isVisible({label: 'ICP Generator'})"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('icp-builder.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
+                    <svg class="w-5 h-5 {{ request()->routeIs('icp-builder.*') ? 'text-blue-600' : 'text-slate-400' }}"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"></circle>
+                        <circle cx="12" cy="12" r="6" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"></circle>
+                        <circle cx="12" cy="12" r="2" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"></circle>
+                    </svg>
+                    <span x-html="highlight('ICP Generator')">ICP Generator</span>
+                </a>
+
+                <p class="px-3 mb-2 text-xs font-medium text-slate-400 uppercase tracking-wider">Career</p>
+
+
+                {{-- Resume Analyze --}}
                 <a href="{{ route('resume-builder.index') }}" x-show="isVisible({label: 'Resume Analyzer'})"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('resume-builder.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
                     <svg class="w-5 h-5 {{ request()->routeIs('resume-builder.*') ? 'text-blue-600' : 'text-slate-400' }}"
@@ -170,34 +198,12 @@
                         </path>
                     </svg>
                     <span x-html="highlight('Job Analyze')">Job Analyze</span>
-                    <span id="job-analyze-badge" class="ml-auto text-xs px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded-full font-medium hidden">0</span>
-                </a>
-
-                <a href="{{ route('icp-builder.index') }}" x-show="isVisible({label: 'ICP Generator'})"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('icp-builder.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
-                    <svg class="w-5 h-5 {{ request()->routeIs('icp-builder.*') ? 'text-blue-600' : 'text-slate-400' }}"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2"></circle>
-                        <circle cx="12" cy="12" r="6" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2"></circle>
-                        <circle cx="12" cy="12" r="2" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2"></circle>
-                    </svg>
-                    <span x-html="highlight('ICP Generator')">ICP Generator</span>
+                    <span id="job-analyze-badge"
+                        class="ml-auto text-xs px-1.5 py-0.5 bg-purple-100 text-purple-600 rounded-full font-medium hidden">0</span>
                 </a>
 
 
-                <a href="{{ route('user.yt-summarize.index') }}" x-show="isVisible({label: 'YT Summarizer'})"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all cursor-pointer {{ request()->routeIs('user.yt-summarize.*') ? 'bg-slate-100 text-slate-900 font-medium' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900' }}">
-                    <svg class="w-5 h-5 {{ request()->routeIs('user.yt-summarize.*') ? 'text-blue-600' : 'text-slate-400' }}"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z">
-                        </path>
-                    </svg>
-                    <span x-html="highlight('YT Summarizer')">YT Summarizer</span>
-                </a>
+
                 @php $interviewStatus = $featureService->checkAccess(Auth::user(), 'interview_prep'); @endphp
                 <a href="{{ $interviewStatus['status'] === 'inactive' ? '#' : route('user.interview-prep.index') }}"
                     x-show="isVisible({label: 'Interview Prep'})"
@@ -736,12 +742,12 @@
                                     <div class="flex items-center justify-between mt-2">
                                         <span class="text-xs text-slate-400">${item.time_since_created}</span>
                                         ${item.notification.action_text && item.notification.action_url ? `
-                                                                                                    <a href="${item.notification.action_url}" target="_blank"
-                                                                                                       onclick="event.stopPropagation(); recordActionClick(${item.id}, '${item.notification.action_url}')"
-                                                                                                       class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
-                                                                                                        ${item.notification.action_text}
-                                                                                                    </a>
-                                                                                                ` : ''}
+                                                                                                                            <a href="${item.notification.action_url}" target="_blank"
+                                                                                                                               onclick="event.stopPropagation(); recordActionClick(${item.id}, '${item.notification.action_url}')"
+                                                                                                                               class="text-xs text-indigo-600 hover:text-indigo-700 font-medium">
+                                                                                                                                ${item.notification.action_text}
+                                                                                                                            </a>
+                                                                                                                        ` : ''}
                                     </div>
                                 </div>
                             </div>
@@ -883,8 +889,8 @@
     </script>
 
     <!-- Job Analyze JavaScript -->
-    @if(request()->routeIs('user.job-analyze.*'))
-    <script src="{{ asset('js/job-analyze.js') }}"></script>
+    @if (request()->routeIs('user.job-analyze.*'))
+        <script src="{{ asset('js/job-analyze.js') }}"></script>
     @endif
 </body>
 
