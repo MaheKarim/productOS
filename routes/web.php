@@ -81,6 +81,9 @@ Route::prefix('directory')->name('directory.')->group(function () {
 // Search
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 
+// Sitemap (Public)
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap.xml');
+
 // Interview Prep Landing Page
 Route::get('/interview-prep', function () {
     return view('frontend.interview-prep');
@@ -408,6 +411,20 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
         Route::get('/{feedbackId}', [\App\Http\Controllers\Admin\FeedbackController::class, 'show'])->name('show');
         Route::patch('/{feedbackId}/status', [\App\Http\Controllers\Admin\FeedbackController::class, 'updateStatus'])->name('update-status');
         Route::post('/{feedbackId}/internal-note', [\App\Http\Controllers\Admin\FeedbackController::class, 'addInternalNote'])->name('add-internal-note');
+    });
+
+    // Sitemap Management
+    Route::prefix('sitemap')->name('admin.sitemap.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\SitemapController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\SitemapController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\SitemapController::class, 'store'])->name('store');
+        Route::get('/preview', [\App\Http\Controllers\Admin\SitemapController::class, 'preview'])->name('preview');
+        Route::post('/generate-defaults', [\App\Http\Controllers\Admin\SitemapController::class, 'generateDefaults'])->name('generate-defaults');
+        Route::post('/bulk-action', [\App\Http\Controllers\Admin\SitemapController::class, 'bulkAction'])->name('bulk-action');
+        Route::get('/{sitemap}/edit', [\App\Http\Controllers\Admin\SitemapController::class, 'edit'])->name('edit');
+        Route::put('/{sitemap}', [\App\Http\Controllers\Admin\SitemapController::class, 'update'])->name('update');
+        Route::delete('/{sitemap}', [\App\Http\Controllers\Admin\SitemapController::class, 'destroy'])->name('destroy');
+        Route::post('/{sitemap}/toggle', [\App\Http\Controllers\Admin\SitemapController::class, 'toggle'])->name('toggle');
     });
 });
 

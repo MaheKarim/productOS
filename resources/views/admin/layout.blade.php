@@ -471,6 +471,16 @@
                         Activity Logs
                     </a>
 
+                    <a href="{{ route('admin.sitemap.index') }}"
+                        class="menu-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.sitemap.*') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}"
+                        data-menu-name="sitemap">
+                        <i data-lucide="network"
+                            class="mr-3 w-5 h-5 {{ request()->routeIs('admin.sitemap.*') ? 'text-indigo-400' : 'text-slate-500 group-hover:text-indigo-400' }}"></i>
+                        Sitemap
+                        <span
+                            class="ml-auto px-2 py-0.5 text-[10px] rounded-full bg-cyan-500/20 text-cyan-400 font-bold">{{ \App\Models\SitemapItem::count() }}</span>
+                    </a>
+
 
                     <a href="{{ route('admin.settings.index') }}"
                         class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-soft {{ request()->routeIs('admin.settings.index') ? 'sidebar-item-active' : 'hover:bg-slate-800/50 hover:text-white' }}">
