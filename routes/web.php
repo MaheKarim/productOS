@@ -89,6 +89,9 @@ Route::get('/interview-prep', function () {
     return view('frontend.interview-prep');
 })->name('interview-prep.landing');
 
+// Gifts & Offers (Public)
+Route::get('/gifts', [\App\Http\Controllers\GiftPageController::class, 'index'])->name('gifts.index');
+
 
 // Auth Routes
 Route::get('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -412,6 +415,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
         Route::patch('/{feedbackId}/status', [\App\Http\Controllers\Admin\FeedbackController::class, 'updateStatus'])->name('update-status');
         Route::post('/{feedbackId}/internal-note', [\App\Http\Controllers\Admin\FeedbackController::class, 'addInternalNote'])->name('add-internal-note');
     });
+
+    // Gift Management
+    Route::resource('gifts', \App\Http\Controllers\Admin\GiftController::class)->except(['show'])->names('admin.gifts');
+    Route::post('gifts/{gift}/toggle', [\App\Http\Controllers\Admin\GiftController::class, 'toggle'])->name('admin.gifts.toggle');
 
     // Sitemap Management
     Route::prefix('sitemap')->name('admin.sitemap.')->group(function () {
