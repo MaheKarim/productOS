@@ -21,7 +21,9 @@ class VideoSeeder extends Seeder
                 'name' => 'OpenAI',
                 'slug' => 'openai',
                 'is_active' => true,
-                'default_model' => 'gpt-4o'
+                'default_model' => 'gpt-4o',
+                'api_key' => encrypt('your-api-key-here'),
+                'base_url' => 'https://api.openai.com/v1',
             ]);
         }
 
