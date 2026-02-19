@@ -62,14 +62,18 @@ class DirectoryItemSeeder extends Seeder
         ];
 
         foreach ($tools as $tool) {
-            DirectoryItem::create(array_merge($tool, [
-                'type' => 'tools',
-                'uuid' => Str::uuid(),
-                'slug' => Str::slug($tool['name']),
-                'is_active' => true,
-                'is_featured' => rand(0, 1),
-                'verification_status' => 'verified',
-            ]));
+            $slug = Str::slug($tool['name']);
+            DirectoryItem::updateOrCreate(
+                ['slug' => $slug],
+                array_merge($tool, [
+                    'type' => 'tools',
+                    'uuid' => Str::uuid(),
+                    'slug' => $slug,
+                    'is_active' => true,
+                    'is_featured' => rand(0, 1),
+                    'verification_status' => 'verified',
+                ])
+            );
         }
 
         // ---------------------------------------------------------
@@ -98,13 +102,17 @@ class DirectoryItemSeeder extends Seeder
         ];
 
         foreach ($learningRefs as $item) {
-            DirectoryItem::create(array_merge($item, [
-                'type' => 'learning',
-                'uuid' => Str::uuid(),
-                'slug' => Str::slug($item['name']),
-                'is_active' => true,
-                'verification_status' => 'verified',
-            ]));
+            $slug = Str::slug($item['name']);
+            DirectoryItem::updateOrCreate(
+                ['slug' => $slug],
+                array_merge($item, [
+                    'type' => 'learning',
+                    'uuid' => Str::uuid(),
+                    'slug' => $slug,
+                    'is_active' => true,
+                    'verification_status' => 'verified',
+                ])
+            );
         }
 
         // ---------------------------------------------------------
@@ -141,13 +149,17 @@ class DirectoryItemSeeder extends Seeder
         ];
 
         foreach ($companies as $item) {
-            DirectoryItem::create(array_merge($item, [
-                'type' => 'companies',
-                'uuid' => Str::uuid(),
-                'slug' => Str::slug($item['name']),
-                'is_active' => true,
-                'verification_status' => 'verified',
-            ]));
+            $slug = Str::slug($item['name']);
+            DirectoryItem::updateOrCreate(
+                ['slug' => $slug],
+                array_merge($item, [
+                    'type' => 'companies',
+                    'uuid' => Str::uuid(),
+                    'slug' => $slug,
+                    'is_active' => true,
+                    'verification_status' => 'verified',
+                ])
+            );
         }
 
         // ---------------------------------------------------------
@@ -165,13 +177,17 @@ class DirectoryItemSeeder extends Seeder
             ],
         ];
         foreach ($communities as $item) {
-            DirectoryItem::create(array_merge($item, [
-                'type' => 'communities',
-                'uuid' => Str::uuid(),
-                'slug' => Str::slug($item['name']),
-                'is_active' => true,
-                'verification_status' => 'verified',
-            ]));
+            $slug = Str::slug($item['name']);
+            DirectoryItem::updateOrCreate(
+                ['slug' => $slug],
+                array_merge($item, [
+                    'type' => 'communities',
+                    'uuid' => Str::uuid(),
+                    'slug' => $slug,
+                    'is_active' => true,
+                    'verification_status' => 'verified',
+                ])
+            );
         }
 
         // ---------------------------------------------------------
@@ -189,13 +205,17 @@ class DirectoryItemSeeder extends Seeder
         ];
 
         foreach ($templates as $item) {
-            DirectoryItem::create(array_merge($item, [
-                'type' => 'templates',
-                'uuid' => Str::uuid(),
-                'slug' => Str::slug($item['name']),
-                'is_active' => true,
-                'verification_status' => 'verified',
-            ]));
+            $slug = Str::slug($item['name']);
+            DirectoryItem::updateOrCreate(
+                ['slug' => $slug],
+                array_merge($item, [
+                    'type' => 'templates',
+                    'uuid' => Str::uuid(),
+                    'slug' => $slug,
+                    'is_active' => true,
+                    'verification_status' => 'verified',
+                ])
+            );
         }
     }
 }

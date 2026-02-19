@@ -136,8 +136,15 @@ class PagesSeeder extends Seeder
             $seoData = $pageData['seo'];
             unset($pageData['seo']);
 
-            $page = Page::create($pageData);
-            $page->seoMetadata()->create($seoData);
+            $page = Page::updateOrCreate(
+                ['slug' => $pageData['slug']],
+                $pageData
+            );
+
+            $page->seoMetadata()->updateOrCreate(
+                ['page_id' => $page->id],
+                $seoData
+            );
 
             // Calculate initial SEO score
             $page->seoMetadata->calculateSeoScore();

@@ -9,8 +9,6 @@ class CaseStudySeeder extends Seeder
 {
     public function run()
     {
-        CaseStudy::truncate();
-
         $caseStudies = [
             [
                 'title' => 'Scaling Fintech Growth',
@@ -28,7 +26,10 @@ class CaseStudySeeder extends Seeder
         ];
 
         foreach ($caseStudies as $study) {
-            CaseStudy::create($study);
+            CaseStudy::updateOrCreate(
+                ['slug' => $study['slug']],
+                $study
+            );
         }
     }
 }

@@ -86,21 +86,25 @@ class RoadmapSeeder extends Seeder
         $order = 1;
 
         foreach ($categories as $catName => $data) {
-            $category = RoadmapCategory::create([
-                'name' => $catName,
-                'slug' => Str::slug($catName),
-                'order' => $order++,
-                'color' => $data['color'],
-            ]);
+            $category = RoadmapCategory::updateOrCreate(
+                ['slug' => Str::slug($catName)],
+                [
+                    'name' => $catName,
+                    'order' => $order++,
+                    'color' => $data['color'],
+                ]
+            );
 
             foreach ($data['topics'] as $topicName) {
-                $category->topics()->create([
-                    'name' => $topicName,
-                    'slug' => Str::slug($topicName),
-                    'description' => "Learn about $topicName",
-                    'difficulty_level' => 1,
-                    'resources' => [],
-                ]);
+                $category->topics()->updateOrCreate(
+                    ['slug' => Str::slug($topicName)],
+                    [
+                        'name' => $topicName,
+                        'description' => "Learn about $topicName",
+                        'difficulty_level' => 1,
+                        'resources' => [],
+                    ]
+                );
             }
         }
     }
