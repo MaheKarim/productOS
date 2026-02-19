@@ -22,6 +22,36 @@ use App\Models\Feature;
 
 class DashboardController extends Controller
 {
+    /**
+     * Get database-specific date format for grouping by hour.
+     */
+    protected function getHourFormat(): string
+    {
+        $driver = DB::connection()->getDriverName();
+
+        return match ($driver) {
+            'sqlite' => "strftime('%H:00', created_at)",
+            'mysql', 'mariadb' => "DATE_FORMAT(created_at, '%H:00')",
+            'pgsql' => "TO_CHAR(created_at, 'HH24:00')",
+            default => "DATE_FORMAT(created_at, '%H:00')",
+        };
+    }
+
+    /**
+     * Get database-specific date format for grouping by month.
+     */
+    protected function getMonthFormat(): string
+    {
+        $driver = DB::connection()->getDriverName();
+
+        return match ($driver) {
+            'sqlite' => "strftime('%m', created_at)",
+            'mysql', 'mariadb' => "DATE_FORMAT(created_at, '%m')",
+            'pgsql' => "TO_CHAR(created_at, 'MM')",
+            default => "DATE_FORMAT(created_at, '%m')",
+        };
+    }
+
     public function index(Request $request): View
     {
         $stats = [
@@ -248,7 +278,7 @@ class DashboardController extends Controller
         // Hourly trend data (last 24 hours)
         $hourlyTrend = AiRequestLog::where('ai_provider_id', $groq->id)
             ->where('created_at', '>=', $now->copy()->subHours(24))
-            ->selectRaw('DATE_FORMAT(created_at, "%H:00") as hour, COUNT(*) as requests, SUM(COALESCE(input_tokens, 0) + COALESCE(output_tokens, 0)) as tokens')
+            ->selectRaw($this->getHourFormat() . ' as hour, COUNT(*) as requests, SUM(COALESCE(input_tokens, 0) + COALESCE(output_tokens, 0)) as tokens')
             ->groupBy('hour')
             ->orderBy('hour')
             ->get()
@@ -342,7 +372,7 @@ class DashboardController extends Controller
         $previousYear = $year - 1;
 
         // Get current year data
-        $currentYearData = User::selectRaw('DATE_FORMAT(created_at, "%m") as month, COUNT(*) as count')
+        $currentYearData = User::selectRaw($this->getMonthFormat() . ' as month, COUNT(*) as count')
             ->whereYear('created_at', $year)
             ->groupBy('month')
             ->orderBy('month')
@@ -350,7 +380,7 @@ class DashboardController extends Controller
             ->toArray();
 
         // Get previous year data for comparison
-        $previousYearData = User::selectRaw('DATE_FORMAT(created_at, "%m") as month, COUNT(*) as count')
+        $previousYearData = User::selectRaw($this->getMonthFormat() . ' as month, COUNT(*) as count')
             ->whereYear('created_at', $previousYear)
             ->groupBy('month')
             ->orderBy('month')
