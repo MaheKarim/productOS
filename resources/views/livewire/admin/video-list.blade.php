@@ -2,19 +2,20 @@
 
 <div class="space-y-6" x-data="{
     showDeleteModal: false,
+    deleteVideoId: null,
     deleteVideoTitle: '',
     openDeleteModal(id, title) {
-        $wire.set('deleteVideoId', id);
+        this.deleteVideoId = id;
         this.deleteVideoTitle = title;
         this.showDeleteModal = true;
     },
     closeDeleteModal() {
         this.showDeleteModal = false;
         this.deleteVideoTitle = '';
-        $wire.set('deleteVideoId', null);
+        this.deleteVideoId = null;
     },
-    async confirmDelete() {
-        await $wire.call('delete');
+    confirmDelete() {
+        $wire.delete(this.deleteVideoId);
         this.closeDeleteModal();
     }
 }">
@@ -89,8 +90,8 @@
 
     <!-- Data Table Card -->
     <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm shadow-slate-200/50 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full">
+        <div class="overflow-x-auto" style="max-width: 100%;">
+            <table class="w-full" style="min-width: 900px;">
                 <thead>
                     <tr class="border-b border-slate-100 bg-slate-50/50">
                         <th scope="col" class="px-6 py-4 text-left">
@@ -306,7 +307,7 @@
 
                                     {{-- Delete Video - Opens Modal --}}
                                     <button
-                                        @click="openDeleteModal({{ $video->id }}, '{{ addslashes($video->title) }}')"
+                                        @click="openDeleteModal({{ $video->id }}, {{ \Illuminate\Support\Js::from($video->title) }})"
                                         class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-white ring-1 ring-slate-200 text-slate-500 hover:text-rose-600 hover:ring-rose-300 hover:bg-rose-50 shadow-sm hover:shadow transition-all duration-200 cursor-pointer"
                                         title="Delete Video">
                                         <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -341,7 +342,7 @@
         <!-- Pagination -->
         @if ($videos->hasPages())
             <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/50">
-                {{ $videos->links() }}
+                {{ $videos->links(data: ['wire:navigate' => true]) }}
             </div>
         @endif
     </div>
@@ -422,5 +423,53 @@
         document.addEventListener('livewire:updated', () => {
             lucide.createIcons();
         });
+
+        // Handle notification events
+        document.addEventListener('livewire:initialized', () => {
+            Livewire.on('notify', (event) => {
+                const type = event.type || 'success';
+                const message = event.message || 'Operation completed';
+
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-lg transform transition-all duration-300 translate-x-full ${
+                    type === 'success' ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'
+                }`;
+                notification.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <i data-lucide="${type === 'success' ? 'check-circle' : 'alert-circle'}" class="w-5 h-5"></i>
+                        <span class="font-medium">${message}</span>
+                    </div>
+                `;
+
+                document.body.appendChild(notification);
+                lucide.createIcons();
+
+                // Animate in
+                requestAnimationFrame(() => {
+                    notification.classList.remove('translate-x-full');
+                });
+
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.classList.add('translate-x-full');
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            });
+        });
     </script>
+@endpush
+@push('styles')
+    <style>
+        .notification-enter-active,
+        .notification-leave-active {
+            transition: all 0.3s ease;
+        }
+
+        .notification-enter-from,
+        .notification-leave-to {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+    </style>
 @endpush

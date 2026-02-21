@@ -26,16 +26,34 @@ class VideoList extends Component
         $this->resetPage();
     }
 
-    public function delete()
+    public function delete($id = null)
     {
-        if (!$this->deleteVideoId) {
+        $videoId = $id ?? $this->deleteVideoId;
+
+        if (!$videoId) {
             return;
         }
 
-        $video = Video::findOrFail($this->deleteVideoId);
-        $video->delete();
-        $this->deleteVideoId = null;
-        session()->flash('message', 'Video deleted successfully.');
+        try {
+            $video = Video::findOrFail($videoId);
+
+            // Detach all topics (pivot table entries)
+            $video->topics()->detach();
+
+            // Delete related AI output if exists
+            if ($video->aiOutput) {
+                $video->aiOutput()->delete();
+            }
+
+            // Delete the video
+            $video->delete();
+
+            $this->deleteVideoId = null;
+            $this->dispatch('notify', type: 'success', message: 'Video deleted successfully.');
+        } catch (\Exception $e) {
+            $this->deleteVideoId = null;
+            $this->dispatch('notify', type: 'error', message: 'Failed to delete video: ' . $e->getMessage());
+        }
     }
 
     public function retry(Video $video)
