@@ -105,14 +105,75 @@
         .gradient-primary {
             background: linear-gradient(135deg, #4F46E5 0%, #2563EB 100%);
         }
+
+        /* Mobile Touch Targets - Minimum 44px */
+        @media (max-width: 768px) {
+
+            .menu-item,
+            button,
+            a[href] {
+                min-height: 44px;
+            }
+
+            /* Improve touch scrolling */
+            aside {
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Prevent text selection on UI elements */
+            .menu-item,
+            button {
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            /* Mobile table improvements */
+            .mobile-card-view td {
+                display: block;
+                width: 100%;
+                padding: 0.5rem;
+            }
+
+            .mobile-card-view tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #e2e8f0;
+                border-radius: 0.75rem;
+                padding: 1rem;
+            }
+
+            .mobile-card-view thead {
+                display: none;
+            }
+        }
+
+        /* Safe area support for notched devices */
+        @@supports (padding: max(0px)) {
+            header {
+                padding-left: max(1rem, env(safe-area-inset-left));
+                padding-right: max(1rem, env(safe-area-inset-right));
+            }
+
+            @media (min-width: 768px) {
+                header {
+                    padding-left: max(2rem, env(safe-area-inset-left));
+                    padding-right: max(2rem, env(safe-area-inset-right));
+                }
+            }
+        }
     </style>
 </head>
 
 <body class="h-full overflow-hidden">
     <div class="flex h-screen bg-dashboard-bg">
+        <!-- Mobile Sidebar Overlay -->
+        <div id="mobile-sidebar-overlay"
+            class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity opacity-0"
+            onclick="toggleMobileSidebar()"></div>
+
         <!-- Sidebar -->
-        <aside
-            class="hidden md:flex md:w-72 md:flex-col fixed h-full bg-dashboard-sidebar text-slate-300 z-50 transition-soft">
+        <aside id="sidebar"
+            class="flex flex-col fixed h-full bg-dashboard-sidebar text-slate-300 z-50 transition-all duration-300 transform -translate-x-full md:translate-x-0 w-72">
             <div class="flex flex-col flex-grow pt-8 overflow-y-auto">
                 {{-- Logo Section --}}
                 <div class="flex items-center flex-shrink-0 px-8 mb-10">
@@ -538,15 +599,18 @@
         <main class="flex-1 w-full md:ml-72 flex flex-col min-h-screen overflow-y-auto relative">
             <!-- Top Header (Glassmorphism) -->
             <header
-                class="sticky top-0 z-40 w-full glass border-b border-slate-200/60 px-8 py-4 flex items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <div class="md:hidden p-2 text-slate-600">
+                class="sticky top-0 z-30 w-full glass border-b border-slate-200/60 px-4 md:px-8 py-3 md:py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-3 md:space-x-4">
+                    <button onclick="toggleMobileSidebar()"
+                        class="md:hidden p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                        aria-label="Toggle menu">
                         <i data-lucide="menu" class="w-6 h-6"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-slate-900 tracking-tight">@yield('page-title', 'Dashboard')</h2>
+                    </button>
+                    <h2 class="text-lg md:text-2xl font-bold text-slate-900 tracking-tight truncate">@yield('page-title', 'Dashboard')
+                    </h2>
                 </div>
 
-                <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-2 md:space-x-6">
                     {{-- Global Search Toggle --}}
                     <div
                         class="hidden lg:flex items-center bg-slate-100 rounded-full px-4 py-1.5 border border-slate-200 transition-soft focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:bg-white w-64">
@@ -557,24 +621,30 @@
                             class="text-[10px] text-slate-400 bg-slate-200 px-1.5 py-0.5 rounded font-bold uppercase tracking-widest ml-2">⌘K</span>
                     </div>
 
-                    <div class="flex items-center space-x-4">
-                        <button class="relative p-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-soft">
+                    <div class="flex items-center space-x-1 md:space-x-4">
+                        <button class="relative p-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-soft"
+                            aria-label="Notifications">
                             <i data-lucide="bell" class="w-5 h-5"></i>
                             <span
                                 class="absolute top-2 right-2 w-2 h-2 bg-indigo-600 rounded-full border-2 border-white"></span>
                         </button>
-                        <div class="w-px h-6 bg-slate-200"></div>
+                        <div class="hidden md:block w-px h-6 bg-slate-200"></div>
                         <a href="{{ url('/') }}" target="_blank"
-                            class="flex items-center space-x-2 text-sm font-bold text-indigo-600 hover:text-indigo-700">
+                            class="hidden md:flex items-center space-x-2 text-sm font-bold text-indigo-600 hover:text-indigo-700">
                             <span>Live Site</span>
                             <i data-lucide="external-link" class="w-4 h-4"></i>
+                        </a>
+                        <a href="{{ url('/') }}" target="_blank"
+                            class="md:hidden p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl transition-soft"
+                            aria-label="Live Site">
+                            <i data-lucide="external-link" class="w-5 h-5"></i>
                         </a>
                     </div>
                 </div>
             </header>
 
             <!-- Main Scrollable Content -->
-            <div class="p-8">
+            <div class="p-4 md:p-8">
                 {{-- Session Messages --}}
                 @if (session('success'))
                     <div
@@ -611,7 +681,7 @@
 
             {{-- Admin Footer --}}
             <footer
-                class="mt-auto p-8 border-t border-slate-200/60 bg-white/50 text-slate-500 flex justify-between items-center text-[11px] font-medium uppercase tracking-widest">
+                class="mt-auto p-4 md:p-8 border-t border-slate-200/60 bg-white/50 text-slate-500 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-0 text-[11px] font-medium uppercase tracking-widest">
                 <div>&copy; {{ date('Y') }} ProductOS Manager. Build v2.4</div>
                 <div class="flex items-center space-x-4">
                     <a href="#" class="hover:text-indigo-600 transition-colors">Documentation</a>
@@ -624,6 +694,41 @@
     <script>
         // Initialize Lucide Icons
         lucide.createIcons();
+
+        // Mobile Sidebar Toggle
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-sidebar-overlay');
+
+            if (sidebar.classList.contains('-translate-x-full')) {
+                // Open sidebar
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                }, 10);
+                document.body.style.overflow = 'hidden';
+            } else {
+                // Close sidebar
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close mobile sidebar on window resize to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('mobile-sidebar-overlay');
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.add('hidden', 'opacity-0');
+                document.body.style.overflow = '';
+            }
+        });
 
         // Toggle CMS Settings dropdown with animation
         function toggleCmsSettings() {

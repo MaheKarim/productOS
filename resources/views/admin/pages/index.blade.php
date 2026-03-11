@@ -7,35 +7,36 @@
     {{-- Modern Gradient Background --}}
     <div class="fixed inset-0 -z-10 bg-gradient-to-br from-violet-50 via-purple-50 to-fuchsia-50"></div>
 
-    <div class="container-fluid px-6 py-8" x-data="{ tab: 'pages' }">
+    <div class="container-fluid px-0 md:px-6 py-4 md:py-8" x-data="{ tab: 'pages' }">
         {{-- Header with Glassmorphism --}}
-        <div class="mb-8">
-            <div class="backdrop-blur-lg bg-white/70 rounded-2xl shadow-xl border border-white/20 p-6">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="mb-4 md:mb-8">
+            <div class="backdrop-blur-lg bg-white/70 rounded-xl md:rounded-2xl shadow-xl border border-white/20 p-4 md:p-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-4">
                     <div>
                         <h1
-                            class="text-3xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                            class="text-xl md:text-3xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-1 md:mb-2">
                             Management Console
                         </h1>
-                        <p class="text-slate-600 text-sm">Manage frontend pages, SEO, and feature credit costs</p>
+                        <p class="text-slate-600 text-xs md:text-sm">Manage frontend pages, SEO, and feature credit costs</p>
                     </div>
-                    <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2 md:gap-3">
                         <div
-                            class="bg-slate-100/50 p-1 rounded-xl flex items-center border border-white/30 backdrop-blur-sm">
+                            class="bg-slate-100/50 p-1 rounded-lg md:rounded-xl flex items-center border border-white/30 backdrop-blur-sm">
                             <button @click="tab = 'pages'"
                                 :class="{ 'bg-white shadow-sm text-violet-600': tab === 'pages', 'text-slate-500 hover:text-slate-700': tab !== 'pages' }"
-                                class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200">
-                                <i class="fas fa-file-alt mr-2"></i>Pages
+                                class="px-3 md:px-4 py-2 rounded-md md:rounded-lg text-xs md:text-sm font-semibold transition-all duration-200">
+                                <i class="fas fa-file-alt mr-1 md:mr-2"></i><span class="hidden sm:inline">Pages</span>
                             </button>
                             <button @click="tab = 'features'"
                                 :class="{ 'bg-white shadow-sm text-violet-600': tab === 'features', 'text-slate-500 hover:text-slate-700': tab !== 'features' }"
-                                class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200">
-                                <i class="fas fa-coins mr-2"></i>Credits
+                                class="px-3 md:px-4 py-2 rounded-md md:rounded-lg text-xs md:text-sm font-semibold transition-all duration-200">
+                                <i class="fas fa-coins mr-1 md:mr-2"></i><span class="hidden sm:inline">Credits</span>
                             </button>
                         </div>
                         <button onclick="window.location.reload()"
-                            class="px-4 py-2 rounded-xl bg-white/50 hover:bg-white/80 text-slate-700 font-medium transition-all duration-200 backdrop-blur-sm border border-white/30 cursor-pointer">
-                            <i class="fas fa-sync-alt mr-2"></i>Refresh
+                            class="p-2 md:px-4 md:py-2 rounded-lg md:rounded-xl bg-white/50 hover:bg-white/80 text-slate-700 font-medium transition-all duration-200 backdrop-blur-sm border border-white/30 cursor-pointer"
+                            title="Refresh">
+                            <i class="fas fa-sync-alt md:mr-2"></i><span class="hidden md:inline">Refresh</span>
                         </button>
                     </div>
                 </div>
@@ -57,87 +58,89 @@
             x-transition:enter-start="opacity-0 transform scale-95"
             x-transition:enter-end="opacity-100 transform scale-100">
             {{-- Quick Stats Grid --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-4 md:mb-8">
                 {{-- Active Pages --}}
                 <div
-                    class="group backdrop-blur-lg bg-white/60 hover:bg-white/80 rounded-2xl shadow-lg hover:shadow-2xl border border-white/30 p-6 transition-all duration-300 cursor-pointer">
+                    class="group backdrop-blur-lg bg-white/60 hover:bg-white/80 rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl border border-white/30 p-4 md:p-6 transition-all duration-300 cursor-pointer">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-slate-600 mb-1">Active Pages</p>
-                            <h3 class="text-4xl font-bold text-emerald-600">
+                            <p class="text-xs md:text-sm font-medium text-slate-600 mb-1">Active Pages</p>
+                            <h3 class="text-2xl md:text-4xl font-bold text-emerald-600">
                                 {{ $pages->where('is_active', true)->count() }}
                             </h3>
                         </div>
                         <div
-                            class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                            <i class="fas fa-check-circle text-white text-2xl"></i>
+                            class="w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-check-circle text-white text-lg md:text-2xl"></i>
                         </div>
                     </div>
                 </div>
 
                 {{-- Inactive Pages --}}
                 <div
-                    class="group backdrop-blur-lg bg-white/60 hover:bg-white/80 rounded-2xl shadow-lg hover:shadow-2xl border border-white/30 p-6 transition-all duration-300 cursor-pointer">
+                    class="group backdrop-blur-lg bg-white/60 hover:bg-white/80 rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl border border-white/30 p-4 md:p-6 transition-all duration-300 cursor-pointer">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-slate-600 mb-1">Inactive Pages</p>
-                            <h3 class="text-4xl font-bold text-slate-500">
+                            <p class="text-xs md:text-sm font-medium text-slate-600 mb-1">Inactive Pages</p>
+                            <h3 class="text-2xl md:text-4xl font-bold text-slate-500">
                                 {{ $pages->where('is_active', false)->count() }}
                             </h3>
                         </div>
                         <div
-                            class="w-14 h-14 rounded-xl bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                            <i class="fas fa-times-circle text-white text-2xl"></i>
+                            class="w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-to-br from-slate-400 to-slate-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-times-circle text-white text-lg md:text-2xl"></i>
                         </div>
                     </div>
                 </div>
 
                 {{-- Avg SEO Score --}}
                 <div
-                    class="group backdrop-blur-lg bg-white/60 hover:bg-white/80 rounded-2xl shadow-lg hover:shadow-2xl border border-white/30 p-6 transition-all duration-300 cursor-pointer">
+                    class="group backdrop-blur-lg bg-white/60 hover:bg-white/80 rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl border border-white/30 p-4 md:p-6 transition-all duration-300 cursor-pointer">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-slate-600 mb-1">Avg SEO Score</p>
-                            <h3 class="text-4xl font-bold text-violet-600">
+                            <p class="text-xs md:text-sm font-medium text-slate-600 mb-1">Avg SEO Score</p>
+                            <h3 class="text-2xl md:text-4xl font-bold text-violet-600">
                                 {{ round($pages->avg(fn($p) => $p->seoMetadata?->seo_score ?? 0)) }}
-                                <span class="text-xl text-slate-400">/100</span>
+                                <span class="text-sm md:text-xl text-slate-400">/100</span>
                             </h3>
                         </div>
                         <div
-                            class="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                            <i class="fas fa-search text-white text-2xl"></i>
+                            class="w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-search text-white text-lg md:text-2xl"></i>
                         </div>
                     </div>
                 </div>
 
                 {{-- In Navigation --}}
                 <div
-                    class="group backdrop-blur-lg bg-white/60 hover:bg-white/80 rounded-2xl shadow-lg hover:shadow-2xl border border-white/30 p-6 transition-all duration-300 cursor-pointer">
+                    class="group backdrop-blur-lg bg-white/60 hover:bg-white/80 rounded-xl md:rounded-2xl shadow-lg hover:shadow-2xl border border-white/30 p-4 md:p-6 transition-all duration-300 cursor-pointer">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm font-medium text-slate-600 mb-1">In Navigation</p>
-                            <h3 class="text-4xl font-bold text-blue-600">
+                            <p class="text-xs md:text-sm font-medium text-slate-600 mb-1">In Navigation</p>
+                            <h3 class="text-2xl md:text-4xl font-bold text-blue-600">
                                 {{ $pages->where('show_in_navigation', true)->count() }}
                             </h3>
                         </div>
                         <div
-                            class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                            <i class="fas fa-bars text-white text-2xl"></i>
+                            class="w-10 h-10 md:w-14 md:h-14 rounded-lg md:rounded-xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <i class="fas fa-bars text-white text-lg md:text-2xl"></i>
                         </div>
                     </div>
                 </div>
             </div>
 
             {{-- Pages Table with Glassmorphism --}}
-            <div class="backdrop-blur-lg bg-white/70 rounded-2xl shadow-2xl border border-white/30 overflow-hidden">
+            <div
+                class="backdrop-blur-lg bg-white/70 rounded-xl md:rounded-2xl shadow-2xl border border-white/30 overflow-hidden">
                 {{-- Table Header --}}
-                <div class="bg-gradient-to-r from-violet-500/10 to-purple-500/10 px-6 py-4 border-b border-white/20">
-                    <h3 class="text-lg font-bold text-slate-800">All Pages</h3>
+                <div
+                    class="bg-gradient-to-r from-violet-500/10 to-purple-500/10 px-4 md:px-6 py-3 md:py-4 border-b border-white/20">
+                    <h3 class="text-base md:text-lg font-bold text-slate-800">All Pages</h3>
                 </div>
 
                 {{-- Table --}}
-                <div class="overflow-x-auto">
-                    <table class="w-full">
+                <div class="overflow-x-auto -mx-0">
+                    <table class="w-full min-w-[900px]">
                         <thead>
                             <tr class="bg-white/50 border-b border-slate-200/50">
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
@@ -302,13 +305,15 @@
             </div>
 
             {{-- Features Table --}}
-            <div class="backdrop-blur-lg bg-white/70 rounded-2xl shadow-2xl border border-white/30 overflow-hidden">
-                <div class="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 px-6 py-4 border-b border-white/20">
-                    <h3 class="text-lg font-bold text-slate-800">Feature Costs & Status</h3>
+            <div
+                class="backdrop-blur-lg bg-white/70 rounded-xl md:rounded-2xl shadow-2xl border border-white/30 overflow-hidden">
+                <div
+                    class="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 px-4 md:px-6 py-3 md:py-4 border-b border-white/20">
+                    <h3 class="text-base md:text-lg font-bold text-slate-800">Feature Costs & Status</h3>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full">
+                <div class="overflow-x-auto -mx-0">
+                    <table class="w-full min-w-[700px]">
                         <thead>
                             <tr class="bg-white/50 border-b border-slate-200/50">
                                 <th class="px-6 py-4 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
